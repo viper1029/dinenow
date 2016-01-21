@@ -1,0 +1,294 @@
+package com.dinenowinc.dinenow.resources;
+
+import io.dropwizard.auth.Auth;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import com.dinenowinc.dinenow.DineNowApplication;
+import com.dinenowinc.dinenow.dao.RestaurantUserDao;
+import com.dinenowinc.dinenow.dao.RoleDao;
+import com.dinenowinc.dinenow.error.ServiceErrorMessage;
+import com.dinenowinc.dinenow.error.ServiceResult;
+import com.dinenowinc.dinenow.model.AccessToken;
+import com.dinenowinc.dinenow.model.AddOn;
+import com.dinenowinc.dinenow.model.NetworkStatus;
+import com.dinenowinc.dinenow.model.PaymentType;
+import com.dinenowinc.dinenow.model.Restaurant;
+import com.dinenowinc.dinenow.model.RestaurantUser;
+import com.dinenowinc.dinenow.model.Role;
+import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.service.RestaurantUserService;
+import com.dinenowinc.dinenow.utils.MD5Hash;
+import com.google.inject.Inject;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
+@Path("/user")
+@Api("/user")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
+
+
+	@Inject
+	private RestaurantUserService restaurantUserService;
+	
+	@Inject
+    RoleDao  roleDao;
+	@Inject
+	RestaurantUserDao restaurantUserDao;
+	
+	public RestaurantUserResource() {
+	}
+
+
+	@Override
+	protected HashMap<String, Object> fromEntity(RestaurantUser entity) {
+		HashMap<String, Object> dto = new HashMap<String, Object>();
+		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
+		return dto;
+	}	
+	
+	
+	//POST/ PUT
+	@Override
+	protected RestaurantUser fromFullDto(HashMap<String, Object> dto) {
+		RestaurantUser ru = super.fromFullDto(dto);
+		ru.setEmail(dto.get("email").toString());
+		ru.setPassword(dto.get("password").toString());
+		ru.setRole(UserRole.valueOf(dto.get("role").toString()));
+		return ru;
+	}
+	
+	
+	@Override
+	protected RestaurantUser fromAddDto(HashMap<String, Object> dto) {
+		System.out.println("@Override@Override@Override @Override@Override@Override "+dto);
+		RestaurantUser entity = super.fromAddDto(dto);
+		
+		entity.setEmail(dto.get("email").toString());
+		entity.setPassword(MD5Hash.md5Spring(dto.get("password").toString()));
+		entity.setRole(UserRole.valueOf(dto.get("role").toString()));
+		entity.setFirstName(dto.get("firstName").toString());
+		entity.setLastName(dto.get("lastName").toString());
+		entity.setPhone(dto.get("phone").toString());
+		entity.setRegisteredDate(new Date());
+	//	entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
+		if (dto.containsKey("roles")) {
+			ArrayList<String> listKeyRoles = (ArrayList<String>)dto.get("roles");
+			for (String key : listKeyRoles) {
+				Role role = roleDao.findOne(key);
+				entity.addRestaurant(role);
+			}
+		}
+		return entity;
+	}
+	
+	
+	@Override
+	protected RestaurantUser fromUpdateDto(RestaurantUser t, HashMap<String, Object> dto) {
+		RestaurantUser entity = super.fromUpdateDto(t, dto);
+		entity.setEmail(dto.containsKey("email") ? dto.get("email").toString() : t.getEmail());
+		entity.setPassword(dto.containsKey("password") ? MD5Hash.md5Spring(dto.get("password").toString()) : t.getPassword());
+		entity.setRole(dto.containsKey("role") ? UserRole.valueOf(dto.get("role").toString()) : t.getRole());
+		entity.setFirstName(dto.get("firstName").toString());
+		entity.setLastName(dto.get("lastName").toString());
+		entity.setPhone(dto.get("phone").toString());
+		//entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
+		//entity.setNumberOfOrders(Integer.parseInt(dto.get("numberOfOrders").toString()));
+		return entity;
+	}
+	
+	
+	
+	
+	
+	//=================================ACTION=================================//
+	
+	
+	
+	@Override
+	protected Response onAdd(AccessToken access, RestaurantUser entity, Restaurant restaurant) { 
+		if (restaurant == null) {
+			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
+		}
+		restaurant.addUser(entity);
+		dao.save(entity);
+		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+	}
+	
+	
+	
+	
+	
+	//=================================METHOD===================================//
+	
+	
+	@Inject
+	private RestaurantUserService userService;
+	
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value="api get all restaurant user",notes="")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "data"),
+			@ApiResponse(code = 401, message = "access denied for user") 
+			})
+	@Override
+	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
+			return super.getAll(access);
+		}
+		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+	}
+	
+	
+	
+	
+	@GET
+	@Path("/{id}")
+	@ApiOperation(value="api get detail restaurant user",notes="id for restaurant user")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "data") ,
+			@ApiResponse(code = 404, message = "Cannot found entity") 
+			})
+	@Override
+	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+		return super.get(access, id);
+	}
+	
+	
+	@POST
+	@ApiOperation(value="api add new restaurant user",notes="<pre><code>{"
+			+ "<br/>  \"email\": \"hien123@gmail.com\","
+			+ "<br/>  \"password\": \"123456789\","
+			+ "<br/>  \"role\": \"OWNER\","
+			+ "<br/>  \"firstName\": \"Test First Name\","
+			+ "<br/>  \"lastName\": \"Test Last name\","
+			+ "<br/>  \"phone\": \"+841674546173\""
+			+ "<br/>}    </code></pre>")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "data"),
+			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
+			})
+	@Override
+	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {	
+		// Create Restaurant Owner by admin.(Give details of Restaurant for both)
+	    if (access.getRole() == UserRole.ADMIN && dto.get("role").toString().equals("OWNER")) {
+			RestaurantUser user = fromAddDto(dto);
+			ServiceResult<RestaurantUser> result = userService.createNewUser(user);
+			
+			if (!result.hasErrors()) {
+				return super.add(access, dto);
+			}else {
+				return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, result.getErrors());
+			}	
+		}
+		else if (access.getRole() == UserRole.OWNER) {
+			RestaurantUser user = fromAddDto(dto);
+			ServiceResult<RestaurantUser> result = userService.createNewUser(user);
+			
+			if (!result.hasErrors()) {
+				return super.add(access, dto);
+			}else {
+				return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, result.getErrors());
+			}
+		}
+		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+	}
+	
+	@PUT
+	@ApiOperation(value="api update restaurant user",notes="Chua Check Trung Email<pre><code>{<br/>"
+			+ "<br/>  \"id\": \"bd0d8b92-ccbc-4fbd-a880-6ee865cfa653\","
+			+ "<br/>  \"lastName\": null,"
+			+ "<br/>  \"phone\": null,"
+			+ "<br/>  \"email\": \"admin@gmail.com\","
+			+ "<br/>  \"registeredDate\": null,"
+			+ "<br/>  \"role\": \"ADMIN\","
+			+ "<br/>  \"firstName\": null,"
+			+ "<br/>  \"numberOfOrders\": 0,"
+			+ "<br/>  \"password\": \"12345678\","
+			+ "<br/>}</code></pre>")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "data"),
+			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###") 
+			})
+	@Path("/{id}")
+	@Override
+	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+		if (access.getRole() == UserRole.ADMIN && access.getRole() == UserRole.OWNER )
+		return super.update(access, id, dto);
+		else
+		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied"));
+	}
+	
+	@DELETE
+	@Path("/{id}")
+	@ApiOperation(value="api delete restaurant user",notes="Delete Restaurant User")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = ""),
+			@ApiResponse(code = 500, message = "Cannot delete entity. Error message: ###"),
+			@ApiResponse(code = 404, message = "Cannot found entity")
+			})
+	@Override
+	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+		RestaurantUser entity = dao.findOne(id);
+		Response response = ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage(String.format("deleted succesfully", "deleted succesfully" )));
+		
+    	if (entity != null) {
+    		System.out.println(entity.toString());
+    		try {
+    			onChangeStatus(access,entity);
+    		}
+    		catch(Exception ex) {
+    			ex.printStackTrace();
+    						
+    		}
+    		
+    		return response;
+    	} else {    		
+    		return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
+    	}
+	}
+	
+/*	@OPTIONS
+	@ApiOperation(value="Get List By Restaurant-Id", notes="<pre><code>{"
+			+ "<br/>  \"restaurantId\": \"aa27652f-864c-4a2a-b44d-a1ccc3be8b36\","
+			+ "<br/>}</code></pre>")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "data"),
+			@ApiResponse(code = 401, message = "access denied for user")
+			})
+	public Response getAllByRestaurantID(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+		if (!dto.containsKey("restaurantId")) {
+				return ResourceUtils.asFailedResponse(Status.NOT_FOUND,new ServiceErrorMessage("restaurant not found"));
+		}
+		else if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+			String res_id=dto.get("restaurantId").toString();		
+			List<RestaurantUser> entities  = restaurantUserDao.getAddonsByRestaurantId(res_id);
+			List<HashMap<String, Object>> dtos = fromEntities(entities);
+			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
+		}
+		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));	
+	}*/
+}
