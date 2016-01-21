@@ -1,0 +1,78 @@
+<div class="verticalcenter">
+	<a href="#/" class="login-heading">DineNow</a>
+	<div class="panel panel-primary login-form">
+	
+		<div class="panel-body">
+			<h4 class="text-center" style="margin-bottom: 25px;">Sign Up</h4>
+			<form name="form" class="form-horizontal" style="margin-bottom: 0px !important;">
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+							<input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" class="form-control" id="firstname" placeholder="First Name" ng-model="user.firstName" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" class="form-control" id="lastname" placeholder="Last Name" ng-model="user.lastName" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-phone"></i></span>
+							<input type="text" class="form-control" maskinput data-inputmask="'mask':'99999999999'" id="phone" placeholder="Phone" ng-model="user.phoneNumber" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+							<input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password" ng-model="passwordConfirm" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+							<input type="password" class="form-control" id="password-confirm" placeholder="Repeat password" ng-model="passwordConfirm" ng-model-options="{ updateOn: 'blur' }" required>
+						</div>
+						<div class="pad-top text-center">
+							<small class="alert-text" ng-show="passwordConfirm != user.password">Password confirm is not match</small>
+						</div>				
+					</div>
+				</div>
+				
+				<div class="checkbox block" style="text-align:center">
+					<input icheck type="checkbox" ng-model="checkUserAgreement">
+					<span>
+						I accept the <a href="#">User Agreement</a>
+					</span>
+				</div>
+					
+			</form>			
+		</div>
+		<div class="panel-footer">
+			<div class="pull-left">
+				<a href="#/login" class="btn btn-default">Cancel</a>
+			</div>
+			<div class="pull-right">
+				<a href="#" class="btn btn-success" ng-disabled="form.$invalid || !checkUserAgreement || passwordConfirm != user.password" ng-click="signUp(user)">Sign up</a>
+			</div>
+		</div>
+	</div>
+</div>

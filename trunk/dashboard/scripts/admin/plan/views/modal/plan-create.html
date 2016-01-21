@@ -1,0 +1,64 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.name : "Plan Name" }}</h3>
+</div>
+<div class="modal-body">
+	<!-- <pre>{{ itemToProcess | json }}</pre> -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<form name="form" class="form-horizontal" >
+					<div class="form-group">
+						<label class="col-sm-3 control-label align-left">Name</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" placeholder="" ng-model="itemToProcess.name" required maxlength="50">
+						</div>
+					</div>
+
+					<!-- <div class="form-group">
+						<label class="col-sm-3 control-label align-left">Time Expire</label>
+						<div class="col-sm-3">
+							<input type="number" class="form-control" placeholder="" ng-model="itemToProcess.trialPeriodDays" required min="0"maxlength="9">
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control" ng-model="itemToProcess.interval" ng-options="interval as interval for interval in enumTypes.interval" required ></select>
+						</div>
+					</div> -->
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label align-left">Trial days</label>
+						<div class="col-sm-3">
+							<input type="number" class="form-control" placeholder="" ng-model="itemToProcess.trialPeriodDays" min="0" maxlength="9">
+						</div>
+						<div class="col-sm-3">
+							<p class="help-block">{{ itemToProcess.trialPeriodDays > 1 ? 'Days' : 'Day' }}</p>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label align-left">Interval</label>
+						<div class="col-sm-3">
+							<select class="form-control" ng-model="itemToProcess.interval" ng-options="interval as interval for interval in enumTypes.interval" required ></select>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label align-left">Amount</label>
+						<div class="col-sm-3">
+							<input type="number" class="form-control" placeholder="" ng-model="itemToProcess.amount" required min="0" maxlength="9">
+						</div>
+						<div class="col-sm-3">
+							<p class="help-block">USD</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+<button class="btn btn-primary" ladda="isLoadingSave" ng-click="save()" ng-disabled="form.$invalid">Save</button>
+</div>

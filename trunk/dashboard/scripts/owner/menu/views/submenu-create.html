@@ -1,0 +1,126 @@
+<form name="form" novalidate role="form">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">  
+      <div class="container wrap-container">
+        <div class="row">
+          <div class="col-md-12">
+              <h1>{{ submenu.name ? submenu.name : "Submenu Name" }}</h1>
+          </div>
+        </div>
+        <div class="row">
+          <!-- LEFT SUB-MENU CONTENT -->
+          <div class="col-md-6"> 
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="name" class="col-sm-3 control-label align-left">Name</label>
+                <div class="col-sm-9">
+                  <input type="text" name="name" class="form-control align-left" ng-model="submenu.name" required placeholder="" maxlength="50">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description" class="col-sm-3 control-label align-left">Description</label>
+                <div class="col-sm-9"><textarea name="description" ng-model="submenu.description" cols="50" rows="2" class="form-control" required></textarea></div>
+              </div>
+              <div class="form-group">
+                <label for="radio" class="col-sm-3 control-label align-left">Notes</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" ng-model="submenu.subMenuNotes" required placeholder="">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" placeholder="Search" ng-model="submenuSearch">
+                </div>
+              </div>
+            </div>
+            <!-- drop items -->
+            <div ui-tree="subMenuOptions" class="wrap-drop-item submenu-left-drag"> 
+              <div ui-tree-nodes ng-model="submenu.categories" id="submenu-area">
+                <div ui-tree-node ui-tree-handle class="drop-item" ng-repeat="sub in submenu.categories | filter:submenuSearch" >
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <i class="fa fa-arrows"></i>
+                      <span class="item-name" ng-click="isCollapsed=!isCollapsed" data-nodrag="false">{{ sub.categoryName }}</span>
+                    </div>
+                    <div class="col-xs-8 text-right" data-nodrag="false">
+                      <button type="button" class="btn btn-sm btn-default" ng-click="deleteCategory(this, sub)"><i class="fa fa-times"></i> Remove Category</button>
+                    </div>
+                  </div>
+                  <div collapse="isCollapsed">
+                    <ul ui-tree-nodes ng-model="sub.items" class="child-item pad-top" >
+                      <li ui-tree-node class="pad-bot" ng-repeat="item in sub.items">
+                        <div class="row">
+                          <div class="col-xs-3"><span><i class="fa fa-arrows arrows-small"></i> {{ item.itemName }}</span></div>
+                          <div class="col-xs-3" data-nodrag="false"> <input type="number" ng-model="item.price" class="form-control input-sm" min="0" required></div>
+                          <div class="col-xs-6 text-right" data-nodrag="false"><button type="button" class="btn btn-sm btn-default" ng-click="deleteCategory(this, item)"><i class="fa fa-times"></i> Remove Item</button></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                </div>
+              </div>
+            </div> 
+            <!-- <pre>{{submenu | json}}</pre> -->
+          </div> 
+          <!-- END: LEFT SUB-MENU CONTENT -->
+
+          <!-- RIGHT SUBMENU CONTENT -->
+          <div class="col-md-6"> 
+            <!-- <pre>{{categoriesTree | json}}</pre> -->
+            <!-- CATEGORIES -->
+            <div class="wrap-container">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label align-left"><span>Categories</span></label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Search" ng-model="categorySearch">
+                  </div>
+                </div>
+              </div>
+              <!-- drop items -->
+              <div ui-tree="categoryOptions" class="wrap-drop-item"> 
+                <div ui-tree-nodes ng-model="categoriesTree">
+                  <div ui-tree-node ui-tree-handle class="drop-item" ng-repeat="category in categoriesTree | filter:categorySearch" tooltip-animation="false" tooltip-placement="bottom" tooltip-html-unsafe="{{ category.description }}">
+                    <div><i class="fa fa-arrows"></i> {{ category.name }}</div>
+                  </div>
+                </div>
+              </div> 
+              <!-- drop items -->
+            </div>
+            <!-- ITEMS -->
+            <div class="wrap-container" >
+              <!-- <pre>{{itemsTree | json}}</pre> -->
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label align-left"><span>Items</span></label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Search" ng-model="itemSearch">
+                  </div>
+                </div>
+              </div>
+              <!-- drop items -->
+              <div ui-tree="itemOptions" class="wrap-drop-item"> 
+                <div ui-tree-nodes ng-model="itemsTree">
+                  <div ui-tree-node ui-tree-handle class="drop-item" ng-repeat="item in itemsTree | filter:itemSearch" tooltip-placement="bottom" tooltip-animation="false" tooltip-html-unsafe="{{ item.description }}">
+                    <div><i class="fa fa-arrows"></i> {{ item.name }}</div>
+                  </div> 
+                </div>
+              </div> 
+              <!-- drop items -->
+            </div>
+          </div>
+          <!-- END: RIGHT SUBMENU CONTENT -->
+        </div>
+        <div class="row fix-row">
+          <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-default" ui-sref="app.owner.menu.submenu.list">Back</button>
+            <button type="button" class="btn btn-primary" ng-disabled="form.$invalid || submenu.categories.length == 0" ladda="isLoadingSave" ng-click="save(submenu)"><i class="fa fa-check"></i> Done</button>
+          </div>
+        </div>
+      </div>
+      </div> <!-- right content -->
+    </div>
+  </div> 
+</form>

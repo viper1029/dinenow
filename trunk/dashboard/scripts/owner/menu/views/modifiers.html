@@ -1,0 +1,62 @@
+<!-- categories content -->
+<div id="page-heading" class="heading-content">
+  <h1>Modifier</h1>
+</div>
+
+<div class="container body-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="open()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Modifier</button>
+        </div>  
+      </div>
+    </div>
+    <div class="col-md-4 text-right">
+      <div class="form-group">
+        <input class="form-control" ng-model="modifierSearch.name" placeholder="Search" type="text"></input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-condensed">
+        <!--<thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Multiple Selections</th>
+            <th>Min. Selections</th>
+            <th>Max. Selections</th>
+            <th>Items</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>-->
+        <tbody>
+          <tr ng-repeat="modifier in $data | filter:modifierSearch">
+            <td ng-bind="modifier.name" data-title="'Name'" sortable="'name'">
+            </td>
+            <td ng-bind="modifier.description" data-title="'Description'" sortable="'description'">    
+            </td>
+            <td ng-bind="modifier.isSelectMultiple ? 'Yes' : 'No'" data-title="'Multiple Selections'" sortable="'isSelectMultiple'">    
+            </td>
+            <td ng-bind="modifier.minSelection" data-title="'Min. Selections'" sortable="'minSelection'">    
+            </td>
+            <td ng-bind="modifier.maxSelection" data-title="'Max. Selections'" sortable="'maxSelection'">    
+            </td>
+            <td ng-bind="modifier.items" data-title="'Items'" sortable="'items'">    
+            </td>
+            <td class="text-center" style="white-space: nowrap">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ng-click="open(modifier)"><i class="fa fa-pencil"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" ng-click="delete(modifier)"><i class="fa fa-times"></i> Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 
+<!-- categories content -->

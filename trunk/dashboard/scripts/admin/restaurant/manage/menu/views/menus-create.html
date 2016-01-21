@@ -1,0 +1,122 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12"> 
+    <div class="container wrap-container">
+      <div class="row">
+        <div class="col-md-12">
+            <h1>{{ menuTree.menuName ? menuTree.menuName : "Menu Name" }}</h1>
+            <!-- <div class="form-group">
+                <div class="col-sm-12 form-control-static">
+                    <a editable-text="menuTree.menuName" class="h1">{{ menuTree.menuName || "Menu Name" }}</a>
+                </div>
+            </div> -->
+        </div>
+      </div>
+      <div class="row">
+        <!-- LEFT MENU CONTENT -->
+        <div class="col-md-6"> 
+          <div class="row">
+            <div class="col-md-12">
+              <form class="form-horizontal" name="form" novalidate role="form">
+                <div class="form-group">
+                  <label for="name" class="col-sm-3 control-label align-left">Name</label>
+                  <div class="col-sm-9">
+                     <input type="text" name="name" class="form-control align-left" ng-model="menuTree.name" required placeholder="" maxlength="50">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="name" class="col-sm-3 control-label align-left">Description</label>
+                  <div class="col-sm-9"><textarea name="description" required placeholder="" cols="50" rows="2" class="form-control" ng-model="menuTree.description"></textarea></div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <pre>{{ menuTree | json }}</pre> -->
+              <div ui-tree class="wrap-drop-item submenu-left-drag">
+                <div ui-tree-nodes ng-model="menuTree.submenus">
+                  <div ui-tree-node ui-tree-handle class="row no-margin drop-item" ng-repeat="menu in menuTree.submenus" >
+                    <div class="row">
+                      <div class="col-xs-4">
+                        <i class="fa fa-arrows"></i>
+                        <span class="item-name" ng-click="collapseAll()" ng-bind="menu.name" data-nodrag="false"></span>
+                      </div>
+                      <div class="col-xs-4"><span ng-bind="menu.description"></span></div>
+                      <div class="col-xs-4 text-right" data-nodrag="false">
+                        <button type="button" class="btn btn-sm btn-default" ng-click="delete(this, menu)"><i class="fa fa-times"></i> Remove</button>
+                      </div>                    
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <ul class="child-item" collapse="isCollapsed">
+                          <li ng-repeat="category in menu.categories" class="pad-bot">&ndash; {{ category.name }}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- table data submenu -->
+            </div>
+          </div>    
+        </div> 
+        <!-- END: LEFT MENU CONTENT -->
+
+        <!-- RIGHT MENU CONTENT -->
+        <div class="col-md-6"> <!-- right submenu content -->
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <!-- <label for="radio" class="col-sm-4 control-label">&nbsp;</label> -->
+                  <div class="col-sm-12">
+                    <input type="text" class="form-control" ng-model="submenuSearch" placeholder="Search">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <h4>Submenu</h4>
+            </div>
+            <div class="col-xs-6">
+              <h4>Notes</h4>
+            </div>
+          </div>
+          <div class="wrap-drop-item" ui-tree style="min-height: 348px;">
+            <div ui-tree-nodes ng-model="submenuTree">            
+              <div ui-tree-node ui-tree-handle class="row no-margin drop-item" ng-repeat="submenu in submenuTree | filter:submenuSearch" tooltip-animation="false" tooltip-placement="bottom" tooltip-html-unsafe="{{ submenu.description }}">
+                <div class="col-xs-6">
+                  <div ng-click="isCollapsed = !isCollapsed">
+                    <i class="fa fa-arrows"></i>
+                    <span class="item-name" ng-bind="submenu.name" data-nodrag="false"></span>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <span class="" ng-bind="submenu.description"></span>
+                </div>              
+                <div class="col-xs-12 pad-top">
+                  <ul class="child-item" collapse="isCollapsed">
+                    <li ng-repeat="category in submenu.categories" class="pad-bot">&ndash; {{ category.name }}</li>
+                  </ul>
+                </div>              
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- END: RIGHT MENU CONTENT -->
+      </div> 
+      <div class="row fix-row">
+        <div class="col-md-12 text-center">
+          <button type="button" class="btn btn-default" ui-sref="app.admin.restaurant.manage.menu.menus.list">Back</button>
+          <button type="button" class="btn btn-primary"  type="submit" ng-disabled="form.$invalid || menuTree.submenus.length == 0" ladda="isLoadingSave" ng-click="save(menuTree)"><i class="fa fa-check"></i> Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div> <!-- right content -->
+</div>

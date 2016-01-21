@@ -1,0 +1,52 @@
+<div class="admin-manage">
+	<div class="manage-header" >
+		<div class="manage-name"><h1>{{ restaurant.restaurantName }}</h1></div>
+		<div class="manage-handle" id="menu-toggle"><i class="fa fa-bars"></i></div>
+		<div class="manage-done">
+			<a ui-sref="app.admin.restaurant.list">Done</a>
+		</div>
+	</div>
+    <div class="manage-body">
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <div id='cssmenu'>
+                    <ul>
+                       <li><a ui-sref="app.admin.restaurant.manage.orders" ui-sref-active="menu-active">Orders</a></li>
+                       <li class='active has-sub'><a >Menu</a>
+                            <ul>                        
+                                <!-- <li><a ui-sref="app.admin.restaurant.manage.menu.hours.list" ui-sref-active="menu-active">Menu Hours</a></li> -->
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.menus.list" ng-class="{true:'menu-active'}[$state.includes('app.admin.restaurant.manage.menu.menus')]">Menus</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.submenu.list" ng-class="{true:'menu-active'}[$state.includes('app.admin.restaurant.manage.menu.submenu')]">Sub Menu</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.addon" ui-sref-active="menu-active">Sides/Addon</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.items" ui-sref-active="menu-active">Items</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.categories" ui-sref-active="menu-active">Categories</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.modifiers" ui-sref-active="menu-active">Modifier</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.menu.sizes" ui-sref-active="menu-active">Sizes</a></li>                      
+                            </ul>
+                       </li>
+                       <li class='active has-sub'><a href='#'>Restaurant Details</a>
+                            <ul>                        
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.info" ui-sref-active="menu-active">Restaurant Information</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.taxes">Taxes</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.ordertype" ui-sref-active="menu-active">Order Types & Hours</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.zones" ui-sref-active="menu-active">Delivery Zones</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.notifications" ui-sref-active="menu-active">Notifications</a></li>
+                                <li><a ui-sref="app.admin.restaurant.manage.restaurant.subscriptions">Subscription</a></li>                      
+                            </ul>
+                       </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper" ui-view>
+                
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+    </div>
+</div>

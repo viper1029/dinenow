@@ -1,0 +1,59 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.name : "Addon Name" }}</h3>
+</div>
+<div class="modal-body">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<form name="form" novalidate>
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label for="name" class="col-sm-12">Name</label>
+							<div class="col-sm-12">
+								<input name="name" type="text" class="form-control" ng-model="itemToProcess.name" required maxlength="50">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="description" class="col-sm-12">Description</label>
+							<div class="col-sm-12">
+								<textarea name="desciption" id="description" ng-model="itemToProcess.description" cols="50" rows="2" class="form-control" required></textarea>
+							</div>
+						</div>				
+					</div>
+
+					<div class="select-item">
+						<!-- <pre>{{ itemToProcess | json }}</pre> -->
+						<label for="">Size and Price</label>
+				    	<div class="form-inline fix-modal-height">
+				    		<div class="form-group fix-inline" ng-if="!onShow.size && !itemToProcess.id">
+			    				<button type="button" class="btn btn-primary" ng-click="onShow.size = true"><i class="fa fa-plus"></i> Add</button>
+			    			</div>
+				    		<div ng-if="onShow.size || itemToProcess.id" ng-repeat="item in itemToProcess.sizePrices">
+				    			<div class="form-group fix-inline">
+					    			<select class="form-control" name="type" ng-model="item.size" ng-options="size.id as size.name for size in listSizes">              	                     
+		                        	</select>
+				    			</div>
+				    			<div class="form-group fix-inline">
+				    				<label class="control-label">Price: </label>
+				    				<input name="price" type="number" class="form-control" ng-model="item.price" min="0" required style="width: 80px">
+				    			</div>			    			  			  			
+				    			<div class="form-group fix-inline">
+				    				<button type="button" class="btn btn-primary" ng-click="addSizePrice()" ng-if="$last" ng-disabled="item.size==''"><i class="fa fa-plus"></i> Add</button>
+				    				<div ng-show="!$last">
+					    				<button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span class="non-text"> Pause</span></button>
+					    				<button type="button" class="btn btn-primary" ng-click="deleteSizePrice($index)"><i class="fa fa-times"></i><span class="non-text"> Remove</span></button>
+				    				</div>
+				    			</div>	
+				    		</div>			    				
+				    	</div>
+			    	</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid || itemToProcess.sizePrices.length == 1">Save</button>
+</div>

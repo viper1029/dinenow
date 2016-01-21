@@ -1,0 +1,38 @@
+
+<nav class="nav-top">
+  <!-- <div class="handle"><a href="javascript:;"><i class="fa fa-bars"></i></a></div> -->
+  <div class="nav-logo">
+    <a href="">DineNow</a>
+    <span class="nav-admin">Administration</span>
+  </div>
+  <ul class="nav-item">
+    <li><a ui-sref="app.admin.orders" ui-sref-active="active">Orders</a></li>
+    <li><a ui-sref="app.admin.restaurant.list" ng-class="{true:'active'}[$state.includes('app.admin.restaurant')]">Restaurants</a></li>
+    <li><a ui-sref="app.admin.user.list" ng-class="{true:'active'}[$state.includes('app.admin.user')]">Users</a></li>
+    <li><a ui-sref="app.admin.plan.list" ui-sref-active="active">Plans</a></li>
+  </ul>
+
+  <ul class="nav-info">
+    <li>
+      <a href="javascript:;"><span id="info-name">{{ username ? username : "Admin" }}</span></a>
+    </li>
+  </ul>
+  <div class="box-user">
+    <span class="box-triangle">▲</span>
+    <ul>
+      <li><a href="javascript:;" ng-click="logOut()"><i class="fa fa-sign-out"></i> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="collapse-menu">
+  <ul>
+    <!-- <li><a ui-sref="app.admin.orders" ui-sref-active="active">Orders</a></li> -->
+    <li><a ui-sref="app.admin.restaurant.list" ng-class="{true:'active'}[$state.includes('app.admin.restaurant')]">Restaurants</a></li>
+    <li><a ui-sref="app.admin.user.list" ng-class="{true:'active'}[$state.includes('app.admin.user')]">Users</a></li>
+    <li><a ui-sref="app.admin.plan.list" ui-sref-active="active">Plans</a></li>
+    
+  </ul>
+</div>
+<section class="main-content" ui-view class="admin">
+  
+</section>

@@ -1,0 +1,105 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.modifierName ? itemToProcess.modifierName : "Modifier Name" }}</h3>
+</div>
+<div class="modal-body">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- <pre>{{ itemToProcess | json }}</pre> -->
+				<form name="form" novalidate>
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label for="name" class="col-sm-3 control-label align-left">Name</label>
+							<div class="col-sm-6">
+								<input name="name" type="text" class="form-control" ng-model="itemToProcess.name" required maxlength="50">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">Description</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<textarea name="desciption" id="description" ng-model="itemToProcess.description" cols="50" rows="2" class="form-control" required></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="notes" class="col-sm-6 control-label align-left">Customer can select multiple items</label>
+							<div class="col-sm-6">
+								<div class="btn-group">
+									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==true]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=true">Yes</button>
+									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==false]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=false;itemToProcess.maxSelection=itemToProcess.minSelection">No</button>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label align-left">Min. Selections</label>
+							<div class="col-sm-3">
+								<input name="name" type="number" class="form-control" ng-model="itemToProcess.minSelection" min="0" required>
+							</div>
+						</div>
+						<div class="form-group" ng-if="itemToProcess.isSelectMultiple">
+							<label class="col-sm-3 control-label align-left">Max. Selections</label>
+							<div class="col-sm-3">
+								<input name="name" type="number" class="form-control" ng-model="itemToProcess.maxSelection" min="0">
+							</div>
+						</div>
+										
+					</div>
+
+					<div class="select-item">
+						<label>Items</label>
+						<div ng-repeat="item in itemToProcess.addOns">			
+				    		<div class="form-inline">
+				    			<div class="form-group pad-bot fix-inline">
+				    				<select name="addons"  class="form-control" ng-model="item.addOn" ng-options="addon.id as addon.name for addon in addons" style="width: 100%">			    			
+				    				</select>
+				    			</div>
+				    			<div class="form-group pad-bot fix-inline">
+				    				<label for="prices" class="control-label">Price: </label>
+				    				<input name="prices" type="number" class="form-control" ng-model="item.price" style="width: 80px" min="0" required>
+				    			</div>		    			
+				    			<div class="form-group pad-bot fix-inline" ng-if="!itemToProcess.isSelectMultiple">
+				    				<div class="checkbox block">
+				    					<label for="default" class="checkbox-inline"><input icheck type="checkbox" name="default" ng-model="item.isDefault" ></label><span style="vertical-align: middle"> Default</span>
+				    				</div>  	
+				    			</div>
+				    			<div class="form-group pad-bot fix-inline">
+				    				<button type="button" class="btn btn-primary" ng-click="addItems()" ng-show="$last" ng-disabled="!item.addOn"><i class="fa fa-check"></i> Add</button>
+				    				<div ng-show="!$last">
+					    				<button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span class=""> Pause</span></button>
+					    				<button type="button" class="btn btn-primary" ng-click="deleteItem($index)"><i class="fa fa-times"></i><span class=""> Remove</span></button>
+				    				</div>
+				    			</div>	
+				    		</div>
+						</div>
+			    	</div>
+
+			    	<!-- <div class="apply-item">
+			    		<label class="pad-top">Applies to</label>
+						<div ng-repeat="apply in itemToProcess.itemSizes">
+				    		<div class="form-inline">
+				    			<div class="form-group fix-inline pad-bot">
+				    				<select name="items" class="form-control" ng-model="apply.item" ng-options="item.id as item.name for item in items" style="width: 100%">		    				
+				    				</select>
+				    			</div>
+				    			<div class="form-group fix-inline pad-bot">
+					    			<select name="sizes" id="input" class="form-control" ng-model="apply.size" ng-options="size.id as size.name for size in sizes" style="width:100%" ng-if="apply.item">
+					    			</select>
+				    			</div> 
+				    			<div class="form-group fix-inline pad-bot">
+				    				<button type="button" class="btn btn-primary" ng-click="deleteAppliesTo($index)" ng-show="!$last"><i class="fa fa-times"></i> Remove</button>
+				    				<button type="button" class="btn btn-primary" ng-click="addAppliesTo()" ng-show="$last" ng-disabled="!apply.item || !apply.size"><i class="fa fa-check"></i> Add</button>
+				    			</div>					    				
+				    		</div>
+						</div>
+			    	</div> -->
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ladda="loadingSave" ng-click="save()" ng-disabled="form.$invalid || itemToProcess.itemSizes.length < 2 || itemToProcess.addOns.length < 2">Save</button>
+</div>

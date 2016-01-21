@@ -1,0 +1,42 @@
+<div class="container">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="cancel()">×</button>
+		<h3 class="modal-title text-center">PAYMENT</h3>
+		<p class="text-center"><small>{{ planAssigned.name }}</small></p>
+	</div>
+	<div class="modal-body">
+		<div class='row'>
+			<div class='col-md-12'>
+				<form stripe-form="stripeCallback" name="form" novalidate>
+					<div class='form-row'>
+						<div class='col-xs-12 form-group required'>
+							<label class='control-label'>Name on Card</label>
+							<input class="form-control" placeholder="Name on Card" ng-model="name" required>
+						</div>
+					</div>
+					<div class='form-row'>
+						<div class='col-xs-12 form-group card required'>
+							<label class='control-label'>Card Number</label>
+							<input class="form-control" placeholder="ex. 4242 4242 4242 4242" payments-format="card"  payments-validate="card" ng-model="number" required>
+						</div>
+					</div>
+					<div class='form-row'>
+						<div class='col-xs-6 form-group cvc required'>
+							<label class='control-label'>CVC</label>
+							<input class="form-control" placeholder="ex. 311" payments-format="cvc" ng-model="cvc" payments-validate="cvc" required>
+						</div>
+						<div class='col-xs-6 form-group expiration required'>
+							<label class='control-label'>Expiration</label>
+							<input class="form-control" placeholder="ex. MM/YY" payments-format="expiry" payments-validate="expiry" ng-model="expiry" required>
+						</div>
+					</div>
+					<div class='form-row'>
+						<div class='col-md-12 text-center'>
+							<button type="submit" class="btn btn-primary" ladda="isLoadingSubmit" ng-disabled="form.$invalid">Pay <span class='amount'> {{ planAssigned.amount | currency:'$' }}</span></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

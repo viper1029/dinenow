@@ -1,0 +1,25 @@
+<div id="wrapper">
+    <div id="menu-toggle" class="handle-leftbar"><i class="fa fa-bars"></i></div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <div id='cssmenu' class="text-center">
+            <ul>
+               <li><a ui-sref="app.owner.restaurant.info" ui-sref-active="menu-active">Restaurant Information</a></li>          
+               <li><a ui-sref="app.owner.restaurant.ordertype" ui-sref-active="menu-active">Order Types & Hours</a></li>          
+               <li><a ui-sref="app.owner.restaurant.zones" ui-sref-active="menu-active">Delivery Zones</a></li>          
+               <li><a ui-sref="app.owner.restaurant.notifications" ui-sref-active="menu-active">Notifications</a></li>                
+               <li><a ui-sref="app.owner.restaurant.subscriptions" ui-sref-active="menu-active">Subscriptions</a></li>                
+            </ul>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid" ui-view>
+            
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>

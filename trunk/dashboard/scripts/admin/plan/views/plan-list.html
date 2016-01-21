@@ -1,0 +1,50 @@
+<div id="page-heading" class="heading-content">
+  <h1>Plan Manage</h1>
+</div>
+
+<div class="container body-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="create()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Plan</button>
+        </div>  
+      </div>
+    </div>
+    <div class="col-md-4 text-right">
+      <div class="form-group">
+        <input class="form-control" ng-model="planSearch" placeholder="Search" type="text"></input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-condensed">
+        <tbody>
+          <tr ng-repeat="plan in $data | filter:planSearch">
+            <td style="width: 30%" class="text-center" ng-bind="plan.name" data-title="'Name'" sortable="'name'">
+            </td>
+            <!-- <td class="text-center" ng-bind="plan.created | date:short" data-title="'Created at'" sortable="'created'">
+            </td> -->
+            <td class="text-center" ng-bind="plan.interval" data-title="'Interval'" sortable="'interval'">
+            </td>
+            <td class="text-center" ng-bind="plan.amount / 100 | currency:'$':0" data-title="'Amount'" sortable="'amount'">    
+            </td>
+            <td style="width: 25%" class="text-center">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ng-click="edit(plan)"><i class="fa fa-pencil"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" ng-click="delete(plan)"><i class="fa fa-times"></i> Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr ng-if="isLoadingList">
+            <td colspan="4" class="text-center">
+              <i class="fa fa-cog fa-spin"></i> Loading Data...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

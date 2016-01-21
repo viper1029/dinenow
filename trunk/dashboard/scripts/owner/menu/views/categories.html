@@ -1,0 +1,50 @@
+<!-- categories content -->
+<div id="page-heading" class="heading-content">
+  <h1>Categories</h1>
+</div>
+
+<div class="container body-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="open()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Category</button>
+        </div>  
+      </div>
+    </div>
+    <div class="col-md-4 text-right">
+      <div class="form-group">
+        <input class="form-control" ng-model="categorySearch" placeholder="Search" type="text"></input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-condensed">
+        <!-- <thead>
+          <tr>
+            <th style="width:30%">Name</th>
+            <th style="width:50%">Description</th>
+            <th style="width:20%">&nbsp;</th>
+          </tr>
+        </thead> -->
+        <tbody>
+          <tr ng-repeat="category in $data | filter:categorySearch">
+            <td style="width:30%" class="text-center" ng-bind="category.name" data-title="'Name'" sortable="'name'">
+            </td>
+            <td style="width:50%" class="text-center" ng-bind="category.description" data-title="'Description'" sortable="'description'">    
+            </td>
+            <td style="width:20%" class="text-center" style="white-space: nowrap">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ng-click="open(category)"><i class="fa fa-pencil"></i><span class="non-text"> Edit</span></button>
+                <button class="btn btn-sm btn-primary" ng-click="delete(category)"><i class="fa fa-times"></i><span class="non-text"> Delete</span></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 
+<!-- categories content -->

@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-md-8">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="createMenu()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create New Menu</button>
+        </div>  
+      </div>
+    </div>
+    <div class="col-md-4 text-right">
+      <div class="form-group">
+        <input class="form-control" ng-model="menuSearch" placeholder="Search" type="text"></input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-condensed">
+        <tbody>
+          <tr ng-repeat="menu in $data | filter:menuSearch">
+            <td class="text-center" ng-bind="menu.name" data-title="'Name'" sortable="'menuname'">
+            </td>
+            <td class="text-center" ng-bind="menu.description" data-title="'Description'" sortable="'description'">    
+            </td>
+            <td class="text-center" data-title="'Hours'"> 
+              <ul style="list-style: none">
+                <li ng-repeat="time in menu.hours track by $index">{{ millisToUTCDate(time.fromTime) | date:"EEEE HH:mm"}} - {{ millisToUTCDate(time.toTime) | date:"HH:mm"}}</li>
+               <!--  <li ng-repeat="time in menu.hours track by $index">{{ time.fromTime | date:"EEEE HH:mm"}} - {{ time.toTime | date:"HH:mm"}}</li> -->
+              </ul>   
+            </td>
+            <td class="text-center" style="white-space: nowrap">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ladda="menu.editLoading" ng-click="editMenu(menu)"><i class="fa fa-pencil"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" ng-click="setHourMenu(menu)"><i class="fa fa-clock-o"></i> Hours</button>
+                <button class="btn btn-sm btn-primary" ng-click="deleteMenu(menu)"><i class="fa fa-times"></i> Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> 
+   <div class="col-lg-5">
+      <div id="menu-calendar" ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
+    </div> 
+  </div>

@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-md-8">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="createMenu()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create New Menu</button>
+        </div>  
+      </div>
+    </div>
+    <div class="col-md-4 text-right">
+      <div class="form-group">
+        <input class="form-control" ng-model="menuSearch" placeholder="Search" type="text"></input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-condensed">
+<!--         <thead>
+          <tr>
+            <th style="width:30%" class="sortable" ng-class="{'sort-asc': tableParams.isSortBy('menuName', 'asc'), 'sort-desc': tableParams.isSortBy('menuName', 'desc')}" ng-click="tableParams.sorting({'menuName' : tableParams.isSortBy('menuName', 'asc') ? 'desc' : 'asc'})">Name</th>
+            <th style="width:50%">Description</th>
+            <th style="width:20%">&nbsp;</th>
+          </tr>
+        </thead> -->
+        <tbody>
+          <tr ng-repeat="menu in $data | filter:menuSearch">
+            <td class="text-center" ng-bind="menu.menuName" data-title="'Name'" sortable="'menuName'">
+            </td>
+            <td class="text-center" ng-bind="menu.menuDescription" data-title="'Description'" sortable="'menuDescription'">    
+            </td>
+            <td class="text-center" style="white-space: nowrap">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ladda="menu.editLoading" ng-click="editMenu(menu)"><i class="fa fa-pencil"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" ng-click="deleteMenu(menu)"><i class="fa fa-times"></i> Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

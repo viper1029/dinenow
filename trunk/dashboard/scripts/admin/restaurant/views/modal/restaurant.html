@@ -1,0 +1,119 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.name : "Name" }}</h3>
+</div>
+<div class="modal-body">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">	
+				<!-- <pre>{{itemToProcess|json}}</pre> -->
+				<form class="form-horizontal" name="form">
+					<div class="form-group">
+						<label for="name" class="col-sm-4 control-label align-left">Name</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.name" required maxlength="50">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-4 control-label align-left">Description</label>
+						<div class="col-sm-8"><textarea name="description" cols="50" rows="2" class="form-control" ng-model="itemToProcess.description" required></textarea></div>
+					</div>
+
+					<div class="form-group">
+						<label for="address" class="col-sm-4 control-label align-left">Cuisine</label>
+						<div class="col-sm-8">
+							<input ui-select2="tagOptions" ng-model="itemToProcess.cuisine" style="width:100%"/>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="keyword" class="col-sm-4 control-label align-left">Keyword</label>
+						<div class="col-sm-8">
+							<input type="text" name="keyword" class="form-control" placeholder="" ng-model="itemToProcess.keyword" required maxlength="50">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="address1" class="col-sm-4 control-label align-left">Address 1</label>
+						<div class="col-sm-8">
+							<!-- <google-places location='itemToProcess.location' address='itemToProcess.address' attributes="{placeholder: '', required: true, ngMaxlength : '255', model: 'itemToProcess.address'}" ng-model="itemToProcess.address" required></google-places> -->
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.address1" required>
+						</div>
+					</div>	
+
+					<div class="form-group">
+						<label for="address2" class="col-sm-4 control-label align-left">Address 2</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.address2" required>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="city" class="col-sm-4 control-label align-left">City</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.city" required>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="postalCode" class="col-sm-4 control-label align-left">Postal Code</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.postalCode" required>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="province" class="col-sm-4 control-label align-left">Province</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.province" required>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="country" class="col-sm-4 control-label align-left">Country</label>
+						<div class="col-sm-8">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.country" required>
+						</div>
+					</div>
+
+				<!-- Mark address map -->
+
+					<div class="form-group" ng-if="loadMap">
+						<label for="address" class="col-sm-12 control-label align-left">Choice location of restaurant by click on map <span class="text-danger">(*)</span></label>
+						<div id="address-map" gmap options="addressMapOptions" instance="addressMapInstances" class="full-width-map-restro" style="height:500%;">											
+						</div>
+					</div>
+				<!-- Mark address map -->
+
+					<div class="form-group">
+						<label for="phone" class="col-sm-4 control-label align-left">Phone</label>
+						<div class="col-sm-8">						
+							<input type="text" class="form-control" maskinput data-inputmask="'mask':'+19999999999'" ng-model="itemToProcess.phoneNumber" required="required">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="contactPerson" class="col-sm-4 control-label align-left">Contact Person</label>
+						<div class="col-sm-8">						
+							<input type="text" class="form-control" ng-model="itemToProcess.contactPerson" >
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="website" class="col-sm-4 control-label align-left">Website</label>
+						<div class="col-sm-8">
+							<input type="text" name="website" class="form-control" ng-pattern="/^((?:http)s?:\/\/)(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[\/?]\S+)$/i" placeholder="http://www.example.com" ng-model="itemToProcess.webSite"  required>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+<button class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid || !itemToProcess.location">Done</button>
+</div>

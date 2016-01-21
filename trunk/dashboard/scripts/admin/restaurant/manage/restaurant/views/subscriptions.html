@@ -1,0 +1,98 @@
+<div id="page-heading" class="heading-content">
+  <h1>Subscription</h1>
+</div>
+
+<div class="container body-content">
+  <div class="panel panel-default panel-custom">
+    <div class="panel-heading">
+      <h4>Assign Plan</h4>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="fix-row"></div>
+          <div class="text-center" ng-if="isLoadingList">
+              <i class="fa fa-cog fa-spin"></i> Loading Data...
+          </div>
+          <table class="table table-condensed" ng-if="!isLoadingList">
+            <thead>
+              <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">Interval</th>
+                <th class="text-center">Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="plan in plans | filter:planSearch">
+                <td style="width: 30%" class="text-center" ng-bind="plan.name" data-title="'Name'" sortable="'name'">
+                </td>
+                <!-- <td class="text-center" ng-bind="plan.created | date:short" data-title="'Created at'" sortable="'created'">
+                </td> -->
+                <td class="text-center" ng-bind="plan.interval" data-title="'Interval'" sortable="'interval'">
+                </td>
+                <td class="text-center" ng-bind="plan.amount / 100 | currency:'$':0" data-title="'Amount'" sortable="'amount'">    
+                </td>
+                <td style="width: 25%" class="text-center">
+                  <div class="buttons">
+                    <button class="btn btn-sm btn-success" disabled ng-if="itemAssigned === plan.id"><i class="fa fa-check"></i> Assigned</button>
+                    <button class="btn btn-sm btn-primary" ng-click="onAssign(plan)" ng-if="itemAssigned !== plan.id" ladda="plan.isLoadingAssign"><i class="fa fa-pencil"></i> Assign</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default panel-custom">
+    <div class="panel-heading">
+      <h4>Subscription Infomation</h4>
+    </div>
+    <div class="panel-body">
+      <div class="text-center" ng-if="isLoadingSubscriptions">
+          <i class="fa fa-cog fa-spin"></i> Loading Data...
+      </div>
+      <div ng-if="!isLoadingSubscriptions">
+        <div class="row" ng-if="subscriptions.length === 0">
+          <div class="col-md-12">
+            <p>No Subscription</p>
+          </div>
+        </div>
+        <div class="row" ng-if="subscriptions.length > 0">
+          <div class="col-md-12">
+            <table class="table table-condensed" ng-if="!isLoadingSubscriptions">
+              <thead>
+                <tr>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Interval</th>
+                  <th class="text-center">Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in subscriptions">
+                  <td style="width: 30%" class="text-center" ng-bind="item.plan.name">
+                  </td>
+                  <!-- <td class="text-center" ng-bind="plan.created | date:short" data-title="'Created at'" sortable="'created'">
+                  </td> -->
+                  <td class="text-center" ng-bind="item.plan.interval">
+                  </td>
+                  <td class="text-center" ng-bind="item.plan.amount / 100 | currency:'$':0">    
+                  </td>
+                  <td style="width: 25%" class="text-center">
+                    <div class="buttons">
+                      <button class="btn btn-sm btn-danger" ng-click="onCancelSubscription(item)"><i class="fa fa-trash"></i> Cancel</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

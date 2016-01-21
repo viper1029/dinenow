@@ -1,0 +1,66 @@
+<div id="menu-showing" class="order-heading" >
+	<a href="javascript:;" class="filter" id="open" ng-click="statusFilter('open')">Open <span class="badge badge-danger" ng-bind="status.open != 0 ? status.open : ''"></span></a>
+	<a href="javascript:;" class="filter" id="accepted" ng-click="statusFilter('accepted')">Accepted <span class="badge badge-danger"></span></a>
+	<a href="javascript:;" class="filter" id="completed" ng-click="statusFilter('completed')">Completed <span class="badge badge-danger"></span></a>
+	<a href="javascript:;" class="filter" id="scheduled" ng-click="statusFilter('scheduled')">Scheduled <span class="badge badge-danger"></span></a>
+	<a href="javascript:;" class="filter" id="late" ng-click="statusFilter('late')">Late <span class="badge badge-danger" ng-bind="status.late != 0 ? status.late : ''"></span></a>
+	<a href="javascript:;" class="filter" id="all" ng-click="statusFilter()">All</a>
+</div>
+<!-- <pre>{{daterange|json}}</pre> -->
+
+<div class="order-body" style="overflow-y: auto">
+	<div class="order-wrap">
+		<div class="form-group order-wrap-child order-daterange">
+		    <!-- <div class="input-group" >
+		    	<input date-range-picker options="daterangeOptions" class="form-control date-picker" type="text" ng-model="daterange" ng-change="daterangeFilter(daterange.startDate, daterange.endDate)" placeholder="Date Range"/>
+				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		    </div> -->
+		    <button class="btn btn-default button-daterange" daterangepicker="daterangeOptions" date-begin="daterange.startDate" date-end="daterange.endDate" render-date-begin="renderDateRange.from" render-date-end="renderDateRange.to" fetch-data="orders" id={{restaurantID}}>
+		        <i class="fa fa-calendar"></i> <span style="margin-left: 5px">{{ renderDateRange.from }} - {{ renderDateRange.to }}</span> <b class="caret"></b>
+		    </button>
+		</div>
+
+		<div class="order-search order-wrap-child" role="search">
+			<div class="form-group">
+		      <input type="text" class="form-control" placeholder="Search for..." ng-model="orderSearch">
+		    </div>
+		</div>
+	</div>
+	<table class="table table-header-fixed fix-border-top">
+		<thead>
+			<tr>
+				<th><div>Order Number</div></th>
+				<th><div>Status</div></th>
+				<th><div>Received At</div></th>
+				<th><div>Expected Completion</div></th>
+				<th><div>Type</div></th>
+				<th><div>Customer</div></th>
+				<th><div>Total</div></th>
+			</tr>
+		</thead>
+	</table>
+	<table id="order-table" class="table table-hover">
+		<thead>
+			<tr>
+				<th><div>Order Number</div></th>
+				<th><div>Status</div></th>
+				<th><div>Received At</div></th>
+				<th><div>Expected Completion</div></th>
+				<th><div>Type</div></th>
+				<th><div>Customer</div></th>
+				<th><div>Total</div></th>
+			</tr>
+		</thead>
+		<tbody when-scroll-ends="loadMoreOrders()" next-page="page" is-scroll-end="isScrollEnd">
+			<tr ng-repeat="order in orders | filter:orderSearch" ng-click="viewDetail(order)">
+				<td class="text-center" ng-bind="order.orderNumber"></td>
+				<td class="text-center" ng-bind="order.orderStatus"></td>
+				<td class="text-center" ng-bind="order.receivedAt | date:'MMM d, y h:mm a' | dateformated"></td>
+				<td class="text-center" ng-bind="order.expectedCompletionAt | date:'MMM d, y h:mm a' | dateformated"></td>
+				<td class="text-center" ng-bind="order.orderType"></td>
+				<td class="text-center" ng-bind="order.customer.firstName"></td>
+				<td class="text-center" ng-bind="order.total"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

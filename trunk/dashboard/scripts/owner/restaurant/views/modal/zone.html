@@ -1,0 +1,67 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.deliveryZoneName ? itemToProcess.deliveryZoneName : "Delivery Zone Name" }}</h3>
+</div>
+<div class="modal-body" >
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal" name="form">
+					<div class="form-group">
+						<label for="name" class="col-sm-4 control-label align-left">Name</label>
+						<div class="col-sm-4">
+							<input type="text" name="name" class="form-control" placeholder="" ng-model="itemToProcess.deliveryZoneName" maxlength="50" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="fee" class="col-sm-4 control-label align-left">Delivery Fee</label>
+						<div class="col-sm-4">
+							<input type="number" name="fee" class="form-control" placeholder="" ng-model="itemToProcess.deliveryFee" min="0" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="order-size" class="col-sm-4 control-label align-left">Minimum Order</label>
+						<div class="col-sm-4">
+							<input type="number" name="order-size" class="form-control" placeholder="" ng-model="itemToProcess.orderMinimun" min="0" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description" class="col-sm-4 control-label align-left">Description</label>
+						<div class="col-sm-4">
+							<input type="text" name="description" class="form-control" placeholder="" ng-model="itemToProcess.deliveryZoneDescription" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="type" class="col-sm-4 control-label align-left">Type</label>
+						<div class="col-sm-4">
+							<select class="form-control" name="type" ng-model="itemToProcess.deliveryZoneType" ng-options="type.value as type.label for type in typeZone" required ng-change="changeMapType()" ng-disabled="changedMap">              	                     
+	                        </select>	                   
+						</div>
+						<div class="col-sm-4" ng-show="itemToProcess.deliveryZoneType == 'City'">
+							<input type="text" name="city" class="form-control" placeholder="" ng-model="itemToProcess.deliveryZoneCity">
+						</div>
+						<div class="col-sm-2" ng-show="itemToProcess.deliveryZoneType == 'Radius'">
+							<input type="number" min="0" name="city" class="form-control" placeholder="" ng-model="itemToProcess.radius">
+						</div>
+						<div class="col-sm-1" ng-show="itemToProcess.deliveryZoneType == 'Radius'"><p class="help-block">Meter</p></div>
+					</div>	
+					<!-- <pre>{{ itemToProcess | json }}</pre>	
+					<pre>{{ coordinates | json }}</pre>	 -->			
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">	
+	            <div class="container" ng-if="loadMap"> 
+		          <div style="height: 300px" gmap options="circleOptions" instance="circleInstance" ng-show="itemToProcess.deliveryZoneType === 'Radius'"></div>
+		          <div style="height: 300px" gmap options="polygonOptions" instance="polygonInstance" ng-show="itemToProcess.deliveryZoneType === 'CUSTOM'"></div>
+		     	</div>		
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+<button class="btn btn-primary" ladda="saveLoading" ng-click="save()" ng-disabled="form.$invalid || coordinates.length==0">Save</button>
+</div>

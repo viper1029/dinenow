@@ -1,0 +1,56 @@
+<!-- BEGIN: DELIVERY ZONE -->
+<div id="page-heading" class="heading-content">
+  <h1>Delivery Zones</h1>
+</div>
+
+<div class="container body-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="buttons">
+        <div class="form-group">
+          <button class="btn btn-primary" ladda="createLoading" data-style="expand-left" ng-click="open()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Delivery Zones</button>
+        </div>  
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="fix-row"></div>
+      <table ng-table="tableParams" class="table table-hover">
+        <!--<thead>
+          <tr>
+            <th>Description</th>
+            <th class="text-center">Delivery Fee</th>
+            <th class="text-center">Minimum Order</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>-->
+        <tbody>
+          <tr ng-repeat="zone in $data" ng-click="showOnMap(zone)">
+            <td ng-bind="zone.description" data-title="'Description'" sortable="'description'">
+            </td>
+            <td class="text-center" ng-bind="zone.deliveryFee | currency:'$':0" data-title="'Delivery Fee'" sortable="'deliveryFee'">    
+            </td>
+            <td class="text-center" ng-bind="zone.orderMinimun | currency:'$':0" data-title="'Minimum Order'" sortable="'orderMinimun'">
+            </td>
+            <td class="text-center" style="white-space: nowrap">
+              <div class="buttons">
+                <button class="btn btn-sm btn-primary" ladda="zone.loading" data-style="none" ng-click="open(zone, $event)"><i class="fa fa-pencil"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" ng-click="deleteZone(zone, $event)"><i class="fa fa-times"></i> Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="container pad-top">
+            <!-- <div style="height: 300px" gmap options="zoneMap"></div> -->
+            <div id="zone-map" style="height: 300px" ></div>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div> 
+<!-- END: DELIVERY ZONE -->

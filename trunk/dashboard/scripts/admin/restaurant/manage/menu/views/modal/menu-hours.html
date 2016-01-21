@@ -1,0 +1,48 @@
+<div class="modal-header text-center">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">{{ itemToProcess.menuName }}</h3>
+	<small>{{ itemToProcess.menuDescription }}</small>
+</div>
+<div class="modal-body">
+	<div class="container">
+		<!-- <pre>{{ itemToProcess | json }}</pre> -->
+		<div class="row">
+			<h4 style="padding:10px">Add menu's hour: </h4>
+			<div class="col-md-12 fix-modal-height">
+				<form>
+					<div class="form-inline">
+		                <div class="form-group fix-inline pad-bot">
+		                    <select class="form-control" ng-model="item.weekDayType" ng-options="day.value as day.label for day in datetimes.days">    
+		                    </select>
+		                </div>
+		                <div class="form-group fix-inline pad-bot">
+		                    <label class="control-label">From</label>
+		                    <select id="input" class="form-control" ng-model="item.fromTime" ng-options="time for time in datetimes.startTimes" ng-disabled="!item.weekDayType" ng-change="initEndTime(item.fromTime)">                     
+		                    </select>
+		                </div>
+		                <div class="form-group fix-inline pad-bot">
+		                    <label class="control-label">To</label>
+		                    <select id="input" class="form-control" ng-model="item.toTime" ng-disabled="!item.fromTime" ng-options="time for time in datetimes.endTimes">                     
+		                    </select>
+		                </div>                             
+		                <div class="form-group fix-inline">
+		    				<button type="button" class="btn btn-primary" ng-disabled="!item.toTime" ng-click="addEvents(item)"><i class="fa fa-check"></i> Add</button>
+		    			</div>
+		            </div>		
+				</form>
+			</div>
+		</div>
+		<div class="row" ng-if="isLoadedCalendar">
+			<div class="col-md-12">
+				<button class="btn btn-default pull-left" ng-click="onClearEvents()" ng-disabled="isLoadingEvents"><i class="fa fa-trash"></i> Clear</button>
+				<div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid">Save</button>
+</div>
+<!-- <pre>{{itemToProcess|json}}</pre> -->

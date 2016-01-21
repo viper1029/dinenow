@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DineNow Dashboard</title>
+
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link href="assets/css/main.css" rel="stylesheet" type='text/css' >
+    <link href="assets/css/styles.css" rel="stylesheet" type='text/css' />
+
+    <script type="text/javascript" src="assets/js/jquery.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing,places"></script>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/modernizr/modernizr.js"></script>
+
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+    <script src="bower_components/gmaps/gmaps.js"></script>
+    <script src="bower_components/angular-loading-bar/src/loading-bar.js"></script>
+    <script src="bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
+
+    <script src="bower_components/ladda/dist/spin.min.js"></script>
+
+    <script src="bower_components/ladda/dist/ladda.min.js"></script>
+
+    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+    <script type="text/javascript" src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+
+    <script src="bower_components/angular-ladda/dist/angular-ladda.js"></script>
+    <script src="bower_components/select2/select2.js"></script>
+    <script src="bower_components/angular-ui-select2/src/select2.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script type="text/javascript" src="bower_components/angular-payments/lib/angular-payments.js"></script>
+    <script type="text/javascript" src="bower_components/icheck/icheck.min.js"></script>
+    <script src="bower_components/ng-table/dist/ng-table.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/ui-select/dist/select.js"></script>
+    <script type="text/javascript" src="bower_components/angular-toArrayFilter/toArrayFilter.js"></script>
+
+    <script type="text/javascript" src="bower_components/moment/moment.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <script type="text/javascript" src="bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
+    <script type="text/javascript" src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
+    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
+
+
+    <script src="bower_components/flow.js/dist/flow.js"></script>
+    <script src="bower_components/ng-flow/dist/ng-flow.js"></script>
+    <script src="bower_components/enquire/dist/enquire.js"></script>
+    <script src="bower_components/alertify-js/build/alertify.js"></script>
+
+    <script src="components/routes.js"></script>
+    <script src="components/directives.js"></script>
+    <script src="components/services.js"></script>
+    <script src="tempCtrls.js"></script>
+    <script src="components/admin/addonController.js"></script>  
+    <script src="components/admin/categoriesController.js"></script>  
+    <script src="components/admin/infoController.js"></script>  
+    <script src="components/admin/itemController.js"></script>  
+    <script src="components/admin/manageOrderController.js"></script>  
+    <script src="components/admin/manageRestaurant.js"></script>  
+    <script src="components/admin/manageUserController.js"></script>  
+    <script src="components/admin/menuController.js"></script>  
+    <script src="components/admin/modifierController.js"></script>  
+    <script src="components/admin/orderController.js"></script>  
+    <script src="components/admin/orderTypeController.js"></script>  
+    <script src="components/admin/planController.js"></script>  
+    <script src="components/admin/restaurantController.js"></script>  
+    <script src="components/admin/sizeController.js"></script>  
+    <script src="components/admin/submenuController.js"></script>  
+    <script src="components/admin/subscriptionController.js"></script>  
+    <script src="components/admin/taxController.js"></script>  
+    <script src="components/admin/userController.js"></script>  
+    <script src="components/admin/zonesController.js"></script>  
+    <script src="components/owner/addonController.js"></script>  
+    <script src="components/owner/categoriesController.js"></script>  
+    <script src="components/owner/infoController.js"></script>  
+    <script src="components/owner/itemsController.js"></script>  
+    <script src="components/owner/menuController.js"></script>  
+    <script src="components/owner/modifiersController.js"></script>  
+    <script src="components/owner/orderController.js"></script>  
+    <script src="components/owner/orderTypeController.js"></script>  
+    <script src="components/owner/sizeController.js"></script>  
+    <script src="components/owner/submenuController.js"></script>  
+    <script src="components/owner/subscriptionController.js"></script>  
+    <script src="components/owner/zonesController.js"></script>  
+    <script src="components/googleMapsController.js"></script>  
+    <script src="components/loginController.js"></script>  
+    <script src="components/signupController.js"></script>  
+</head>
+<body class=""
+      ng-app="app"
+      ng-controller="MainController"
+      ng-class="{
+              'static-header': !style_fixedHeader,
+              'focusedform': style_fullscreen,
+              'layout-horizontal': style_layoutHorizontal,
+              'fixed-layout': style_layoutBoxed,
+              'collapse-leftbar': style_leftbarCollapsed && !style_leftbarShown,
+              'show-rightbar': style_rightbarCollapsed,
+              'show-leftbar': style_leftbarShown
+            }"
+      ng-click="hideSearchBar();hideHeaderBar();"
+      ng-cloak>
+<div ui-view></div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<div id="page-heading" class="heading-content">
+    <h1>Operating Hours</h1>
+    <button class="btn btn-primary button-save-right" ladda="isLoadingSave" ng-click="onSave()" ng-disabled="events.length < 1"><i class="fa fa-floppy-o"></i> Save</button>
+</div>
+<div class="container body-content">
+    <div class="row">
+        <div class="col-lg-6">
+            <div>
+                <label><i class="fa fa-square color-dinein"></i> Dine-In Hours</label>
+                <div class="form-inline">
+                    <div class="form-group fix-inline pad-bot">
+                        <select class="form-control" required="required" ng-model="dinein.day" ng-options="day.label for day in datetimes.days">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label">From</label>
+                        <select id="input" class="form-control" required="required" ng-model="dinein.startTime" ng-options="time for time in datetimes.startTimes" ng-disabled="!dinein.day" ng-change="initEndTime().dinein(dinein.startTime)">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label">To</label>
+                        <select id="input" class="form-control" required="required" ng-model="dinein.endTime" ng-disabled="!dinein.startTime" ng-options="time for time in datetimes.dineinEndTimes">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <button type="button" class="btn btn-primary" ng-disabled="!dinein.endTime" ng-click="addEvents().dinein(dinein)"><i class="fa fa-check"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-bottom: 20px"></div>
+            <div>
+                <label><i class="fa fa-square color-delivery"></i> Accept Delivery &nbsp;&nbsp;</label>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary-alt btn-sm" ng-class="{true: 'active'}[isAccept.delivery==true]" ng-model="isAccept.delivery" ng-click="isAccept.delivery=true">Yes</button>
+                    <button type="button" class="btn btn-primary-alt btn-sm" ng-class="{true: 'active'}[isAccept.delivery==false]" ng-model="isAccept.delivery" ng-click="isAccept.delivery=false">No</button>
+                </div>
+                <div class="form-inline">
+                    <div class="form-group fix-inline pad-bot">
+                        <select class="form-control" required="required" ng-model="delivery.day" ng-disabled="!isAccept.delivery" ng-options="day.label for day in datetimes.days">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label" ng-class="{true: 'disable-text'}[!isAccept.delivery]">From</label>
+                        <select id="input" class="form-control" required="required" ng-model="delivery.startTime" ng-options="time for time in datetimes.startTimes" ng-disabled="!delivery.day || !isAccept.delivery" ng-change="initEndTime().delivery(delivery.startTime)">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label" ng-class="{true: 'disable-text'}[!isAccept.delivery]">To</label>
+                        <select id="input" class="form-control" required="required" ng-model="delivery.endTime" ng-disabled="!delivery.startTime || !isAccept.delivery" ng-options="time for time in datetimes.deliveryEndTimes">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <button type="button" class="btn btn-primary" ng-disabled="!delivery.endTime || !isAccept.delivery" ng-click="addEvents().delivery(delivery)"><i class="fa fa-check"></i> Add</button>
+                    </div>
+                </div>
+                <span class="alert-text" ng-show="!isAccept.delivery"><i class="fa fa-exclamation-triangle"></i> Delivery is not enabled</span>
+            </div>
+            <div style="padding-bottom: 20px"></div>
+            <div>
+                <label><i class="fa fa-square color-takeout"></i> Accept TakeOut &nbsp;&nbsp;</label>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary-alt btn-sm" ng-class="{true: 'active'}[isAccept.takeout==true]" ng-model="isAccept.takeout" ng-click="isAccept.takeout=true">Yes</button>
+                    <button type="button" class="btn btn-primary-alt btn-sm" ng-class="{true: 'active'}[isAccept.takeout==false]" ng-model="isAccept.takeout" ng-click="isAccept.takeout=false">No</button>
+                </div>
+                <div class="form-inline">
+                    <div class="form-group fix-inline pad-bot">
+                        <select class="form-control" required="required" ng-model="takeout.day" ng-disabled="!isAccept.takeout" ng-options="day.label for day in datetimes.days">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label" ng-class="{true: 'disable-text'}[!isAccept.takeout]">From</label>
+                        <select id="input" class="form-control" required="required" ng-model="takeout.startTime" ng-options="time for time in datetimes.startTimes" ng-disabled="!takeout.day || !isAccept.takeout" ng-change="initEndTime().takeout(takeout.startTime)">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <label class="control-label" ng-class="{true: 'disable-text'}[!isAccept.takeout]">To</label>
+                        <select id="input" class="form-control" required="required" ng-model="takeout.endTime" ng-disabled="!takeout.startTime || !isAccept.takeout" ng-options="time for time in datetimes.takeoutEndTimes">
+                        </select>
+                    </div>
+                    <div class="form-group fix-inline pad-bot">
+                        <button type="button" class="btn btn-primary" ng-disabled="!takeout.endTime || !isAccept.takeout" ng-click="addEvents().takeout(takeout)"><i class="fa fa-check"></i> Add</button>
+                    </div>
+                </div>
+                
+                <span class="alert-text" ng-show="!isAccept.takeout"><i class="fa fa-exclamation-triangle"></i> Take out is not enabled</span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="text-center" ng-if="isLoadingEvents">
+                <i class="fa fa-cog fa-spin"></i> Loading...
+            </div>
+            <div>
+                <button class="btn btn-default pull-right" ng-click="onClearEvents()" ng-disabled="isLoadingEvents"><i class="fa fa-trash"></i> Clear</button>
+                <div id="order-calendar" ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <pre>{{events|json}}</pre>
+<pre>{{eventSources|json}}</pre> -->

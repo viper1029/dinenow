@@ -1,0 +1,27 @@
+<div id="wrapper">
+    <div id="menu-toggle" class="handle-leftbar"><i class="fa fa-bars"></i></div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <div id='cssmenu' class="text-center">
+            <ul>
+               <li ><a ui-sref="app.owner.menu.menus.list" ng-class="{true:'menu-active'}[$state.includes('app.owner.menu.menus')]">Menus</a></li>          
+               <li><a ui-sref="app.owner.menu.submenu.list" ng-class="{true:'menu-active'}[$state.includes('app.owner.menu.submenu')]">Sub Menu</a></li>          
+               <li><a ui-sref="app.owner.menu.addon" ui-sref-active="menu-active">Sides/Addon</a></li>          
+               <li><a ui-sref="app.owner.menu.items" ui-sref-active="menu-active">Items</a></li>          
+               <li><a ui-sref="app.owner.menu.categories" ui-sref-active="menu-active">Categories</a></li>          
+               <li><a ui-sref="app.owner.menu.modifiers" ui-sref-active="menu-active">Modifiers</a></li>          
+               <li><a ui-sref="app.owner.menu.sizes" ui-sref-active="menu-active">Sizes</a></li>          
+            </ul>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid" ui-view>
+            
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>

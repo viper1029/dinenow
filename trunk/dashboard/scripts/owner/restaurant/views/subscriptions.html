@@ -1,0 +1,120 @@
+<div id="page-heading" class="heading-content">
+  <h1>Subscriptions</h1>
+</div>
+<div class="container body-content text-center" ng-if="isLoadingData">
+    <i class="fa fa-cog fa-spin"></i> Loading Data...
+</div>
+<div ng-if="!isLoadingData">
+	<div class="container body-content" ng-if="planAssigned">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default panel-custom">
+					<div class="panel-heading">
+						<h4>Register / Update Subscription</h4>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" ng-click="onAddCard()" ng-disabled="subscription"><i class="fa fa-credit-card"></i> Add Payment Method</button>
+						</div>
+
+						<div class="panel panel-default panel-custom" ng-if="cardInfo">
+							<div class="panel-heading">
+								<h4>Card Infomation</h4>
+								<button type="button" class="btn btn-default btn-sm btn-trash" ng-click="onDeleteCard(cardInfo)"><i class="fa fa-trash"></i></button>
+							</div>
+							<div class="panel-body">
+							    <div class="form-horizontal">
+									<fieldset>
+										<div class="form-group">
+											<label class="col-md-3 control-label">Username: </label>
+											<div class="col-md-6">
+												<p class="help-block" ng-bind="cardInfo.name"></p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-3 control-label">Card Number: </label>
+											<div class="col-md-6">
+												<p class="help-block">**** **** **** {{ cardInfo.last4 }}</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-3 control-label">Brand: </label>
+											<div class="col-md-6">
+												<p class="help-block" ng-bind="cardInfo.brand"></p>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default panel-custom">
+					<div class="panel-heading">
+						<h4>Subscription Information</h4>
+					</div>
+					<div class="panel-body">
+						<div class="text-center" ng-if="isLoadingData">
+				            <i class="fa fa-cog fa-spin"></i> Loading Data...
+				        </div>
+					   <div class="form-horizontal" ng-if="!isLoadingData">
+							<div ng-if="subscription">
+							   	<div ng-if="subscription.plan.trialPeriodDays > 0">
+									<div class="form-group">
+										<label class="col-md-3 control-label">Previous Payment: </label>
+										<div class="col-md-6">
+											<p class="help-block" ng-bind="subscription.trialStart * 1000 | date:'medium'"></p>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-3 control-label">Next Payment: </label>
+										<div class="col-md-6">
+											<p class="help-block" ng-bind="subscription.trialEnd * 1000 | date:'medium'"></p>
+										</div>
+									</div>
+							   	</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">Name Pack: </label>
+									<div class="col-md-3">
+										<p class="help-block">{{ subscription.plan.name }}</p>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">Price: </label>
+									<div class="col-md-3">
+										<p class="help-block">{{ subscription.plan.amount / 100 | currency:'$' }} / {{  subscription.plan.interval }} </p>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label"></label>
+									<div class="col-md-6">
+										<alert type="success" ng-show="subscription">
+											<p><i class="fa fa-check-circle-o"></i> Next Payment: <b>{{ subscription.currentPeriodEnd * 1000 | date:'medium' }}</b></p>
+										</alert>
+									</div>
+								</div>
+							</div>
+							<p ng-if="!subscription">No Subscription</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container body-content" ng-if="!planAssigned">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default panel-custom">
+					<div class="panel-heading">
+					   <h4>No Subscription</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

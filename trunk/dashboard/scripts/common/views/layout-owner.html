@@ -1,0 +1,53 @@
+
+<nav class="nav-top">
+  <!-- <div class="handle"><a href="javascript:;"><i class="fa fa-bars"></i></a></div> -->
+  <div class="nav-logo"><a href="">DineNow</a></div>
+  <ul class="nav-item">
+    <li><a ui-sref="app.owner.orders" ui-sref-active="active">Orders</a></li>
+    <li><a ui-sref="app.owner.menu.menus.list" ng-class="{true:'active'}[$state.includes('app.owner.menu')]">Menus</a></li>
+    <li><a ui-sref="app.owner.restaurant.info" ng-class="{true:'active'}[$state.includes('app.owner.restaurant')]">Restaurant Details</a></li>
+  </ul>
+  <div class="nav-status">
+    <div ng-if="isOnline" class="handle-status">
+      <a href="javascript:;"><i class="fa fa-circle status-online"></i> Online</a>
+      <div class="box-status" ng-if="isOnline">
+        <span class="box-triangle">▲</span>
+        <ul>
+          <li><a href="javascript:;" ng-click="changeStatus()"><i class="fa fa-circle status-offline"></i> Offline</a></li>
+        </ul>
+      </div>
+    </div>
+    <div ng-if="!isOnline" class="handle-status">
+      <a href="javascript:;"><i class="fa fa-circle status-offline"></i> Offline</a>
+      <div class="box-status"  ng-if="!isOnline">
+        <span class="box-triangle">▲</span>
+        <ul>
+          <li><a href="javascript:;" ng-click="changeStatus()"><i class="fa fa-circle status-online"></i> Online</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <ul class="nav-info">
+    <li>
+      <a href="javascript:;"><span id="info-name">{{ username ? username : "Anonymous" }}</span></a>
+    </li>
+  </ul>
+  <div class="box-user">
+    <span class="box-triangle">▲</span>
+    <ul>
+      <li><a href="javascript:;" ng-click="logOut()"><i class="fa fa-sign-out"></i> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="collapse-menu">
+  <ul>
+    <li><a ui-sref="app.owner.orders" ui-sref-active="active">Orders</a></li>
+    <li><a ui-sref="app.owner.menu.menus.list" ng-class="{true:'active'}[$state.includes('app.owner.menu')]">Menus</a></li>
+    <li><a ui-sref="app.owner.restaurant.info" ng-class="{true:'active'}[$state.includes('app.owner.restaurant')]">Restaurant Details</a></li>
+  </ul>
+</div>
+<section class="main-content">
+  <div ui-view class="owner">
+
+  </div> 
+</section>

@@ -1,0 +1,47 @@
+<!-- BEGIN: NOTIFICATION -->
+<div id="page-heading" class="heading-content">
+  <h1>Notifications</h1>
+</div>
+
+<div class="container body-content">
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="form" class="form-horizontal" role="form" style="margin: 0 35px">
+        <div class="form-group">
+          <label for="phone" class="col-sm-2">Phone</label>
+          <div class="col-sm-6 pad-bot">
+            <input type="text" name="phone" class="form-control" placeholder="">
+          </div>         
+        </div>
+        <div class="form-group">
+          <label for="sms" class="col-sm-2">SMS</label>
+          <div class="col-sm-6 pad-bot">
+            <input type="text" name="sms" class="form-control" placeholder="">
+          </div>
+          <div class="col-sm-4">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==true]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=true">On</button>
+              <button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==false]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=false">Off</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email" class="col-sm-2">Email</label>
+          <div class="col-sm-6 pad-bot">
+            <input type="text" name="email" class="form-control" placeholder="">
+          </div>    
+          <div class="col-sm-4">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==true]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=true">On</button>
+              <button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==false]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=false">Off</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>       
+      </form>
+    </div>
+  </div>
+</div> 
+<!-- END: NOTIFICATION -->

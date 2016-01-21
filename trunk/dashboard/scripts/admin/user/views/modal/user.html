@@ -1,0 +1,76 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">×</button>
+	<h3 class="modal-title text-center">Create a New User</h3>
+</div>
+<div class="modal-body">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal" name="form">
+					
+					<div class="form-group">
+						<label for="last-name" class="col-sm-4 control-label align-left">First Name</label>
+						<div class="col-sm-8">
+							<input type="text" name="last-name" class="form-control" placeholder="" ng-model="itemToProcess.firstName" required>
+						</div>
+					</div>
+
+					
+					<div class="form-group">
+						<label for="last-name" class="col-sm-4 control-label align-left">Last Name</label>
+						<div class="col-sm-8">
+							<input type="text" name="last-name" class="form-control" placeholder="" ng-model="itemToProcess.lastName" required>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="password" class="col-sm-4 control-label align-left">Password Default</label>
+						<div class="col-sm-8">
+							<input type="password" name="password" class="form-control" placeholder="" ng-model="itemToProcess.password" required>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label for="email" class="col-sm-4 control-label align-left">Email</label>
+						<div class="col-sm-8">
+							<input type="email" strict-email name="email" class="form-control" placeholder="" ng-model="itemToProcess.email" required>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="phone" class="col-sm-4 control-label align-left">Phone</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" maskinput data-inputmask="'mask':'+19999999999'" ng-model="itemToProcess.phone" required="required">
+						</div>
+					</div>
+
+					<div class="form-group">
+     				 <label for="restaurant" class="col-sm-4 control-label align-left">Restaurant</label>
+       				<div class="col-sm-8">
+                    	<input type="text" class="form-control" placeholder="Search" ng-model="restaurantSearch">
+                  		</div>
+                	</div>
+                	 <label for="restaurant" class="col-sm-4 control-label align-left"></label>
+      				<div class="col-sm-8">
+				       <select class="form-control" ng-model="itemToProcess.restaurantId" ng-options="restaurant.id as restaurant.name for restaurant in restaurants| filter:restaurantSearch" required ></select>
+				     </div>
+     </div>
+
+					<div class="form-group">
+						<label for="phone" class="col-sm-4 control-label align-left">Role</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" ng-model="itemToProcess.role" required="required" disabled>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+<button class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid">Save</button>
+</div>
