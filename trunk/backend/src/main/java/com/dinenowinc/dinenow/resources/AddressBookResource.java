@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import javax.ws.rs.core.Response.Status;
 import com.dinenowinc.dinenow.dao.AddressBookDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.AddressBook;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Restaurant;
@@ -71,7 +71,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 	}
 	
 	@Override
-	protected Response onAdd(AccessToken access, AddressBook entity, Restaurant restaurant) {
+	protected Response onAdd(User access, AddressBook entity, Restaurant restaurant) {
 		
 		Customer cus = customerDao.findOne(access.getId().toString());
 		dao.save(entity);
@@ -115,7 +115,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data")
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		/*List<AddressBook> entities = addressBookDao.getByCustomer(access.getId().toString());
 		List<HashMap<String, Object>> dtos = fromEntities(entities);
 		return ResourceUtils.asSuccessResponse(Status.OK, dtos);*/
@@ -130,7 +130,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		return super.get(access, id);
 	}
 	
@@ -151,7 +151,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 			AddressBookValidator typeValidator = new AddressBookValidator(dto);
 			List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
@@ -171,7 +171,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 				AddressBookValidator typeValidator = new AddressBookValidator(dto);
 				List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
@@ -192,7 +192,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return super.delete(access, id);
 		}
