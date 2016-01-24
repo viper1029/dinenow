@@ -23,9 +23,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.core.header.FormDataContentDisposition;
+//import com.sun.jersey.multipart.FormDataBodyPart;
+//import com.sun.jersey.multipart.FormDataParam;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
@@ -60,7 +60,7 @@ public class ImageResource {
 	
 	
 	
-	
+	/*
 	@POST
 	@Path("/upload")
 	@ApiOperation(value="api upload image item",notes="POST file=XXXXXXXXXXXXXXXXX")
@@ -90,7 +90,7 @@ public class ImageResource {
 			return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
- 
+ */
 	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
  
 		try {

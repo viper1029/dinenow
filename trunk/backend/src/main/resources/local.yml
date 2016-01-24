@@ -1,7 +1,14 @@
 host: localhost
 port: 30505
+
 # The reset key will expire after x amount of time (12H) 
 timeResetKey: 12
+
+swagger:
+  resourcePackage: com.dinenowinc.dinenow.resources
+
+server:
+  rootPath: '/api/v1/*'
 
 isInitDb: false
 # Logging settings.

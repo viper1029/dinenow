@@ -39,6 +39,9 @@
     <class>com.dinenowinc.dinenow.model.SubMenu</class>
     <class>com.dinenowinc.dinenow.model.Tax</class>
     <class>com.dinenowinc.dinenow.model.Version</class>
+      <class>com.dinenowinc.dinenow.model.RestaurantFacilities</class>
+    <class>com.dinenowinc.dinenow.model.PaymentType</class>
+    <class>com.dinenowinc.dinenow.model.ClosedDay</class>
 		<properties>
 			<property name="connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider" />
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import javax.persistence.RollbackException;
@@ -22,11 +23,9 @@ import javax.ws.rs.core.Response.Status;
 import com.dinenowinc.dinenow.dao.CouponDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Coupon;
 import com.dinenowinc.dinenow.model.CouponType;
 import com.dinenowinc.dinenow.model.NetworkStatus;
-import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
@@ -129,19 +128,19 @@ public class CouponResource extends AbstractResource<Coupon> {
 
 
 	@Override
-	protected Response onAdd(AccessToken access, Coupon entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Coupon entity, Restaurant restaurant) {
 		dao.save(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
 	}
 
 	@Override
-	protected Response onUpdate(AccessToken access, Coupon entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, Coupon entity, Restaurant restaurant) {
 		dao.update(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));	
 	}
 
 	@Override
-	protected Response onDelete(AccessToken access,Coupon entity) {
+	protected Response onDelete(User access,Coupon entity) {
 		try {
 			dao.delete(entity);
 			return ResourceUtils.asSuccessResponse(Status.OK, null);
@@ -161,7 +160,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 			@ApiResponse(code = 401, message = "Access denied for user"),
 	})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.getAll(access);
 		}
@@ -178,7 +177,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 			@ApiResponse(code = 401, message = "Access denied for user") 
 	})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.get(access, id);
 		}
@@ -203,7 +202,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 	})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.add(access, dto);
 		}
@@ -227,7 +226,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 	})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN) {
 			Coupon coupon = couponDao.findOne(id);
 			if (coupon != null) {
@@ -251,7 +250,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 			@ApiResponse(code = 401, message = "Access denied for user")
 	})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN ) {
 			Coupon coupon = couponDao.findOne(id);
 			if (coupon != null) {

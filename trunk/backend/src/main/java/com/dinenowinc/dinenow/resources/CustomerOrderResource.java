@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.io.FileNotFoundException;
@@ -27,7 +28,6 @@ import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.OrderDetailsDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.DeliveryZone;
@@ -263,7 +263,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	}
 
 	@Override
-	protected Response onAdd(AccessToken access, Order entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Order entity, Restaurant restaurant) {
 		//corrected
 		Customer cus = customerDao.findOne(access.getId().toString());
 		entity.setCreatedBy(cus.getLastName());
@@ -275,13 +275,13 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	}
 
 	@Override
-	protected Response onUpdate(AccessToken access, Order entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, Order entity, Restaurant restaurant) {
 		return super.onUpdate(access, entity, restaurant);
 	}
 
 
 	@Override
-	protected Response onDelete(AccessToken access, Order entity) {
+	protected Response onDelete(User access, Order entity) {
 		return super.onDelete(access, entity);
 	}
 
@@ -331,7 +331,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			+ "<br/>  \"tip\": 0,"
 			+ "<br/>  \"orderType\": \"DELIVERY\""
 			+ "<br/>}</code></pre>")
-	public Response checkOut(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto){ System.out.println(access.getRole());
+	public Response checkOut(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto){ System.out.println(access.getRole());
 
 	double subtotal = 0;
 	double tip = 0;
@@ -538,7 +538,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	//	@GET
 	//	@Path("/orderByOwner")
 	//	@ApiOperation(value="api get List Order for Owner", notes="<pre><code></code></pre>")
-	//	public Response getOrderByOwner(@Auth AccessToken access){
+	//	public Response getOrderByOwner(@Auth User access){
 	//		if (access.getRole() == UserRole.OWNER) {
 	//			List<CustomerOrder> entities = customerOrderDao.findByOwner(access.getId().toString());
 	//			List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
@@ -554,7 +554,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	//	@GET
 	//	@ApiOperation("get order by customer")
 	//	@Path("/orderByCustomer")
-	//	public Response getOrder(@Auth AccessToken access){
+	//	public Response getOrder(@Auth User access){
 	//		if (access.getRole() == UserRole.CUSTOMER) {
 	//			List<CustomerOrder> entities = customerOrderDao.findByCustomer(access.getId().toString());
 	//			List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
@@ -571,7 +571,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	@GET
 	@ApiOperation("api get all Customer Order")
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		return super.getAll(access);
 	}
 
@@ -581,7 +581,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	@Path("/{id}")
 	@ApiOperation("api get detail of Customer Order")
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access,@PathParam("id") String id) {
 		return super.get(access, id);
 	}
 
@@ -597,7 +597,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			+ "<br/>    \"tip\": 0"
 			+ "<br/>  }</code></pre>")
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		System.out.println("@@@@@@@@@" + dto);
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return onAdd(access, fromFullDto(dto), null);
@@ -620,7 +620,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			+ "<br/>  }</code></pre>")
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		return super.update(access, id, dto);
 	}
 
@@ -629,7 +629,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	@Path("/{id}")
 	@ApiOperation("delete Customer Order Detail by id")
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		return super.delete(access, id);
 	}
 

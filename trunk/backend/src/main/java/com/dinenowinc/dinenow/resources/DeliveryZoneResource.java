@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import com.dinenowinc.dinenow.dao.DeliveryZoneDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.error.ServiceErrorValidationMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.DeliveryZone;
 import com.dinenowinc.dinenow.model.DeliveryZoneType;
 import com.dinenowinc.dinenow.model.Restaurant;
@@ -196,7 +196,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	
 	//==============================ACTION====================================//
 	@Override
-	protected Response onAdd(AccessToken access, DeliveryZone entity, Restaurant restaurant) {
+	protected Response onAdd(User access, DeliveryZone entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -206,13 +206,13 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	}
 	
 	@Override
-	protected Response onUpdate(AccessToken access, DeliveryZone entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, DeliveryZone entity, Restaurant restaurant) {
 		dao.update(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));	
 	}
 	
 	@Override
-	protected Response onDelete(AccessToken access, DeliveryZone entity) {
+	protected Response onDelete(User access, DeliveryZone entity) {
 		try {
 			dao.delete(entity);
 			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
@@ -236,7 +236,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 401, message = "access denied for user") 
 			})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 //		if (access.getRole() == UserRole.OWNER) {
 //			List<DeliveryZone> entities = deliveryZoneDao.getListByUser(access);		
 //			List<HashMap<String, Object>> dtos = fromEntities(entities);
@@ -258,7 +258,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 401, message = "access denied for user") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access,@PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -298,7 +298,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, dto);
 		List<ServiceErrorMessage> mListError = deliveryZoneValidator.validateForAdd();
 		if (mListError.size() == 0) {
@@ -341,7 +341,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, dto);
 		ServiceErrorValidationMessage mListError = deliveryZoneValidator.validateForUpdate();
 		if (mListError.getErrors().size() == 0) {
@@ -359,7 +359,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 404, message = "Cannot found entity")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		return super.delete(access, id);
 	}
 	
@@ -372,7 +372,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
-	public Response getAllByRestaurantID(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response getAllByRestaurantID(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (!dto.containsKey("restaurantId")) {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND,new ServiceErrorMessage("restaurant not found"));
 		}

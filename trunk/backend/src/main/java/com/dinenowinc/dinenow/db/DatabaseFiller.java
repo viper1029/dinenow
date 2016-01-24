@@ -44,6 +44,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,7 +52,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class DatabaseFiller {
 
-	Logger logger = Logger.getLogger(DatabaseFiller.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DatabaseFiller.class);
 	
 	static DatabaseFiller instance = null;
 	
@@ -68,28 +69,27 @@ public class DatabaseFiller {
 	public void initData() {
 	//	addRestaurantUserMenu();
 	//	addCustomer();
-		addVersion();
+		//addVersion();
 	//	addRestaurantAndDeliveryZone();
 		addAdmin();
 	}
 
 
 	public void addAdmin() {
-		// TODO Auto-generated method stub
-		System.out.println("admin data entering");
 		AdminService adminService = injector.getInstance(AdminService.class);
+		LOGGER.debug("Creating admin user");
 
-		Admin admin = new Admin();
-		admin.setFirstName("Admin");
-		admin.setLastName("Admin"); 
-		admin.setEmail("admin@admin.com");
-		admin.setPassword(MD5Hash.md5Spring("admin@123"));
-		admin.setCreatedBy("admin");
-		admin.setCreatedDate(new Date());
-		
-		adminService.createAdmin(admin);
-		
-		
+		final String adminEmail = "admin@admin.com";
+		if(adminService.getUserByEmail(adminEmail) != null) {
+      Admin admin = new Admin();
+      admin.setFirstName("Admin");
+      admin.setLastName("Admin");
+      admin.setEmail(adminEmail);
+      admin.setPassword(MD5Hash.md5Spring("admin@123"));
+      admin.setCreatedBy("admin");
+      admin.setCreatedDate(new Date());
+      adminService.createAdmin(admin);
+    }
 	}
 
 

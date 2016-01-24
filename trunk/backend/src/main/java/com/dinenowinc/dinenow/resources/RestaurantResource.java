@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.text.DateFormat;
@@ -44,7 +45,6 @@ import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.dao.SubMenuDao;
 import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.AddOn;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Category;
@@ -192,7 +192,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			@ApiResponse(code = 401, message = "only for customer") ,
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
-	public Response checkOut(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+	public Response checkOut(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 		try {
 			if (access.getRole() == UserRole.CUSTOMER) {
 				Restaurant restaurant = restaurantDao.findOne(restaurant_id);
@@ -291,7 +291,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
 	@GET
-	public Response searchByOrder(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id,
+	public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,
 			@QueryParam("query") String query, @QueryParam("customer_phone") String c_ph , @QueryParam("order_no") long o_no ){
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			if (query != null) {
@@ -338,7 +338,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
 	@GET
-	public Response getDeliverByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getDeliverByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<DeliveryZone> entities = deliveryZoneDao.getAllDeliveryZonesByRestaurantId(restaurant_id);
@@ -362,7 +362,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
 	@GET
-	public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status, @QueryParam("from") String from,@QueryParam("to") String to, @QueryParam("page") String page, @QueryParam("size") String size)
+	public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status, @QueryParam("from") String from,@QueryParam("to") String to, @QueryParam("page") String page, @QueryParam("size") String size)
 	{	
 
 		int iPage = 1;
@@ -534,7 +534,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
-	public Response getUsersByRestaurantID(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id) {
+	public Response getUsersByRestaurantID(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
 		if (restaurantDao.findOne(restaurant_id) == null) {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND,new ServiceErrorMessage("restaurant not found"));
 		}
@@ -554,7 +554,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/items")
 	@ApiOperation("Get All Items By Restaurant")
 	@GET
-	public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Item> entities = itemDao.getListByRestaurant(restaurant_id);		
@@ -593,7 +593,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/sizes")
 	@ApiOperation("Get All Sizes By Restaurant")
 	@GET
-	public Response getSizesByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getSizesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
  {
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Size> entities = sizeDao.getSizesByRestaurantId(restaurant_id);
@@ -613,7 +613,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/addons")
 	@ApiOperation("Get All AddOns By Restaurant")
 	@GET
-	public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<AddOn> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
@@ -632,7 +632,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/categories")
 	@ApiOperation("Get All Categories By Restaurant")
 	@GET
-	public Response getCategoriesByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getCategoriesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Category> entities = categoryDao.getCategoriesByRestaurantId(restaurant_id);
@@ -652,7 +652,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/taxes")
 	@ApiOperation("Get All Taxes By Restaurant")
 	@GET
-	public Response getTaxesByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getTaxesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Tax> entities = taxeDao.getTaxesByRestaurantId(restaurant_id);
@@ -681,7 +681,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/submenus")
 	@ApiOperation("Get All SubMenus By Restaurant")
 	@GET
-	public Response getSubMenusByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getSubMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<SubMenu> entities = submenuDao.getListByRestaurant(restaurant_id);
@@ -716,7 +716,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/menus")
 	@ApiOperation("Get All Menus By Restaurant")
 	@GET
-	public Response getMenusByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Menu> entities = menuDao.getMenusByRestaurantId(restaurant_id);
@@ -744,7 +744,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/comments")
 	@ApiOperation("Get All Reviews By Restaurant")
 	@GET
-	public Response getReviewsByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id)
+	public Response getReviewsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id)
 	{	
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Review> entities = reviewDao.getReviewsByRestaurantId(restaurant_id);
@@ -760,7 +760,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/modifiers")
 	@ApiOperation("Get All Modifier By Restaurant")
 	@GET
-	public Response getModifiersByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id){
+	public Response getModifiersByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id){
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			List<Modifier> entities = modifierDao.getModifiersByRestaurantId(restaurant_id);
 			System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"+entities.size());
@@ -802,7 +802,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 	@Path("/{restaurant_id}/holiday")
 	@ApiOperation(value = "Set time  Dine-In Hours, Accept Delivery, Accept TakeOut")
 	@PUT
-	public Response setRestaurantHoliday(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+	public Response setRestaurantHoliday(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 		Restaurant restaurant = restaurantDao.findOne(restaurant_id);
 		if (restaurant != null) {
 			
@@ -880,7 +880,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			+ "<br/>  \"timeZoneId\": \"Asia/Kolkata\""
 			+ "<br/>}</code></pre>")
 	@PUT
-	public Response setTimeRestaurant(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+	public Response setTimeRestaurant(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 		Restaurant restaurant = restaurantDao.findOne(restaurant_id);
 		if (restaurant != null) {
 			
@@ -1441,7 +1441,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 400, message = "page not format number"),
 			@ApiResponse(code = 400, message = "size not format number")
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access, @QueryParam("page") String page, @QueryParam("size") String size) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access, @QueryParam("page") String page, @QueryParam("size") String size) {
 		if (access.getRole() == UserRole.ADMIN) {
 			int iPage = 1;
 			int iSize = 50;
@@ -1480,7 +1480,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		Restaurant entity = restaurantDao.findByKeyword(id); 
 		if(entity != null)
 			return ResourceUtils.asSuccessResponse(Status.OK,entity);
@@ -1495,7 +1495,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
-	public Response getApp(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response getApp(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		
 		Restaurant entity = dao.findOne(id);
     	if (entity != null) {
@@ -1535,7 +1535,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		System.out.println("############" + dto);
 		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
 			return super.add(access, dto);
@@ -1572,7 +1572,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 				return super.update(access, id, dto);
 		}
@@ -1589,7 +1589,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 404, message = "Cannot found entity")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
 			return super.delete(access, id);
 		}
@@ -1645,7 +1645,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 400, message = "location is not null"),
 			@ApiResponse(code = 400, message = "Format Incorrect ###")
 			})
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,
+	public Response get(@ApiParam(access = "internal") @Auth User access,
 			@ApiParam(required=true) @QueryParam("location") String latlng,
 			@QueryParam("type") Integer type,@QueryParam("zone") String zone,
 			@QueryParam("distance") double distance,@QueryParam("cusine") String cusine , @QueryParam("sorted") String sorted) {
@@ -1704,7 +1704,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 400, message = "location is not null"),
 			@ApiResponse(code = 400, message = "Format Incorrect ###")
 			})
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,
+	public Response get(@ApiParam(access = "internal") @Auth User access,
 			@ApiParam(required=true) @QueryParam("location") String latlng,
 			@QueryParam("distance") double distance) {
 		try {
@@ -1743,7 +1743,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data")
 			})
-	public Response getPolygon(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getPolygon(@ApiParam(access = "internal") @Auth User access) {
 		List<Restaurant> entities = this.dao.findAll();
 
 		List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
@@ -1792,7 +1792,7 @@ System.out.println(entity.getMenus().size()+"++++++++++++++++++++++");
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 404, message = "restaurant found info")
 			})
-	public Response getInfo(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id){
+	public Response getInfo(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id){
 		Restaurant res = restaurantDao.findOne(restaurant_id);
 		if (res != null) {
 			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(res));

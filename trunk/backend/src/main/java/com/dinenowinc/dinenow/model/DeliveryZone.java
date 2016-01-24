@@ -33,7 +33,7 @@ public class DeliveryZone extends BaseEntity{
 	private DeliveryZoneType type;
 	
 	@Lob
-	@Type(type = "org.hibernate.spatial.GeometryType")
+	//@Type(type = "org.hibernate.spatial.GeometryType")
 	private Polygon coordinates;
 	
 /*	@Column(nullable=false,columnDefinition="Decimal(10,6)")
@@ -115,7 +115,7 @@ public class DeliveryZone extends BaseEntity{
 		this.lng = lng;
 	}*/
 	
-	@Type(type = "org.hibernate.spatial.GeometryType")
+	//@Type(type = "org.hibernate.spatial.GeometryType")
 	public Polygon getCoordinates() {
 		return coordinates;
 	}

@@ -35,7 +35,7 @@ public class CartItem extends BaseEntity {
 	private String note;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_cart", foreignKey=@ForeignKey(name = "id_cart-cart-FK_cart_item-Fk"))
+	@JoinColumn(name="id_cart", foreignKey=@ForeignKey(name = "id_cart_cart_FK_cart_item_Fk"))
 	private Cart cart;
 	
 	public Cart getCart() {

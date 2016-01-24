@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.HashMap;
@@ -8,7 +9,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response.Status;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.ReviewDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Review;
 import com.dinenowinc.dinenow.model.UserRole;
@@ -74,7 +73,7 @@ public class ReviewResource extends AbstractResource<Review>{
 	//=================================ACTION==================================//	
 	
 		@Override
-		protected Response onAdd(AccessToken access, Review review, Restaurant restaurant) {
+		protected Response onAdd(User access, Review review, Restaurant restaurant) {
 			if (restaurant == null) {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 			}
@@ -91,7 +90,7 @@ public class ReviewResource extends AbstractResource<Review>{
 		}
 		
 		@Override
-		protected Response onUpdate(AccessToken access,  Review review, Restaurant restaurant) {
+		protected Response onUpdate(User access,  Review review, Restaurant restaurant) {
 			dao.update(review);
 			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(review));	
 		}
@@ -101,7 +100,7 @@ public class ReviewResource extends AbstractResource<Review>{
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data")
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 			return super.getAll(access);
 	}
 		
@@ -113,7 +112,7 @@ public class ReviewResource extends AbstractResource<Review>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 			return super.get(access, id);
 
 	}
@@ -129,7 +128,7 @@ public class ReviewResource extends AbstractResource<Review>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		System.out.println(":::::::::::"+access.getName());
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return super.add(access, dto);
@@ -145,7 +144,7 @@ public class ReviewResource extends AbstractResource<Review>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 				return super.update(access, id, dto);
 		}
@@ -161,7 +160,7 @@ public class ReviewResource extends AbstractResource<Review>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return super.delete(access, id);
 		}

@@ -20,17 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.persistence.RollbackException;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -42,15 +39,14 @@ import com.dinenowinc.dinenow.dao.ItemDao;
 import com.dinenowinc.dinenow.dao.ModifierDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
-import com.dinenowinc.dinenow.dao.SubMenuDao;
-import com.dinenowinc.dinenow.error.ServiceError;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.*;
 import com.dinenowinc.dinenow.validation.ItemValidator;
 import com.google.inject.Inject;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.core.header.FormDataContentDisposition;
+//import com.sun.jersey.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
@@ -66,10 +62,10 @@ import static java.util.Collections.singletonMap;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ItemResource extends AbstractResource<Item> {	
-	
+
 	@Inject
 	private CategoryDao categoryDao;
-	
+
 	@Inject
 	private ItemDao itemDao;
 	@Inject
@@ -78,20 +74,20 @@ public class ItemResource extends AbstractResource<Item> {
 	private ModifierDao modifierDao;
 	@Inject
 	private RestaurantDao restaurantDao;
-	
+
 	@Override
 	protected HashMap<String, Object> fromEntity(Item entity) {
 		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("name", entity.getItemName());
-		dto.put("description", entity.getItemDescription());		
-		dto.put("notes", entity.getNotes());		
+		dto.put("description", entity.getItemDescription());
+		dto.put("notes", entity.getNotes());
 		dto.put("isVegeterian", entity.isVegeterian());
 		dto.put("spiceLevel", entity.getSpiceLevel());
 		dto.put("linkImage", entity.getLinkImage());
-		dto.put("availabilityStatus", entity.getAvailabilityStatus());		
-		dto.put("spiceLevel", entity.getSpiceLevel());	
-		
+		dto.put("availabilityStatus", entity.getAvailabilityStatus());
+		dto.put("spiceLevel", entity.getSpiceLevel());
+
 		List<HashMap<String, Object>> sizes = new ArrayList<HashMap<String, Object>>();
 		for (SizeInfo size : entity.getSizes()) {
 			LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
@@ -115,14 +111,14 @@ public class ItemResource extends AbstractResource<Item> {
 	}
 
 
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Item fromAddDto(HashMap<String, Object> dto) {
 		Item entity = super.fromAddDto(dto);
 		entity.setItemName(dto.get("name").toString());
-		entity.setItemDescription(dto.get("description").toString());	
+		entity.setItemDescription(dto.get("description").toString());
 		entity.setLinkImage(dto.get("linkImage") == null ? "" : dto.get("linkImage").toString());
 		entity.setNotes(dto.get("notes").toString());
 		entity.setVegeterian(Boolean.parseBoolean(dto.get("isVegeterian").toString()));
@@ -166,16 +162,16 @@ public class ItemResource extends AbstractResource<Item> {
 			}
 			entity.addAllModifier(listmInfo);
 		}
-		return entity; 
+		return entity;
 	}
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Item fromUpdateDto(Item t, HashMap<String, Object> dto) {
 		Item entity = super.fromUpdateDto(t, dto);
 		entity.setItemName(dto.get("name").toString());
-		entity.setItemDescription(dto.get("description").toString());	
+		entity.setItemDescription(dto.get("description").toString());
 		entity.setLinkImage(dto.get("linkImage") == null ? "" : dto.get("linkImage").toString());
 		entity.setNotes(dto.get("notes").toString());
 		entity.setVegeterian(Boolean.parseBoolean(dto.get("isVegeterian").toString()));
@@ -220,16 +216,16 @@ public class ItemResource extends AbstractResource<Item> {
 			}
 			entity.addAllModifier(listmInfo);
 		}
-		
+
 		return entity;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	//================================ACTION================================//
-	
+
 /*	@Override
 	protected HashMap<String, Object> onGet(Item entity) {
 		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -252,14 +248,12 @@ public class ItemResource extends AbstractResource<Item> {
 			listModifiers.add(en);
 		}
 		dto.put("modifiers", listModifiers);
-		
+
 		return dto;
 	}*/
-	
-	
-	
+
 	@Override
-	protected Response onAdd(AccessToken access, Item entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Item entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -268,19 +262,19 @@ public class ItemResource extends AbstractResource<Item> {
 		dao.save(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
 	}
-	
-	
+
+
 	@Override
-	protected Response onUpdate(AccessToken access, Item entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, Item entity, Restaurant restaurant) {
 		//entity.setCompositeId(restaurant.getId());
 		restaurant = restaurantDao.findByItemId(entity.getId());
 		entity.setCompositeId(restaurant.getId());
 		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));	
+		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
 	}
-	
+
 	@Override
-	protected Response onDelete(AccessToken access,Item entity) {
+	protected Response onDelete(User access,Item entity) {
 		try {
 			dao.delete(entity);
 			return ResourceUtils.asSuccessResponse(Status.OK, null);
@@ -288,11 +282,11 @@ public class ItemResource extends AbstractResource<Item> {
 			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED, new ServiceErrorMessage("has relationship"));
 		}
 	}
-	
-	
-	
+
+
+
 	//=============================METHOD=============================//
-	
+
 	@GET
 	@ApiOperation("api get all items of restaurant for ADMIN and OWNER")
 	@ApiResponses(value = {
@@ -300,9 +294,9 @@ public class ItemResource extends AbstractResource<Item> {
 			@ApiResponse(code = 401, message = "Access denied for user")
 			})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 //		if (access.getRole() == UserRole.OWNER) {
-//			List<Item> entities = this.itemDao.getListByUser(access);	
+//			List<Item> entities = this.itemDao.getListByUser(access);
 //			List<HashMap<String, Object>> dtos = fromEntities(entities);
 //			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 //		}
@@ -311,26 +305,26 @@ public class ItemResource extends AbstractResource<Item> {
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
-	
-	
-	
-	
+
+
+
+
 	@GET
 	@Path("/{id}")
 	@ApiOperation("api get detail of items")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 404, message = "Cannot found entity"),
-			@ApiResponse(code = 401, message = "Access denied for user") 
+			@ApiResponse(code = 401, message = "Access denied for user")
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
-	
+
 	@POST
 	@ApiOperation(value="api add new items for restaurant OWNER", notes="<pre><code>{"
 			+ "<br/>  \"restaurantId\": \"a85b2e3d-1511-47fa-886e-9d81e4436d3e\","
@@ -363,10 +357,11 @@ public class ItemResource extends AbstractResource<Item> {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "Access denied for user"),
-			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
+			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+    /*
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			ItemValidator mItemValidator = new ItemValidator(itemDao, dto);
 			List<ServiceErrorMessage> mListError = mItemValidator.validateForAdd();
@@ -375,9 +370,11 @@ public class ItemResource extends AbstractResource<Item> {
 			}
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}
+		*/
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
-	
+
+  /*
 	@PUT
 	@ApiOperation(value="api update items for restaurant OWNER", notes="<pre><code>{"
 			+ "<br/>  \"name\": \"item 2 test\","
@@ -410,11 +407,11 @@ public class ItemResource extends AbstractResource<Item> {
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "Access denied for user"),
 			@ApiResponse(code = 404, message = "Item not found"),
-			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###") 
+			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###")
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Item item = itemDao.findOne(id);
 			if (item != null) {
@@ -431,7 +428,7 @@ public class ItemResource extends AbstractResource<Item> {
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
-	
+	*/
 	@DELETE
 	@ApiOperation("api delete items")
 	@ApiResponses(value = {
@@ -443,7 +440,7 @@ public class ItemResource extends AbstractResource<Item> {
 			})
 	@Path("/{id}")
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Item item = itemDao.findOne(id);
 			if (item != null) {
@@ -456,7 +453,7 @@ public class ItemResource extends AbstractResource<Item> {
 	}
 
 
-	
+/*
 	//Image Items
 	@POST
 	@Path("/{id}/images")
@@ -498,15 +495,15 @@ public class ItemResource extends AbstractResource<Item> {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("item not found"));
 			}
 	}
-	
+*/
 	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
- 
+
 		try {
 			OutputStream out = new FileOutputStream(new File(
 					uploadedFileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
- 
+
 			out = new FileOutputStream(new File(uploadedFileLocation));
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
@@ -517,8 +514,8 @@ public class ItemResource extends AbstractResource<Item> {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	//Get Image
 	@GET
 	@Path("/{id}/images/{fileName}")
@@ -533,13 +530,13 @@ public class ItemResource extends AbstractResource<Item> {
 	public Response getImage( @PathParam("id") String id, @PathParam("fileName") String fileName){
 			Item item = itemDao.findOne(id);
 			if (item != null) {
-				java.nio.file.Path photoPath = Paths.get(System.getProperty("user.dir"), "photos",fileName);	
+				java.nio.file.Path photoPath = Paths.get(System.getProperty("user.dir"), "photos",fileName);
 				return returnFile(photoPath.toFile());
 			}else {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("item not found"));
 			}
 	}
-	
+
 	private Response returnFile(File file) {
 	    if (!file.exists()) {
 	        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, "file not found");
@@ -549,5 +546,5 @@ public class ItemResource extends AbstractResource<Item> {
 	    } catch (FileNotFoundException e) {
 	    	return ResourceUtils.asFailedResponse(Status.NOT_FOUND, "file not found");
 	    }
-	}	
+	}
 }

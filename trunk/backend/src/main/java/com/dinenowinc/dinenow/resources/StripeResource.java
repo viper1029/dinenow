@@ -1,6 +1,8 @@
 package com.dinenowinc.dinenow.resources;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
@@ -22,7 +24,6 @@ import com.dinenowinc.dinenow.DineNowApplication;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.PaymentMethod;
 import com.dinenowinc.dinenow.model.RestaurantUser;
@@ -34,7 +35,7 @@ import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Card;
 import com.stripe.model.DeletedPlan;
-import com.stripe.model.PaymentSource;
+//import com.stripe.model.PaymentSource;
 import com.stripe.model.Plan;
 import com.stripe.model.Subscription;
 import com.wordnik.swagger.annotations.Api;
@@ -68,7 +69,7 @@ public class StripeResource {
 //			+ "<br/>    \"last4\": \"\""
 //			+ "<br/>  }"
 //			+ "<br/>}<code></pre>")
-//	public Response addTokenStripe(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+//	public Response addTokenStripe(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 //		try {
 //			if (dto.containsKey("user") && dto.containsKey("paymentMethod")) {
 //				Customer customer = customerDao.findOne(dto.get("user").toString());
@@ -126,7 +127,7 @@ public class StripeResource {
 //			+ "<br/>    \"last4\": \"\""
 //			+ "<br/>  }"
 //			+ "<br/>}<code></pre>")
-//	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+//	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 //		try {
 //			if (dto.containsKey("user") && dto.containsKey("paymentMethod")) {
 //				Customer customer = customerDao.findOne(dto.get("user").toString());
@@ -159,7 +160,7 @@ public class StripeResource {
 //	@GET
 //	@Path("/{customer_id}/getCard")
 //	@ApiOperation(value="api get all token stripe to customer", notes="")
-//	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("customer_id") String customer_id) {
+//	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth User access, @PathParam("customer_id") String customer_id) {
 //			Customer customer = customerDao.findOne(customer_id);
 //			if (customer != null) {
 //				return ResourceUtils.asSuccessResponse(Status.OK, customer.getCardStrip());
@@ -175,7 +176,7 @@ public class StripeResource {
 //	@POST
 //	@Path("/assign_plan/{restaurant_id}")
 //	@ApiOperation(value="api assign plan for restaurant user", notes="<code><pre>{\"planStripe\":\"testIDPLAN\"}</pre></code>")
-//	public Response assignPlan(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+//	public Response assignPlan(@ApiParam(access = "internal") @Auth User access,@PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 //		try {
 //			String plan_id = dto.get("planStripe").toString();
 //			RestaurantUser restaurant_user = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
@@ -204,7 +205,7 @@ public class StripeResource {
 //	@ApiOperation(value="api add plan to restaurant", notes="<code><pre>{"
 //			+ "<br/>  \"tokenStripe\":\"\""
 //			+ "<br/>}</pre></code>")
-//	public Response registerPlan(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id,  HashMap<String, Object> dto){
+//	public Response registerPlan(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,  HashMap<String, Object> dto){
 //		try {
 //			String token_id = dto.get("tokenStripe").toString();
 //			
@@ -236,7 +237,7 @@ public class StripeResource {
 //	@GET
 //	@Path("/plan/{restaurant_id}")
 //	@ApiOperation(value="api get plan admin assign for restaurant")
-//	public Response infoSubscriptions(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id){
+//	public Response infoSubscriptions(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id){
 //		try {
 //			RestaurantUser customer = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
 //			if (customer != null) {
@@ -251,13 +252,13 @@ public class StripeResource {
 	
 	
 	//===========================================NEW API===================================================//
-	
+	/*
 	@POST
 	@Path("/addCardToCustomer/{user_id}")
 	@ApiOperation(value="api add new card to customer", notes="user_id can is customer_id or restaurant_user_id <br/><code><pre>{"
 			+ "<br/>  \"tokenStripe\":\"\""
 			+ "<br/>}</pre></code>")
-	public Response addCardToCustomer(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("user_id") String user_id, HashMap<String, Object> dto){
+	public Response addCardToCustomer(@ApiParam(access = "internal") @Auth User access, @PathParam("user_id") String user_id, HashMap<String, Object> dto){
 		try {
 			String token_card = dto.get("tokenStripe").toString();
 			Customer customer = customerDao.findOne(user_id);
@@ -275,12 +276,12 @@ public class StripeResource {
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(e.getMessage()));
 		}
 	}
-	
-	
+	*/
+	/*
 	@GET
 	@Path("/getAllCard/{user_id}")
 	@ApiOperation(value="api get list card for", notes="user_id can is customer_id or restaurant_user_id")
-	public Response getListCard(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("user_id") String user_id){
+	public Response getListCard(@ApiParam(access = "internal") @Auth User access, @PathParam("user_id") String user_id){
 		try {
 			List<PaymentMethod> listResult = new ArrayList<PaymentMethod>();
 			Customer customer = customerDao.findOne(user_id);
@@ -306,22 +307,22 @@ public class StripeResource {
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(e.getMessage()));
 		}
 	}
-	
+	*/
 	
 	@SuppressWarnings("unchecked")
 	@DELETE
 	@Path("/deleteCard/{user_id}/{card_id}")
 	@ApiOperation(value="api delete card", notes="user_id can is customer_id or restaurant_user_id")
-	public Response deletePlan(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("user_id") String user_id, @PathParam("card_id") String card_id) {
+	public Response deletePlan(@ApiParam(access = "internal") @Auth User access,@PathParam("user_id") String user_id, @PathParam("card_id") String card_id) {
 		try {
 			Customer customer = customerDao.findOne(user_id);
 			if (customer != null) {
-				DineNowApplication.stripe.deleteCard(customer.getCustomerStripe(), card_id);
+				//DineNowApplication.stripe.deleteCard(customer.getCustomerStripe(), card_id);
 				return ResourceUtils.asSuccessResponse(Status.OK, null);
 			}
 			RestaurantUser restaurant_user = restaurantUserDao.findOne(user_id);
 			if (restaurant_user != null) {
-				DineNowApplication.stripe.deleteCard(restaurant_user.getCustomerStripe(), card_id);
+				//DineNowApplication.stripe.deleteCard(restaurant_user.getCustomerStripe(), card_id);
 				return ResourceUtils.asSuccessResponse(Status.OK, null);
 			}
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("user not found"));
@@ -343,7 +344,7 @@ public class StripeResource {
 			+ "<br/>  \"trialPeriodDays\": 90,"
 			+ "<br/>  \"amount\": 100"
 			+ "<br/>}<code></pre>")
-	public Response createPlan(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response createPlan(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		String id = dto.get("id").toString();
 		String interval = dto.get("interval").toString();
 		String name = dto.get("name").toString();
@@ -366,7 +367,7 @@ public class StripeResource {
 	@ApiOperation(value="api update plan stripe to customer", notes="<pre><code>{"	
 			+ "<br/>  \"name\": \"\""
 			+ "<br/>}<code></pre>")
-	public Response updatePlan(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("plan_id") String plan_id, HashMap<String, Object> dto) {
+	public Response updatePlan(@ApiParam(access = "internal") @Auth User access,@PathParam("plan_id") String plan_id, HashMap<String, Object> dto) {
 		String name = dto.get("name").toString();
 		try {
 			Plan plan = DineNowApplication.stripe.updatePlan(plan_id, name);
@@ -382,7 +383,7 @@ public class StripeResource {
 	@DELETE
 	@Path("/deletePlan/{plan_id}")
 	@ApiOperation(value="api delete plan")
-	public Response deletePlan(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("plan_id") String plan_id) {
+	public Response deletePlan(@ApiParam(access = "internal") @Auth User access,@PathParam("plan_id") String plan_id) {
 		try {
 			DeletedPlan deleteplan = DineNowApplication.stripe.deletePlan(plan_id);
 			return ResourceUtils.asSuccessResponse(Status.OK, deleteplan);
@@ -396,7 +397,7 @@ public class StripeResource {
 	@GET
 	@Path("/getListPlan")
 	@ApiOperation(value="api get list plan")
-	public Response getListPlan(@ApiParam(access = "internal") @Auth AccessToken access){
+	public Response getListPlan(@ApiParam(access = "internal") @Auth User access){
 		try {
 			List<Plan> listResult = DineNowApplication.stripe.getListPlan();
 			return ResourceUtils.asSuccessResponse(Status.OK, listResult);
@@ -412,7 +413,7 @@ public class StripeResource {
 	@ApiOperation(value="api assign Plan for restaurant", notes="<code><pre>{"
 			+ "<br/>  \"planStripe\":\"\""
 			+ "<br/>}</pre></code>")
-	public Response assignPlan(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+	public Response assignPlan(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 		try {
 			String plan_id = dto.get("planStripe").toString();
 			RestaurantUser restaurant_user = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
@@ -438,7 +439,7 @@ public class StripeResource {
 	@ApiOperation(value="api register Plan for restaurant", notes="<code><pre>{"
 			+ "<br/>  \"tokenStripe\":\"\""
 			+ "<br/>}</pre></code>")
-	public Response registerPlan(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
+	public Response registerPlan(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto){
 		try {
 			String token_id = dto.get("tokenStripe").toString();
 			RestaurantUser restaurant_user = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
@@ -457,7 +458,7 @@ public class StripeResource {
 	@GET
 	@Path("/plan/{restaurant_id}")
 	@ApiOperation(value="api get plan admin assign for restaurant")
-	public Response infoSubscriptions(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id){
+	public Response infoSubscriptions(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id){
 		try {
 			RestaurantUser customer = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
 			if (customer != null) {
@@ -478,7 +479,7 @@ public class StripeResource {
 	@GET
 	@Path("/getSubscriptions/{restaurant_id}")
 	@ApiOperation(value="api get subcription")
-	public Response getSubscription(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id){
+	public Response getSubscription(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id){
 		try {
 			RestaurantUser restaurant_user = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
 			if (restaurant_user != null) {
@@ -494,7 +495,7 @@ public class StripeResource {
 	@DELETE
 	@Path("/cancelSubcription/{restaurant_id}/{subcription_id}")
 	@ApiOperation(value="api cancel subcription")
-	public Response cancelSubcription(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, @PathParam("subcription_id") String subcription_id){
+	public Response cancelSubcription(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @PathParam("subcription_id") String subcription_id){
 		try {
 			RestaurantUser restaurant_user = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
 			if (restaurant_user != null) {

@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.HashMap;
@@ -18,7 +19,6 @@ import javax.ws.rs.core.Response.Status;
 
 import com.dinenowinc.dinenow.dao.RoleDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Role;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
@@ -68,7 +68,7 @@ public class RoleResource extends AbstractResource<Role>{
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data")
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.getAll(access);
 		}
@@ -83,7 +83,7 @@ public class RoleResource extends AbstractResource<Role>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.get(access, id);
 		}
@@ -101,7 +101,7 @@ public class RoleResource extends AbstractResource<Role>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN ||access.getRole() == UserRole.OWNER) {
 			return super.add(access, dto);
 		}
@@ -116,7 +116,7 @@ public class RoleResource extends AbstractResource<Role>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 				return super.update(access, id, dto);
 		}
@@ -132,7 +132,7 @@ public class RoleResource extends AbstractResource<Role>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN) {
 			return super.delete(access, id);
 		}

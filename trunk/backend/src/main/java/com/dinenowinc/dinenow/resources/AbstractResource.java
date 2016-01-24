@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.lang.reflect.*;
@@ -18,7 +19,6 @@ import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Admin;
 import com.dinenowinc.dinenow.model.BaseEntity;
 import com.dinenowinc.dinenow.model.Customer;
@@ -123,7 +123,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 		}
 	}
 	
-	protected Response onAdd(AccessToken access, T entity, Restaurant restaurant) {
+	protected Response onAdd(User access, T entity, Restaurant restaurant) {
 		dao.save(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
 	}
@@ -134,20 +134,20 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 	}
 	
 	
-	protected Response onUpdate(AccessToken access, T entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, T entity, Restaurant restaurant) {
 		dao.update(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
 	}
 	
 	
-	protected Response onDelete(AccessToken access,T entity) {
+	protected Response onDelete(User access,T entity) {
 		System.out.println(entity);
 		dao.delete(entity);
 		
 		return ResourceUtils.asSuccessResponse(Status.OK, null);
 	}
 	
-	protected Response onChangeStatus(AccessToken access,T entity) {
+	protected Response onChangeStatus(User access,T entity) {
 		System.out.println(entity);
 		dao.changeStatus(entity);
 		
@@ -155,7 +155,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 	}
 	
 	@Override
-	public Response getAll(@Auth AccessToken access) {
+	public Response getAll(@Auth User access) {
 		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		List<T> entities = this.dao.findAll();		
 		List<HashMap<String, Object>> dtos = fromEntities(entities);
@@ -166,7 +166,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 	
 	
 	@Override
-	public Response get(@Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@Auth User access,@PathParam("id") String id) {
 		T entity = dao.findOne(id);
     	if (entity != null) {
     		HashMap<String, Object> dto = onGet(entity);
@@ -184,7 +184,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 	}	
 	
 	@Override
-	public Response add(@Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@Auth User access, HashMap<String, Object> dto) {
 		T entity = fromAddDto(dto);
 		Admin adminUser;
 		RestaurantUser restaurantUser;
@@ -242,7 +242,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 	}
 	
 	@Override
-	public Response update(@Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		T entity = dao.findOne(id);		
 		entity = fromUpdateDto(entity, dto);
 		Response response = null;
@@ -263,52 +263,9 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
 		}	
 		return response;
 	}
-	
-//	protected void convertDtoToEntity(HashMap<String, Object> dto, T entity) {		
-//		Class<?> classOfT = entity.getClass();
-//		
-//		for (String key : dto.keySet())
-//		{			
-//			Object data = dto.get(key);
-//			
-//			try {			
-//				
-//				//TitleCase
-//				//snake_case
-//				//UPPER_UNDERSCORE				
-//
-//				//camelCase
-//				
-//				Field field = classOfT.getField(key);
-//				field.set(entity, data);
-//						
-//				
-//				
-//			} catch (NoSuchFieldException e) {
-//				e.printStackTrace();
-//			} catch (SecurityException e) {
-//				e.printStackTrace();
-//			}
-//			
-//		 catch (IllegalArgumentException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		}
-//			
-//			
-//			
-//			//get reflection of entity by key (PropertyName)
-//			//set value = data
-//		}		
-//		
-//	}
-	
-	
-	
-	
+
 	@Override
-	public Response delete(@Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@Auth User access, @PathParam("id") String id) {
 		System.out.println(id);
 		T entity = dao.findOne(id);
 		System.out.println(entity);

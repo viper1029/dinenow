@@ -64,5 +64,5 @@ public class RestaurantFacilities implements Serializable{
 	public void setHome_delivery(boolean home_delivery) {
 		this.home_delivery = home_delivery;
 	}
-	
+
 }

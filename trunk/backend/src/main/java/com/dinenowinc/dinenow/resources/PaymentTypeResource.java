@@ -1,11 +1,10 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,15 +18,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.PaymentTypeDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
-import com.dinenowinc.dinenow.model.AddressBook;
-import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.PaymentType;
-import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.dinenowinc.dinenow.validation.PaymentTypeValidator;
 import com.google.inject.Inject;
@@ -77,7 +71,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data")
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.getAll(access);
 		}
@@ -92,7 +86,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -110,7 +104,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, dto);
 			List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
@@ -130,7 +124,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 				PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, dto);
 				List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
@@ -151,7 +145,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.delete(access, id);
 		}

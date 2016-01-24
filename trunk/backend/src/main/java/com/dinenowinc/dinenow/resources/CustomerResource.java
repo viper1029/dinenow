@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
@@ -9,9 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.OptimisticLockException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -26,32 +25,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.Logger;
-
-import com.dinenowinc.dinenow.dao.AddOnDao;
 import com.dinenowinc.dinenow.dao.AddressBookDao;
 import com.dinenowinc.dinenow.dao.CartDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.ItemDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
-import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.error.ServiceResult;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Cart;
 import com.dinenowinc.dinenow.model.CartItem;
-import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.Customer;
-import com.dinenowinc.dinenow.model.ModelHelpers;
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.OrderDetail;
-import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.UserRole;
-import com.dinenowinc.dinenow.service.CustomerService;
-import com.dinenowinc.dinenow.service.RestaurantUserService;
 import com.dinenowinc.dinenow.utils.MD5Hash;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -66,8 +53,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource extends AbstractResource<Customer>{
 	
-	@Auth 
-	AccessToken access;
+	//@Auth
+	//User access;
 	
 	@Inject
 	private AddressBookDao addressBookDao;
@@ -151,7 +138,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 400, message = "page not format number"),
 			@ApiResponse(code = 400, message = "size not format number"),
 			})
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access, @QueryParam("page") String page, @QueryParam("size") String size) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access, @QueryParam("page") String page, @QueryParam("size") String size) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			int iPage = 1;
 			int iSize = 50;
@@ -192,7 +179,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access,@PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -219,11 +206,11 @@ public class CustomerResource extends AbstractResource<Customer>{
 	//@Override
 	public Response add(HashMap<String, Object> dto) {
 		System.out.println("%%%%%%%%%%%%%%%%%%%%" + dto);
-		if(access == null){
-			return super.add(dto);
-		}else if (access.getRole() == UserRole.ADMIN) {
-			return super.add(access, dto);
-		}
+//		if(access == null){
+//			return super.add(dto);
+//		}else if (access.getRole() == UserRole.ADMIN) {
+//			return super.add(access, dto);
+//		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
 	}
 	
@@ -236,7 +223,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		
 		if(access == null){
 			return super.add(dto);
@@ -256,7 +243,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 404, message = "Cannot found entity")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		return super.delete(access, id);
 	}*/
 	
@@ -278,7 +265,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Path("/{id}/order_details")
-	public Response getOrder(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response getOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			if (customerDao.findOne(id) != null) {
 				List<Order> entities = orderDao.findByCustomer(id);
@@ -306,7 +293,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Path("/{customerId}/order_details/{orderId}")
-	public Response getOrderDetail(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("customerId") String customerId
+	public Response getOrderDetail(@ApiParam(access = "internal") @Auth User access, @PathParam("customerId") String customerId
 			, @PathParam("orderId") String orderId){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			if (customerDao.findOne(customerId) != null) {
@@ -330,7 +317,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Path("/{id}/cart")
-	public Response getCart(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response getCart(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			Customer customer = customerDao.findOne(id);
 			if (customer != null) {
@@ -353,7 +340,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Path("/{id}/address_book")
-	public Response getAddressBook(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response getAddressBook(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			Customer customer = customerDao.findOne(id);
 			if (customer != null) {
@@ -397,7 +384,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Path("/{id}/edit")
-	public Response editCustomer(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto){
+	public Response editCustomer(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			Customer customer = customerDao.findOne(id);
 			if (customer != null) {

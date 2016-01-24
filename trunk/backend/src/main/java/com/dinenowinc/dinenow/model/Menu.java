@@ -55,7 +55,7 @@ public class Menu extends BaseEntity {
 	private Set<SubMenu> subMenus = new HashSet<SubMenu>();*/
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY,orphanRemoval=true)
-    @JoinColumn(name="id_menu",nullable=false ,foreignKey= @ForeignKey(name = "id_menu-menu_category-Fk"))	
+    @JoinColumn(name="id_menu",nullable=false ,foreignKey= @ForeignKey(name = "id_menu_menu_category_Fk"))
 	private final Set<CategoryInfo> categories = new HashSet<CategoryInfo>();	
 	
 //	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

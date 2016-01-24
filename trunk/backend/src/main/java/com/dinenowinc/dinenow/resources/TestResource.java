@@ -5,10 +5,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.dropwizard.auth.Auth;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,9 +17,7 @@ import org.joda.time.DateTime;
 import com.dinenowinc.dinenow.DineNowApplication;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Customer;
-import com.dinenowinc.dinenow.model.LatLng;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.UserRole;

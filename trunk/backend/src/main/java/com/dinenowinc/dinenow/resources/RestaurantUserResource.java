@@ -1,16 +1,15 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -20,15 +19,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.dinenowinc.dinenow.DineNowApplication;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.dao.RoleDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.error.ServiceResult;
-import com.dinenowinc.dinenow.model.AccessToken;
-import com.dinenowinc.dinenow.model.AddOn;
-import com.dinenowinc.dinenow.model.NetworkStatus;
-import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.Role;
@@ -127,7 +121,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 	
 	
 	@Override
-	protected Response onAdd(AccessToken access, RestaurantUser entity, Restaurant restaurant) { 
+	protected Response onAdd(User access, RestaurantUser entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -155,7 +149,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 401, message = "access denied for user") 
 			})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
 			return super.getAll(access);
 		}
@@ -173,7 +167,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access,@PathParam("id") String id) {
 		return super.get(access, id);
 	}
 	
@@ -192,7 +186,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {	
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		// Create Restaurant Owner by admin.(Give details of Restaurant for both)
 	    if (access.getRole() == UserRole.ADMIN && dto.get("role").toString().equals("OWNER")) {
 			RestaurantUser user = fromAddDto(dto);
@@ -235,7 +229,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN && access.getRole() == UserRole.OWNER )
 		return super.update(access, id, dto);
 		else
@@ -251,7 +245,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 404, message = "Cannot found entity")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		RestaurantUser entity = dao.findOne(id);
 		Response response = ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage(String.format("deleted succesfully", "deleted succesfully" )));
 		
@@ -279,7 +273,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
-	public Response getAllByRestaurantID(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response getAllByRestaurantID(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (!dto.containsKey("restaurantId")) {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND,new ServiceErrorMessage("restaurant not found"));
 		}

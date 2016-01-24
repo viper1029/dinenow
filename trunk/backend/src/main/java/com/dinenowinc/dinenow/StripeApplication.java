@@ -21,7 +21,7 @@ import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.DeletedCard;
 import com.stripe.model.DeletedPlan;
-import com.stripe.model.PaymentSource;
+//import com.stripe.model.PaymentSource;
 import com.stripe.model.Plan;
 import com.stripe.model.PlanCollection;
 import com.stripe.model.Subscription;
@@ -243,7 +243,8 @@ public class StripeApplication {
 		cu.update(updateParams);
 		
 	}
-	
+
+	/*
 	public void deleteCard(String ic_customer, String card_id) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		Customer cu = Customer.retrieve(ic_customer);
@@ -255,7 +256,7 @@ public class StripeApplication {
 		}
 	}
 	
-	
+	*/
 	
 	public void charge(double amount, String currency, String card_id, String customer_id, String description) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
@@ -272,7 +273,7 @@ public class StripeApplication {
 	}
 	
 	
-	
+	/*
 	
 	public Card addCardToCustomer(String customer_id, String token_card) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException{
 		Stripe.apiKey = SECREC_KEY_STRIPE;
@@ -292,7 +293,7 @@ public class StripeApplication {
 		return cu.getSources().all(cardParams).getData();
 	}
 	
-	
+	*/
 	
 	
 	

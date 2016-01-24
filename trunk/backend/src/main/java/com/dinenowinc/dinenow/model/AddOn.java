@@ -38,7 +38,7 @@ public class AddOn extends AvailabilityEntity {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
   @JoinColumn(name = "id_addon")
-  @ForeignKey(name = "id_addon-addOn-size_info-Fk")
+  @ForeignKey(name = "id_addon_addOn_size_info_Fk")
   private final Set<SizeInfo> sizes = new HashSet<SizeInfo>();
 
 

@@ -1,9 +1,10 @@
 package com.dinenowinc.dinenow.model;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.UUID;
 
-public class AccessToken implements Serializable {
+public class User implements Principal {
 
   private static final long serialVersionUID = -1936855298814425297L;
   private UUID id;

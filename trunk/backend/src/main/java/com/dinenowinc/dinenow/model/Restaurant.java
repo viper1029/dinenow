@@ -95,7 +95,7 @@ public class Restaurant extends BaseEntity{
 	private boolean accept_dinein;
 	
 	@Lob
-	@Type(type = "org.hibernate.spatial.GeometryType")
+	//@Type(type = "org.hibernate.spatial.GeometryType")
     private Point location;
 	
 	/*@Column(nullable=false,columnDefinition="Decimal(10,6)")

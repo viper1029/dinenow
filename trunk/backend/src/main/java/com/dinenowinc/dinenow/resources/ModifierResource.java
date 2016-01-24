@@ -9,7 +9,6 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -25,18 +24,12 @@ import com.dinenowinc.dinenow.dao.ModifierDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
+import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.AddOn;
-import com.dinenowinc.dinenow.model.ModelHelpers;
 import com.dinenowinc.dinenow.model.ModifierAddOn;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
-import com.dinenowinc.dinenow.model.Item;
-import com.dinenowinc.dinenow.model.ItemSizeInfo;
-import com.dinenowinc.dinenow.model.Menu;
 import com.dinenowinc.dinenow.model.Modifier;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.Size;
-import com.dinenowinc.dinenow.model.SizeInfo;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -208,7 +201,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 	}
 	
 	@Override
-	protected Response onAdd(AccessToken access, Modifier entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Modifier entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -218,7 +211,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 	}
 	
 	@Override
-	protected Response onUpdate(AccessToken access, Modifier entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, Modifier entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -240,7 +233,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 			@ApiResponse(code = 401, message = "access denied for user"),
 			})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
 			return super.getAll(access);
 		}
@@ -256,7 +249,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 			@ApiResponse(code = 401, message = "access denied for user") 
 			})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -300,7 +293,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 			@ApiResponse(code = 500, message = "cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.add(access, dto);
 		}
@@ -345,7 +338,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Modifier modifier = dao.findOne(id);
 			if (modifier != null) {
@@ -370,7 +363,7 @@ public class ModifierResource extends AbstractResource<Modifier>{
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Modifier modifier = dao.findOne(id);
 			if (modifier != null) {

@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.Date;
@@ -27,7 +28,6 @@ import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.OrderDetailsDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Cart;
 import com.dinenowinc.dinenow.model.CartItem;
@@ -36,7 +36,6 @@ import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.OrderStatus;
 import com.dinenowinc.dinenow.model.OrderType;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.SizeInfo;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
@@ -97,7 +96,7 @@ public class CartResources extends AbstractResource<Cart> {
 		return cartdto;
 	}
 	
-	protected Cart fromFullDto(AccessToken access,HashMap<String, Object> dto) {
+	protected Cart fromFullDto(User access,HashMap<String, Object> dto) {
 		
 		double subtotal = 0;
 	    double tip = 0;
@@ -148,7 +147,7 @@ public class CartResources extends AbstractResource<Cart> {
 		}
 	}
 	
-	protected Response onDelete(AccessToken access, String id) {
+	protected Response onDelete(User access, String id) {
 		try{
 			CartItem item = cartItemDao.findOne(id);
 			Cart cart  = item.getCart();
@@ -166,7 +165,7 @@ public class CartResources extends AbstractResource<Cart> {
 	}
 	
 	@Override
-	protected Response onAdd(AccessToken access, Cart entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Cart entity, Restaurant restaurant) {
 		//corrected
 		try{
 		Customer cus = customerDao.findOne(access.getId().toString());
@@ -186,7 +185,7 @@ public class CartResources extends AbstractResource<Cart> {
 	@GET
 	@ApiOperation("api get all Customers Cart")
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		return super.getAll(access);
 	}
 	
@@ -195,7 +194,7 @@ public class CartResources extends AbstractResource<Cart> {
 	@Path("/{id}")
 	@ApiOperation("api get detail of Customer Cart")
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access,@PathParam("id") String id) {
 		return super.get(access, id);
 	}
 	
@@ -207,7 +206,7 @@ public class CartResources extends AbstractResource<Cart> {
 			+ "<br/>    \"orderStatus\": \"OPEN\","
 			+ "<br/>  }</code></pre>")
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		System.out.println("@@@@@@@@@" + dto);
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return onAdd(access, fromFullDto(access,dto), null);
@@ -229,7 +228,7 @@ public class CartResources extends AbstractResource<Cart> {
 			+ "<br/>  }</code></pre>")
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		return super.update(access, id, dto);
 	}*/
 	
@@ -238,7 +237,7 @@ public class CartResources extends AbstractResource<Cart> {
 	@Path("/{id}")
 	@ApiOperation("delete Customer Order Detail by id")
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return onDelete(access, id);
 		}

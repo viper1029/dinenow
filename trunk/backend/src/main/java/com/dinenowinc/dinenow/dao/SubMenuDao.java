@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import com.dinenowinc.dinenow.model.AccessToken;
+import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.SubMenu;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -20,7 +20,7 @@ public class SubMenuDao extends BaseEntityDAOImpl<SubMenu, String>{
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<SubMenu> getListByUser(AccessToken accToken){
+	public List<SubMenu> getListByUser(User accToken){
     	try {
     		List<SubMenu> listSubmenu = (ArrayList<SubMenu>)getEntityManager().createNativeQuery("SELECT sm.* FROM restaurantuser ru,restaurant r, submenu sm where ru.id_restaurant = r.id and sm.id_restaurant = r.id and ru.id = :value", SubMenu.class).setParameter("value", accToken.getId().toString()).getResultList();
             return listSubmenu;

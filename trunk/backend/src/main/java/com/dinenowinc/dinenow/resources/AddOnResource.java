@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ import java.util.List;
 import javax.persistence.RollbackException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -22,11 +22,8 @@ import com.dinenowinc.dinenow.dao.AddOnDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.AddOn;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
-import com.dinenowinc.dinenow.model.Category;
-import com.dinenowinc.dinenow.model.ModelHelpers;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.SizeInfo;
@@ -191,7 +188,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 
 
 	@Override
-	protected Response onAdd(AccessToken access, AddOn entity, Restaurant restaurant) {
+	protected Response onAdd(User access, AddOn entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
@@ -201,13 +198,13 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	}
 
 	@Override
-	protected Response onUpdate(AccessToken access, AddOn entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, AddOn entity, Restaurant restaurant) {
 		dao.update(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));	
 	}
 
 	@Override
-	protected Response onDelete(AccessToken access,AddOn entity) {
+	protected Response onDelete(User access,AddOn entity) {
 		try {
 			dao.delete(entity);
 			return ResourceUtils.asSuccessResponse(Status.OK, null);
@@ -227,7 +224,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 			@ApiResponse(code = 401, message = "Access denied for user"),
 	})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		//		if (access.getRole() == UserRole.OWNER) {
 		//			List<AddOn> entities = addOnDao.getListByUser(access);
 		//			List<HashMap<String, Object>> dtos = fromEntities(entities);
@@ -249,7 +246,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 			@ApiResponse(code = 401, message = "Access denied for user") 
 	})
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -279,7 +276,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 	})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.add(access, dto);
 		}
@@ -316,7 +313,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			AddOn addon = addOnDao.findOne(id);
 			if (addon != null) {
@@ -340,7 +337,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 			@ApiResponse(code = 401, message = "Access denied for user")
 	})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			AddOn addon = addOnDao.findOne(id);
 			if (addon != null) {

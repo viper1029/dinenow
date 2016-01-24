@@ -17,7 +17,7 @@ public class InfoSize <Size extends BaseEntity> extends BaseEntity {
 	@OneToOne(cascade = CascadeType.PERSIST, fetch= FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn(name="id_size")
-	@ForeignKey(name="id_size-size-size_info-Fk")
+	@ForeignKey(name="id_size_size_size_info_Fk")
     private Size size = null;
 	public Size getSize() {
 		return this.size;

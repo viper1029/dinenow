@@ -6,7 +6,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
-
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+import org.hibernate.validator.constraints.NotEmpty;
 
 
 public class ApplicationConfiguration extends Configuration{
@@ -30,8 +31,10 @@ public class ApplicationConfiguration extends Configuration{
 	@NotNull
 	@JsonProperty
 	private Boolean isInitDb;
-	
-	
+
+  @JsonProperty("swagger")
+  public SwaggerBundleConfiguration swaggerBundleConfiguration;
+
 	public Boolean getIsInitDb() {
 		return isInitDb;
 	}
@@ -40,7 +43,6 @@ public class ApplicationConfiguration extends Configuration{
 	public void setIsInitDb(Boolean isInitDb) {
 		this.isInitDb = isInitDb;
 	}
-
 
 	public Integer getTimeResetKey() {
 		return timeResetKey;

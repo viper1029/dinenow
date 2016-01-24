@@ -37,7 +37,7 @@ public class PromoCode extends BaseEntity{
 	
 	@OneToMany(cascade = {CascadeType.PERSIST}, fetch= FetchType.LAZY)
     @JoinColumn(name="id_promo_code",nullable=false)
-	@ForeignKey(name="id_promo_code-promoCodeRestaurant-promoCode-FK")
+	@ForeignKey(name="id_promo_code_promoCodeRestaurant_promoCode_FK")
     private final Set<PromoCodeRestaurant> promoCodeRestaurant = new HashSet<PromoCodeRestaurant>();
 	
 	public String getPromo_name() {

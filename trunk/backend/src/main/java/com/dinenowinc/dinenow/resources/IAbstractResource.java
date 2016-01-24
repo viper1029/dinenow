@@ -1,18 +1,20 @@
 package com.dinenowinc.dinenow.resources;
 
-import java.util.HashMap;
-
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-
-import com.dinenowinc.dinenow.model.AccessToken;
+import java.util.HashMap;
 
 public interface IAbstractResource {
-	Response getAll(@Auth AccessToken access);
-	Response get(@Auth AccessToken access,@PathParam("id") String id);
-	Response add(@Auth AccessToken access, HashMap<String, Object> dto);
-	Response update(@Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto);
-	Response delete(@Auth AccessToken access, @PathParam("id") String id);
+  Response getAll(@Auth User access);
+
+  Response get(@Auth User access, @PathParam("id") String id);
+
+  Response add(@Auth User access, HashMap<String, Object> dto);
+
+  Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto);
+
+  Response delete(@Auth User access, @PathParam("id") String id);
 }

@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import com.dinenowinc.dinenow.dao.ItemDao;
 import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.Order;
@@ -35,7 +35,6 @@ import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.SizeInfo;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
-import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -88,18 +87,18 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 	}
 	
 	@Override
-	protected Response onAdd(AccessToken access, OrderDetail entity, Restaurant restaurant) {
+	protected Response onAdd(User access, OrderDetail entity, Restaurant restaurant) {
 		return super.onAdd(access, entity, restaurant);
 	}
 	
 	@Override
-	protected Response onUpdate(AccessToken access, OrderDetail entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, OrderDetail entity, Restaurant restaurant) {
 		return super.onUpdate(access, entity, restaurant);
 	}
 	
 	
 	@Override
-	protected Response onDelete(AccessToken access, OrderDetail entity) {
+	protected Response onDelete(User access, OrderDetail entity) {
 		return super.onDelete(access, entity);
 	}
 	
@@ -114,7 +113,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response getAll(@Auth AccessToken access) {
+	public Response getAll(@Auth User access) {
 		return super.getAll(access);
 	}
 	
@@ -128,7 +127,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 404, message = "Cannot found entity") 
 			})
 	@Override
-	public Response get(@Auth AccessToken access,@PathParam("id") String id) {
+	public Response get(@Auth User access,@PathParam("id") String id) {
 		return super.get(access, id);
 	}
 	
@@ -148,7 +147,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.CUSTOMER) {
 			return super.add(access, dto);
 		}
@@ -172,7 +171,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###") 
 			})
 	@Override
-	public Response update(@Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		return super.update(access, id, dto);
 	}
 	
@@ -186,7 +185,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 404, message = "Cannot found entity")
 			})
 	@Override
-	public Response delete(@Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@Auth User access, @PathParam("id") String id){
 		return super.delete(access, id);
 	}
 	
@@ -199,7 +198,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 400, message = "page not format number") ,
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
-	public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status, @QueryParam("from") String from,@QueryParam("to") String to, @QueryParam("page") String page, @QueryParam("size") String size)
+	public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status, @QueryParam("from") String from,@QueryParam("to") String to, @QueryParam("page") String page, @QueryParam("size") String size)
 	{	
 
 		int iPage = 1;
@@ -278,7 +277,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 400, message = "page not format number") ,
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
-	public Response searchByOrder(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("query") String query){
+	public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("query") String query){
 		if (restaurantDao.findOne(restaurant_id) != null) {
 			if (query != null) {
 				List<Order> entities = new ArrayList<Order>();

@@ -1,17 +1,12 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.RollbackException;
 import javax.ws.rs.Consumes;
@@ -32,7 +27,6 @@ import com.dinenowinc.dinenow.dao.MenuDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SubMenuDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AccessToken;
 import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.CategoryInfo;
 import com.dinenowinc.dinenow.model.Hour;
@@ -241,7 +235,7 @@ public class MenuResource extends AbstractResource<Menu> {
 	//==============================ACTION====================================//
 
 	@Override
-	protected Response onAdd(AccessToken access, Menu entity, Restaurant restaurant) {
+	protected Response onAdd(User access, Menu entity, Restaurant restaurant) {
 		System.out.println("::::::::::::::::::::SCSDCSS");
 		if (restaurant == null) {
 			List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
@@ -255,7 +249,7 @@ public class MenuResource extends AbstractResource<Menu> {
 	}
 
 	@Override
-	protected Response onUpdate(AccessToken access, Menu entity, Restaurant restaurant) {
+	protected Response onUpdate(User access, Menu entity, Restaurant restaurant) {
 		restaurant = restaurantDao.findByMenuId(entity.getId());
 		entity.setCompositeId(restaurant.getId());
 		dao.update(entity);
@@ -263,7 +257,7 @@ public class MenuResource extends AbstractResource<Menu> {
 	}
 
 	@Override
-	protected Response onDelete(AccessToken access, Menu entity) {
+	protected Response onDelete(User access, Menu entity) {
 		try {
 			dao.delete(entity);
 			return ResourceUtils.asSuccessResponse(Status.OK,fromEntity(entity));
@@ -285,7 +279,7 @@ public class MenuResource extends AbstractResource<Menu> {
 			@ApiResponse(code = 401, message = "Access denied for user"),
 	})
 	@Override
-	public Response getAll(@ApiParam(access = "internal") @Auth AccessToken access) {
+	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 
 		//		if (access.getRole() == UserRole.OWNER) {
 		//				List<Menu> entities = menuDao.getListByUser(access);		
@@ -311,7 +305,7 @@ public class MenuResource extends AbstractResource<Menu> {
 	})
 	@Path("/{id}")
 	@Override
-	public Response get(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id) {
+	public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.get(access, id);
 		}
@@ -356,7 +350,7 @@ public class MenuResource extends AbstractResource<Menu> {
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 	})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth AccessToken access, HashMap<String, Object> dto) {
+	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			MenuValidator typeValidator = new MenuValidator(dto , menuDao);
 			List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
@@ -391,7 +385,7 @@ public class MenuResource extends AbstractResource<Menu> {
 			@ApiResponse(code = 500, message = "Exeption:###")
 	})
 	@Path("/{id}/time")
-	public Response updateTimeMenu(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id,HashMap<String, Object> dto){
+	public Response updateTimeMenu(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id,HashMap<String, Object> dto){
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Menu menu = menuDao.findOne(id);
 			
@@ -484,7 +478,7 @@ public class MenuResource extends AbstractResource<Menu> {
 	})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Menu menu = menuDao.findOne(id);
 			if (menu != null) {
@@ -513,7 +507,7 @@ public class MenuResource extends AbstractResource<Menu> {
 			@ApiResponse(code = 401, message = "access denied for user")
 	})
 	@Override
-	public Response delete(@ApiParam(access = "internal") @Auth AccessToken access, @PathParam("id") String id){
+	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Menu menu = menuDao.findOne(id);
 			if (menu != null) {
