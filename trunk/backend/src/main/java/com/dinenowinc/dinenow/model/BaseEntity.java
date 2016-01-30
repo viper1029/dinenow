@@ -31,22 +31,23 @@ public abstract class BaseEntity implements Serializable {
   private String id = null;
 
   @JsonIgnore
-  @Column(nullable = false)
-  private Date created_date;
+  @Column(name = "created_date", nullable = false, updatable = false)
+  private Date createdDate;
 
   @JsonIgnore
-  private Date modified_date;
+  @Column(name = "modified_date")
+  private Date modifiedDate;
 
   @JsonIgnore
-  @Column(nullable = false)
-  private String created_by;
+  @Column(name = "created_by", nullable = false, updatable = false)
+  private String createdBy;
 
   @JsonIgnore
-  private String modified_by;
+  @Column(name = "modifiedBy")
+  private String modifiedBy;
 
   @JsonIgnore
   private int status;
-
 
   public String getId() {
     return id;
@@ -57,37 +58,36 @@ public abstract class BaseEntity implements Serializable {
   }
 
   public String getCreatedDate() {
-    DateFormat dateFormat = new SimpleDateFormat(
-        "yyyy-MM-dd'T'HH:mm:ss");
-    return dateFormat.format(this.created_date);
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    return dateFormat.format(this.createdDate);
   }
 
   public void setCreatedDate(Date createdDate) {
-    this.created_date = createdDate;
+    this.createdDate = createdDate;
   }
 
   public Date getModifiedDate() {
-    return modified_date;
+    return modifiedDate;
   }
 
   public void setModifiedDate(Date modifiedDate) {
-    this.modified_date = modifiedDate;
+    this.modifiedDate = modifiedDate;
   }
 
   public String getCreatedBy() {
-    return created_by;
+    return createdBy;
   }
 
   public void setCreatedBy(String createdBy) {
-    this.created_by = createdBy;
+    this.createdBy = createdBy;
   }
 
   public String getModifiedBy() {
-    return modified_by;
+    return modifiedBy;
   }
 
   public void setModifiedBy(String modifiedBy) {
-    this.modified_by = modifiedBy;
+    this.modifiedBy = modifiedBy;
   }
 
   public int getStatus() {

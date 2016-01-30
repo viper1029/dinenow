@@ -262,11 +262,11 @@ public class RestaurantUser extends BaseEntity{
 		this.password = password;
 	}
 	
-	public String getReset_key() {
+	public String getResetKey() {
 		return reset_key;
 	}
 
-	public void setReset_key(String reset_key) {
+	public void setResetKey(String reset_key) {
 		this.reset_key = reset_key;
 	}
 

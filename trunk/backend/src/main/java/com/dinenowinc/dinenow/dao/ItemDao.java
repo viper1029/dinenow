@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 
 import com.dinenowinc.dinenow.model.Item;
@@ -24,7 +25,7 @@ public class ItemDao extends BaseEntityDAOImpl<Item, String>{
 			// List<Item> listItem = (ArrayList<Item>)getEntityManager().createNativeQuery("SELECT i.* FROM orderdetail od, item i WHERE od.id_item = i.id AND od.id= :value", Item.class).setParameter("value", id_orderdatail).getResultList();
 			List<Item> listItem = (ArrayList<Item>)getEntityManager().createQuery("SELECT i FROM Item i JOIN i.orderDetails od WHERE od.id= :value", Item.class).setParameter("value", id_orderdatail).getResultList();
 			return listItem;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -34,7 +35,7 @@ public class ItemDao extends BaseEntityDAOImpl<Item, String>{
 		try {  
 			 Item item = getEntityManager().createQuery("SELECT i FROM Item i JOIN i.cartItems ci WHERE ci.id= :value", Item.class).setParameter("value", cartitem_id).getSingleResult();
 			return item;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -45,7 +46,7 @@ public class ItemDao extends BaseEntityDAOImpl<Item, String>{
 		try {
 			List<Item> listItem = (ArrayList<Item>)getEntityManager().createNativeQuery("SELECT i.* FROM item i WHERE i.id_restaurant = :value", Item.class).setParameter("value", restaurant_id).getResultList();
 			return listItem;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -61,8 +62,7 @@ public class ItemDao extends BaseEntityDAOImpl<Item, String>{
 					                              .getSingleResult();
 			 System.out.println("(((((((((((((((((((((("+item);
 			return item;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}

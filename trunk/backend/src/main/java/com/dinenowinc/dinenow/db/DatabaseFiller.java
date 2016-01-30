@@ -1,49 +1,18 @@
 package com.dinenowinc.dinenow.db;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
 
 import com.dinenowinc.dinenow.DineNowApplication;
-import com.dinenowinc.dinenow.dao.DeliveryZoneDao;
 import com.dinenowinc.dinenow.dao.VersionDao;
-import com.dinenowinc.dinenow.error.ServiceResult;
 import com.dinenowinc.dinenow.model.Admin;
-import com.dinenowinc.dinenow.model.AvailabilityStatus;
-import com.dinenowinc.dinenow.model.Category;
-import com.dinenowinc.dinenow.model.CategoryInfo;
-import com.dinenowinc.dinenow.model.Customer;
-import com.dinenowinc.dinenow.model.DeliveryZone;
-import com.dinenowinc.dinenow.model.DeliveryZoneType;
-import com.dinenowinc.dinenow.model.Item;
-import com.dinenowinc.dinenow.model.ItemInfo;
-import com.dinenowinc.dinenow.model.Menu;
-import com.dinenowinc.dinenow.model.NetworkStatus;
-import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.SubMenu;
-import com.dinenowinc.dinenow.model.Tax;
-import com.dinenowinc.dinenow.model.UserRole;
 import com.dinenowinc.dinenow.model.Version;
 import com.dinenowinc.dinenow.service.AdminService;
-import com.dinenowinc.dinenow.service.CustomerService;
-import com.dinenowinc.dinenow.service.RestaurantService;
-import com.dinenowinc.dinenow.service.RestaurantUserService;
 import com.dinenowinc.dinenow.utils.MD5Hash;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.Transactional;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 import org.slf4j.LoggerFactory;
 
 
@@ -80,12 +49,12 @@ public class DatabaseFiller {
 		LOGGER.debug("Creating admin user");
 
 		final String adminEmail = "admin@admin.com";
-		if(adminService.getUserByEmail(adminEmail) != null) {
+		if(adminService.getUserByEmail(adminEmail) == null) {
       Admin admin = new Admin();
       admin.setFirstName("Admin");
       admin.setLastName("Admin");
       admin.setEmail(adminEmail);
-      admin.setPassword(MD5Hash.md5Spring("admin@123"));
+      admin.setPassword(MD5Hash.md5Spring("1234567890"));
       admin.setCreatedBy("admin");
       admin.setCreatedDate(new Date());
       adminService.createAdmin(admin);
@@ -96,7 +65,7 @@ public class DatabaseFiller {
 	public static DatabaseFiller getInstance() {
 
 		if (instance==null) {			
-			JpaPersistModule jpaPersistModule = DineNowApplication.createJpaModule();
+			JpaPersistModule jpaPersistModule = DineNowApplication.getJpaPersistModule();
 			injector = Guice.createInjector(jpaPersistModule);
 			instance = injector.getInstance(DatabaseFiller.class);
 			PersistService persistService = injector.getInstance(PersistService.class);
@@ -404,9 +373,9 @@ public class DatabaseFiller {
 		Customer customer1 = new Customer("First Name", "LastName", "1234@gmail.com", "12345678", "095465444", "51 hoang viet", "google:123456789");
 		Customer customer2 = new Customer("First Name", "LastName", "12345@gmail.com", "12345678", "095465444", "51 hoang viet", "facebook:0987654321");
 		
-		customerService.createNewCustomer(customer);
-		customerService.createNewCustomer(customer1);
-		customerService.createNewCustomer(customer2);
+		customerService.validateCustomer(customer);
+		customerService.validateCustomer(customer1);
+		customerService.validateCustomer(customer2);
 		
 		
 	}

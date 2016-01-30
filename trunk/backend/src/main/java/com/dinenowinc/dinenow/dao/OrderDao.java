@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.Item;
@@ -26,7 +27,6 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 			List<Order> l = (ArrayList<Order>) getEntityManager().createQuery("SELECT o FROM Customer c JOIN c.orders o WHERE c.id = :value", Order.class).setParameter("value", idCustomer).getResultList();
 			return l;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -38,7 +38,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					 .setParameter("value2", orderId)
 					 .getSingleResult();
 			return order;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -50,7 +50,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 		try {
 			List<Order> l = (ArrayList<Order>) getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r,restaurantuser ru, item i, orderdetail od, order co WHERE r.id = ru.id_restaurant AND r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND ru.id= :value", Order.class).setParameter("value", restaurant_user_id).getResultList();
 			return l;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -65,7 +65,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 			List<Order> listItem = getEntityManager().createQuery("SELECT distinct r.orders FROM Restaurant r left join r.orders WHERE r.id = :value").setParameter("value", restaurant_id).getResultList();
 			System.out.println("88888888888888888888888888888888888888888888"+listItem.size());
 			return listItem;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -84,8 +84,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.setParameter("to", to)
 					.getResultList();
 			return listItem;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}    
 	}
@@ -103,8 +102,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.getResultList();
 			System.out.println(listItem.size());
 			return listItem;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -125,7 +123,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.setFirstResult(startRow).setMaxResults(maxRecords)
 					.getResultList();
 			return listItem;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -143,8 +141,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.getResultList();
 			System.out.println(listItem.size());
 			return listItem;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -159,8 +156,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.getResultList();
 			System.out.println(listItem.size());
 			return listItem;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -169,8 +165,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 		try {
 			Order v = (Order) getEntityManager().createQuery("Select o from Order as o order by o.orderNumber desc",Order.class).setMaxResults(1).getSingleResult();
 			return v;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -185,8 +180,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 					.getResultList();
 			System.out.println(listItem.size());
 			return listItem;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}

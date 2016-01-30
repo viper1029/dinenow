@@ -83,7 +83,7 @@ task oneJar(type: OneJar) {
 }
 
 run {
-    args 'server', 'C:\\DineNow Development\\Final\\backend\\src\\main\\resources\\local.yml'
+    args 'server', './src/main/resources/local.yml'
 
 }
 

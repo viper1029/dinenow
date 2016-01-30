@@ -37,10 +37,8 @@ public class SizeResource extends AbstractResource<Size>{
 	private SizeDao sizeDao;
 	
 	@Inject 
-	private RestaurantDao restautantDao;
-	
-	
-	
+	private RestaurantDao restaurantDao;
+
 	@Override
 	protected HashMap<String, Object> fromEntity(Size entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
@@ -95,7 +93,7 @@ public class SizeResource extends AbstractResource<Size>{
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
-		entity.setCompositeId(restaurant.getId());
+		//entity.setCompositeId(restaurant.getId());
 		restaurant.addSizes(entity);
 		dao.save(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
@@ -103,8 +101,8 @@ public class SizeResource extends AbstractResource<Size>{
 	
 	@Override
 	protected Response onUpdate(User access, Size entity, Restaurant restaurant) {
-		restaurant = restautantDao.findBySizeId(entity.getId());
-		entity.setCompositeId(restaurant.getId());
+		restaurant = restaurantDao.findBySizeId(entity.getId());
+		//entity.setCompositeId(restaurant.getId());
 		dao.update(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));	
 	}
@@ -121,25 +119,19 @@ public class SizeResource extends AbstractResource<Size>{
 	//============================METHOD=====================================//
 	
 	@GET
-	@ApiOperation("api get all Size of restaurant for ADMIN and OWNER")
+	@ApiOperation("size of restaurant for ADMIN and OWNER")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "data"),
 			@ApiResponse(code = 401, message = "access denied for user")
 			})
 	@Override
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
-//		if (access.getRole() == UserRole.OWNER) {
-//			List<Size> entities = sizeDao.getListByUser(access);
-//			List<HashMap<String, Object>> dtos = fromEntities(entities);
-//			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
-//		}
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			return super.getAll(access);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
 	}
-	
-	
+
 	@GET
 	@Path("/{id}")
 	@ApiOperation("api get detail of Size")

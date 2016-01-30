@@ -2,12 +2,14 @@ package com.dinenowinc.dinenow.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import com.dinenowinc.dinenow.model.Category;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -112,6 +114,12 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
       }
     }
     return entityClass;
+  }
+
+  public List<E> getAll() {
+    return this.emf.get().createQuery(
+        "SELECT c.* FROM " + getEntityClass().getSimpleName()  + " c WHERE c.id_restaurant = :value",
+        getEntityClass()).getResultList();
   }
 
   @SuppressWarnings("unchecked")

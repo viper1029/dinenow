@@ -22,7 +22,7 @@ public class AdminService {
 		return null;
 	}
 	
-//	public ServiceResult<Customer> createNewCustomer(Admin resData) {
+//	public ServiceResult<Customer> validateCustomer(Admin resData) {
 //		CustomerValidator validator = buildTaskValidator(resData);
 //		ServiceErrorValidationMessage errorMessages = validator.validateForCreation();
 //		Admin res = null;

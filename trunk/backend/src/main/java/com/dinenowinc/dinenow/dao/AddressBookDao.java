@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class AddressBookDao extends BaseEntityDAOImpl<AddressBook, String> {
           .setParameter("value", customerId).getResultList();
       return addressBooks;
     }
-    catch (Exception e) {
+    catch (NoResultException e) {
       return null;
     }
   }

@@ -6,6 +6,8 @@ import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -18,21 +20,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="Size.GetAll", query = "from Size s")})
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = {"name", "description"}, name="size_uk")
+)
 public class Size extends BaseEntity{
 
 	private static final long serialVersionUID = -524833031492135630L;
 	
 	@Column(nullable=false,unique=false)
 	private String name;
+
 	@Column(nullable=false,unique=false)
 	private String description;
 	
 	@Column(nullable=false,unique=true)
 	private Integer compositeId;
 
-	
-	
-	
+
 	public Size() {
 		//this.setCompositeId();
 	}

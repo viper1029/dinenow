@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class TaxDao extends BaseEntityDAOImpl<Tax, String> {
@@ -23,7 +24,7 @@ public class TaxDao extends BaseEntityDAOImpl<Tax, String> {
           .setParameter("value", restaurantId).getResultList();
       return taxes;
     }
-    catch (Exception e) {
+    catch (NoResultException e) {
       return null;
     }
   }

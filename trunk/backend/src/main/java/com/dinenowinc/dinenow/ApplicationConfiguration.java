@@ -9,6 +9,8 @@ import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.UnsupportedEncodingException;
+
 
 public class ApplicationConfiguration extends Configuration{
 	
@@ -34,6 +36,13 @@ public class ApplicationConfiguration extends Configuration{
 
   @JsonProperty("swagger")
   public SwaggerBundleConfiguration swaggerBundleConfiguration;
+
+	@NotEmpty
+	private String jwtTokenSecret = "dfwzsdzwh823zebdwdz772632gdsbd";
+
+	public byte[] getJwtTokenSecret() throws UnsupportedEncodingException {
+		return jwtTokenSecret.getBytes("UTF-8");
+	}
 
 	public Boolean getIsInitDb() {
 		return isInitDb;

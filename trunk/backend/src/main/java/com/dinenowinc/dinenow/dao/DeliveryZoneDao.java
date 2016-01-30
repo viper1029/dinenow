@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +25,7 @@ public class DeliveryZoneDao extends BaseEntityDAOImpl<DeliveryZone, String> {
           .setParameter("value", restaurantId).getResultList();
       return deliveryZones;
     }
-    catch (Exception e) {
-      e.printStackTrace();
+    catch (NoResultException e) {
       return null;
     }
   }

@@ -10,7 +10,9 @@ swagger:
 server:
   rootPath: '/api/v1/*'
 
-isInitDb: false
+jwtTokenSecret: e6a88cad578566a6348ffb8d1bf026
+
+isInitDb: true
 # Logging settings.
 logging:
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.

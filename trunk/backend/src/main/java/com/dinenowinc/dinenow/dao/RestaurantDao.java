@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Review;
@@ -33,8 +34,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.setParameter("id",item_id).getSingleResult(); 
 
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -46,8 +46,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.setParameter("id",size_id).getSingleResult(); 
 
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -58,8 +57,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.setParameter("id",category_id).getSingleResult(); 
 
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -71,8 +69,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.setParameter("id",menu_id).getSingleResult(); 
 
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -90,8 +87,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.setParameter("keyword",keyword).getSingleResult(); 
 
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -106,8 +102,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 			Restaurant l = (Restaurant) getEntityManager().createQuery("SELECT t FROM Restaurant t where lower(t.name) = :value ",
 					Restaurant.class).setParameter("value", name).getSingleResult();
 			return l;
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -124,8 +119,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 							Restaurant.class).setParameter("value", id)
 					.getSingleResult();*/	
 			return l;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -180,7 +174,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					return l;
 				}
 			}
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -200,7 +194,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 							.setParameter("value3", location.getY())
 							.setParameter("value4", distance).getResultList();
 			return l;
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -259,7 +253,6 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 
 			return l;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -324,8 +317,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 					.getResultList();
 			System.out.println(l.size()+">>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			return l;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -372,7 +364,6 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 			}
 			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -425,8 +416,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 			}
 			System.out.println(l);*/
 			return l;
-		} catch(Exception e){
-			e.printStackTrace();
+		} catch(NoResultException e){
 			return null;
 		}
 	}

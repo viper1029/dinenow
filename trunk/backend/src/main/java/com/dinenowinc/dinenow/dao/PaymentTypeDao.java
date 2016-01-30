@@ -1,6 +1,7 @@
 package com.dinenowinc.dinenow.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
@@ -20,8 +21,7 @@ public class PaymentTypeDao extends BaseEntityDAOImpl<PaymentType, String>{
 			PaymentType l = (PaymentType) getEntityManager().createQuery("SELECT t FROM PaymentType t where lower(t.name) = :value ",
 					PaymentType.class).setParameter("value", name).getSingleResult();
 			return l;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}

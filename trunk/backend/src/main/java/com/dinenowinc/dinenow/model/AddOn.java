@@ -10,12 +10,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
@@ -23,8 +23,6 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Audited
-@NamedQueries({ @NamedQuery(name = "AddOn.GetAll", query = "from AddOn m") })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddOn extends AvailabilityEntity {
 
@@ -37,8 +35,7 @@ public class AddOn extends AvailabilityEntity {
   private String description;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  @JoinColumn(name = "id_addon")
-  @ForeignKey(name = "id_addon_addOn_size_info_Fk")
+  @JoinColumn(name = "id_addon", foreignKey = @ForeignKey(name = "id_addon_addOn_size_info_Fk_2"))
   private final Set<SizeInfo> sizes = new HashSet<SizeInfo>();
 
 

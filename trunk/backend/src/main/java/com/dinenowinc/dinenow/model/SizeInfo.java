@@ -26,7 +26,6 @@ public class SizeInfo extends InfoSize<Size>{
 	}
 	
 	public SizeInfo(Size addon) {
-		
 		setSize(addon);
 	}
 	

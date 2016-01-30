@@ -2,6 +2,7 @@ package com.dinenowinc.dinenow.dao;
 
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.Version;
 import com.google.inject.Inject;
@@ -21,8 +22,7 @@ public class VersionDao extends BaseEntityDAOImpl<Version, String>{
 			Version v = (Version) getEntityManager().createQuery("SELECT t FROM Version t order by t.created_by desc ",
 					Version.class).getSingleResult();	
 			return v;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}

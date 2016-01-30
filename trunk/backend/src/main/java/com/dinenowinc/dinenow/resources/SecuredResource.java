@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.Constants;
 import com.dinenowinc.dinenow.DineNowApplication;
 import com.dinenowinc.dinenow.dao.AdminDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
@@ -26,14 +27,15 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.google.inject.Inject;
+import com.twilio.sdk.TwilioRestException;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -54,7 +55,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,10 +70,10 @@ public class SecuredResource {
   private RestaurantDao restaurantDao;
 
   @Inject
-  private RestaurantUserDao userDao;
+  private RestaurantUserDao restaurantUserDao;
 
   @Inject
-  private RestaurantUserService userService;
+  private RestaurantUserService restaurantUserService;
 
   @Inject
   private CustomerService customerService;
@@ -90,8 +90,6 @@ public class SecuredResource {
   private final byte[] tokenSecret;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SecuredResource.class);
-
-  private static final int EXPIRY_IN_SECONDS = 60 * 1440;
 
   private static final Pattern CREDENTIALS_PATTERN = Pattern.compile("(.*?):(.*)");
 
@@ -132,13 +130,13 @@ public class SecuredResource {
     }
     catch (IOException e) {
       LOGGER.error("Exception: could not decode authentication string", e);
-      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: could not decode authentication string"));
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: could not decode authentication string."));
     }
 
     try {
       Matcher matcher = CREDENTIALS_PATTERN.matcher(usernameAndPassword);
       if (!matcher.matches()) {
-        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Email or Password cannot be empty"));
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Email or Password cannot be empty."));
       }
 
       final String email = matcher.group(1);
@@ -148,7 +146,7 @@ public class SecuredResource {
         return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Email cannot be empty"));
       }
       else if (!email.matches(EMAIL_PATTERN)) {
-        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Email is not in correct format"));
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Email is not in correct format."));
       }
 
       else if (password == null || password.length() == 0) {
@@ -157,43 +155,36 @@ public class SecuredResource {
       password = MD5Hash.md5Spring(password);
 
 
-      // Start login services
-
-      RestaurantUser uLogin = userService.checkCredentials(email, password);
-
-      if (uLogin == null) {
-        Admin uAdmin = adminService.checkCredentials(email, password);
-        if (uAdmin == null) {
-          Customer uCustomer = customerService.checkCredentials(email, password);
-          if (uCustomer == null) {
-
-            return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Invalid username or password"));
+      RestaurantUser restaurantUser = restaurantUserService.checkCredentials(email, password);
+      if (restaurantUser == null) {
+        Admin admin = adminService.checkCredentials(email, password);
+        if (admin == null) {
+          Customer customer = customerService.checkCredentials(email, password);
+          if (customer == null) {
+            return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Invalid username or password."));
           }
           else {
-            Map<String, Object> data = generateToken(uCustomer.getId(), UserRole.CUSTOMER, uCustomer, null);
+            Map<String, Object> data = generateToken(customer.getId(), UserRole.CUSTOMER, customer, null);
             return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
           }
         }
-        else { // System.out.println("uAdmin-else");
-          Map<String, Object> data = generateToken(uAdmin.getId(), UserRole.ADMIN, uAdmin, null);
+        else {
+          Map<String, Object> data = generateToken(admin.getId(), UserRole.ADMIN, admin, null);
           return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
         }
-
       }
-      Restaurant restaurant = restaurantDao.findByIDUser(uLogin.getId());
-      //System.out.println(">>>>>>>>>." + restaurant );
-      Map<String, Object> data = generateToken(uLogin.getId(), uLogin.getRole(), uLogin, restaurant);
+      Restaurant restaurant = restaurantDao.findByIDUser(restaurantUser.getId());
+      Map<String, Object> data = generateToken(restaurantUser.getId(), restaurantUser.getRole(), restaurantUser, restaurant);
       return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
     }
     catch (Exception e) {
-      System.out.println("No Headers Found");
-      e.printStackTrace();
+      LOGGER.debug("Error attempting to login.", e);
       return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: " + e.getMessage()));
     }
   }
 
   @POST
-  @ApiOperation(value = "api forget password", notes = "Insert type,<pre><code>{\"email\":\"1234@gmail.com\"}</code></pre><br/><br/><pre><code>{\"phone\":\"+841674546172\"}</code></pre>")
+  @ApiOperation(value = "forgot password", notes = "")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "have an SMS was sent"),
       @ApiResponse(code = 200, message = "have an email was sent"),
@@ -204,94 +195,78 @@ public class SecuredResource {
       @ApiResponse(code = 400, message = "format must containskey 'phone' or 'email'"),
       @ApiResponse(code = 400, message = "Exception: ###")
   })
-  @Path("/forget")
-  public Response forget(@QueryParam("type") String type, HashMap<String, Object> information) {
+  @Path("/forgot")
+  public Response forget(HashMap<String, Object> inputMap) {
     try {
-      if (information.containsKey("phone")) {
-        String phone = information.get("phone").toString();
-        if (phone == null) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("format must containskey 'phone'"));
-        }
-        String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
+      if (inputMap.get("email") == null && inputMap.get("phone") == null) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Reset method not specified."));
+      }
 
-        if (type != null && type.equals("resturant")) {
-          RestaurantUser uInfo = userDao.getRestaurantUserByPhoneNumber(phone);
-          if (uInfo == null) {
-            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("this phone number does not exist"));
-          }
-          else if (Utils.sendSMSCode("Reset", token, phone)) {
-            uInfo.setReset_key(token);
-            userDao.update(uInfo);
-            return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("OTP sent to your number"));
-          }
-          else {
-            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("cannot send SMS"));
-          }
+      if (StringUtils.isNotBlank((String) inputMap.get("phone"))) {
+        String phone = inputMap.get("phone").toString();
+        String validationCode = RandomStringUtils.random(Constants.VALIDATION_CODE_LENGTH, 0, 0, false, true, null, new SecureRandom());
+        Customer customer = customerDao.getCustomerByPhoneNumber(phone);
 
-        }
-        else if (Utils.sendSMSCode("Reset", token, phone)) {
-          Customer cus = customerDao.getCustomerByPhoneNumber(phone);
-          cus.setResetKey(token);
+        if(customer != null) {
+          Utils.sendSMSCode("Reset code: " + validationCode, phone);
+          customer.setResetKey(validationCode);
           Date timeReset = DateUtils.addHours(new Date(), DineNowApplication.timeResetKey);
-          cus.setResetKeyTime(timeReset);
-          customerDao.update(cus);
-
-          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("OTP sent to your number"));
+          customer.setResetKeyTime(timeReset);
+          customerDao.update(customer);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Reset code sent to phone."));
         }
-        else {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("cannot send SMS"));
+        else  {
+          RestaurantUser restaurantUser = restaurantUserDao.getRestaurantUserByPhoneNumber(phone);
+          if(restaurantUser == null) {
+            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("This phone number is not registered."));
+          }
+          Utils.sendSMSCode("Reset code: " + validationCode, phone);
+          restaurantUser.setResetKey(validationCode);
+          restaurantUserDao.update(restaurantUser);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Reset code sent to phone."));
         }
       }
-      else {
-        if (information.containsKey("email")) {
-          String email = information.get("email").toString();
-          if (email == null) {
-            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("format must containskey 'email'"));
-          }
-          if (email != null && email.matches(EMAIL_PATTERN)) {
+      else if (StringUtils.isNotBlank((String) inputMap.get("email"))) {
+        String email = inputMap.get("email").toString();
+        String validationCode = RandomStringUtils.random(Constants.VALIDATION_CODE_LENGTH, 0, 0, false, true, null, new SecureRandom());
+        if(!email.matches(EMAIL_PATTERN)) {
+          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("The email is not in correct format."));
+        }
 
-            if (type != null && type.equals("resturant")) {
-              RestaurantUser uInfo = userDao.getRestaurantUserByEmail(email);
-              if (uInfo == null) {
-                return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("this email does not exist"));
-              }
-              String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
-              JavaMail blah = new JavaMail(email, "please copy code below to change the password", token);
-              uInfo.setReset_key(token);
-              userDao.update(uInfo);
-            }
-            else {
-              Customer uInfo = customerService.getUserByEmail(email);
-              if (uInfo == null) {
-                return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("this email does not exist"));
-              }
-              String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
-              JavaMail blah = new JavaMail(email, "please copy code below to change the password", token);
-              uInfo.setResetKey(token);
-              Date timeReset = DateUtils.addHours(new Date(), DineNowApplication.timeResetKey);
-              uInfo.setResetKeyTime(timeReset);
-              customerDao.update(uInfo);
-            }
-            return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Please check your email for instruction on how to rest your password.. "));
-          }
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("this email does not exist"));
+        Customer customer = customerService.getUserByEmail(email);
+        if (customer != null) {
+          JavaMail javaMail = new JavaMail(email, "Your reset code: ", validationCode);
+          customer.setResetKey(validationCode);
+          Date timeReset = DateUtils.addHours(new Date(), DineNowApplication.timeResetKey);
+          customer.setResetKeyTime(timeReset);
+          customerDao.update(customer);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Please check your email for instruction on how to rest your password."));
         }
         else {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("format must containskey 'phone' or 'email'"));
+          RestaurantUser restaurantUser = restaurantUserDao.getRestaurantUserByEmail(email);
+          if (restaurantUser == null) {
+            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("This email is not registered."));
+          }
+          JavaMail javaMail = new JavaMail(email, "Your reset code: ", validationCode);
+          restaurantUser.setResetKey(validationCode);
+          restaurantUserDao.update(restaurantUser);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Please check your email for instruction on how to rest your password."));
         }
       }
     }
     catch (MessagingException m) {
+      m.printStackTrace();
       return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: Internet connection failed "));
     }
     catch (Exception e) {
       return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: " + e.getMessage()));
     }
+    return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Encountered error resetting password."));
   }
 
 
   @POST
-  @ApiOperation(value = "api confirm forget password", notes = "Insert resetKey and type,<br/><br/><pre><code>{\"password\":\"newPassword\"}</code></pre>")
+  @ApiOperation(value = "reset password")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "succeeded"),
       @ApiResponse(code = 410, message = "resetKey expired!!!!!"),
@@ -301,51 +276,60 @@ public class SecuredResource {
       @ApiResponse(code = 400, message = "Exception: ###")
   })
   @Path("/forget/confirm")
-  public Response confirm(@QueryParam("type") String type, HashMap<String, Object> information) {
+  public Response confirm(HashMap<String, Object> paramMap) {
+
+    if (paramMap.get("password") == null) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Password not provided."));
+    }
+    if (paramMap.get("resetKey") == null) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Reset key not provided."));
+    }
+    if (paramMap.get("id") == null) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Customer id not provided."));
+    }
 
     try {
-      String passwordNew = information.get("password").toString();
-      String resetKey = information.get("resetKey").toString();
-      if (type != null && type.equals("resturant")) {
-        RestaurantUser cus = userDao.findByResetKey(resetKey);
-        if (cus != null) {
-          if (passwordNew != null && passwordNew.length() >= 6) {
-            cus.setPassword(MD5Hash.md5Spring(passwordNew));
-            cus.setReset_key(null);
-            userDao.update(cus);
-            return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("succeeded"));
-          }
-          else {
-            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("new password empty or too short"));
-          }
+      String newPassword = paramMap.get("password").toString();
+      String resetKey = paramMap.get("resetKey").toString();
+      String id = paramMap.get("id").toString();
+
+      if (StringUtils.isBlank(newPassword) || newPassword.length() >= Constants.MINIMUM_PASSWORD_LENGTH) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Password is too short."));
+      }
+
+      Customer customer = customerDao.getCustomerByID(id);
+      if (customer != null) {
+        if (customer.getResetKeyTime().getTime() <= new Date().getTime()) {
+          customer.setResetKey(null);
+          customer.setResetKeyTime(null);
+          customerDao.update(customer);
+          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("The reset key has expired."));
+        }
+
+        if(customer.getResetKey().equalsIgnoreCase(resetKey)) {
+          customer.setPassword(MD5Hash.md5Spring(newPassword));
+          customer.setResetKey(null);
+          customer.setResetKeyTime(null);
+          customerDao.update(customer);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Password updated."));
         }
         else {
-          return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, new ServiceErrorMessage("ResturantUser not found "));
+          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Reset code is not valid."));
         }
       }
       else {
-        Customer cus = customerDao.findByResetKey(resetKey);
-        if (cus != null) {
-          if (cus.getResetKeyTime().getTime() <= new Date().getTime()) {
-            cus.setResetKey(null);
-            cus.setResetKeyTime(null);
-            customerDao.update(cus);
-            return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("resetKey expired!!!!!"));
-          }
-
-          if (passwordNew != null && passwordNew.length() >= 6) {
-            cus.setPassword(MD5Hash.md5Spring(passwordNew));
-            cus.setResetKey(null);
-            cus.setResetKeyTime(null);
-            customerDao.update(cus);
-            return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("succeeded"));
-          }
-          else {
-            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("new password empty or too short"));
-          }
+        RestaurantUser restaurantUser = restaurantUserDao.getRestaurantUserById(id);
+        if (restaurantUser == null) {
+          return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, new ServiceErrorMessage("Could not find user with the requested id."));
+        }
+        if(restaurantUser.getResetKey().equalsIgnoreCase(resetKey)) { //TODO: Check the time of reset code
+          restaurantUser.setPassword(MD5Hash.md5Spring(newPassword));
+          restaurantUser.setResetKey(null);
+          restaurantUserDao.update(restaurantUser);
+          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Password updated."));
         }
         else {
-          return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, new ServiceErrorMessage("Customer not found"));
+            return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Reset code is not valid."));
         }
       }
     }
@@ -354,29 +338,8 @@ public class SecuredResource {
     }
   }
 
-
-
-
-
-	/*
-   * register normal
-	 * 
-	 * {"firstName":"first",
-		"lastName":"last",
-		"email":"hien@gmail.com",
-		"password":"1234567",
-		"phoneNumber":"09864545",
-		"socialAccounts":""}
-	 */
-
   @POST
-  @ApiOperation(value = "api register for customer", notes = "<pre><code>{"
-      + "<br/>  \"firstName\": \"hien\","
-      + "<br/>  \"lastName\": \"nguyen\","
-      + "<br/>  \"email\": \"hien12@gmail.com\","
-      + "<br/>  \"password\": \"123456\","
-      + "<br/>  \"phoneNumber\": \"0903\""
-      + "<br/>}</code></pre>")
+  @ApiOperation(value = "create new customer")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "data"),
       @ApiResponse(code = 400, message = "list error"),
@@ -384,58 +347,46 @@ public class SecuredResource {
       @ApiResponse(code = 400, message = "Exception: ###")
   })
   @Path("/register")
-  public Response resgiterCustomer(HashMap<String, Object> customer) {
-    System.out.println("in code");
-
+  public Response registerCustomer(HashMap<String, Object> inputMap) {
     try {
-      String firstName = customer.get("firstName").toString();
-      String lastName = customer.get("lastName").toString();
-      String email = customer.get("email").toString();
-      String password = customer.get("password").toString();
-      String phoneNumber = customer.get("phoneNumber").toString();
-      Customer customerInput = new Customer();
-      customerInput.setFirstName(firstName);
-      customerInput.setLastName(lastName);
-      customerInput.setEmail(email);
-      customerInput.setPassword(MD5Hash.md5Spring(password));
-      customerInput.setPhoneNumber(phoneNumber);
-      customerInput.setCreatedBy(firstName);
-      customerInput.setCreatedDate(new Date());
-      String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
-      System.out.println(token);
+      Customer customer = new Customer();
+      customer.setFirstName(inputMap.get("firstName").toString());
+      customer.setLastName(inputMap.get("lastName").toString());
+      customer.setEmail(inputMap.get("email").toString());
+      customer.setPassword(MD5Hash.md5Spring(inputMap.get("password").toString()));
+      customer.setPhoneNumber(inputMap.get("phoneNumber").toString());
+      customer.setCreatedBy(customer.getFirstName());
+      customer.setCreatedDate(new Date());
 
-
-      if (Utils.sendSMSCode("Validation", token, phoneNumber)) {
-
-        ServiceResult<Customer> serviceResult = customerService.createNewCustomer(customerInput);
-        if (serviceResult.hasErrors()) {
-          return ResourceUtils.asFailedResponse(Response.Status.CONFLICT, serviceResult.getErrors());
-        }
-        int expire_in_seconds = 60 * 1440;
-        Map<String, Object> data = generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
-        Customer cus = customerDao.getCustomerByEmail(email);
-        cus.setValidationCode(token);
-        Date timeValidation = DateUtils.addHours(new Date(), DineNowApplication.timeResetKey);
-        cus.setValidationCodeTime(timeValidation);
-        String id_customer_stripe = DineNowApplication.stripe.createCustomer(cus);
-        cus.setCustomerStripe(id_customer_stripe);
-        customerDao.update(cus);
-
-        return ResourceUtils.asSuccessResponse(Status.OK, data);
+      String validationCode = RandomStringUtils.random(Constants.VALIDATION_CODE_LENGTH, 0, 0, false, true, null, new SecureRandom());
+      ServiceResult<Customer> serviceResult = customerService.validateCustomer(customer);
+      if (serviceResult.hasErrors()) {
+        return ResourceUtils.asFailedResponse(Response.Status.CONFLICT, serviceResult.getErrors());
       }
-      else {
-        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Can't send SMS"));
+      customerDao.save(customer);
+
+      try {
+        Utils.sendSMSCode(Constants.SMS_VALIDATION_MESSAGE + validationCode, customer.getPhoneNumber());
+        Customer newCustomer = customerDao.getCustomerByEmail(customer.getEmail());
+        newCustomer.setValidationCode(validationCode);
+        newCustomer.setValidationCodeTime(DateUtils.addHours(new Date(), DineNowApplication.timeResetKey));
+        newCustomer.setCustomerStripe(DineNowApplication.stripe.createCustomer(customer));
+        customerDao.update(newCustomer);
       }
+      catch (TwilioRestException e) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Error sending SMS to " + customer.getPhoneNumber().substring(1)));
+      }
+      Map<String, Object> token = generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
+      return ResourceUtils.asSuccessResponse(Status.OK, token);
     }
     catch (Exception e) {
-      e.printStackTrace();
       return ResourceUtils.asFailedResponse(Response.Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage("Exception: " + e.getMessage()));
     }
   }
 
 
   @POST
-  @ApiOperation(value = "api validation phone for customer", notes = "id of customer<br/><br/><pre><code>{\"id\":\"88d91bd5-a7bb-48a5-a368-6432ab9387f1\"}</code></pre>")
+  @ApiOperation(value = "validate phone number")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "validation phone..."),
       @ApiResponse(code = 410, message = "validationCode expired!!!!!"),
@@ -444,52 +395,58 @@ public class SecuredResource {
       @ApiResponse(code = 404, message = "not found customer"),
   })
   @Path("/validation")
-  public Response validationPhone(@QueryParam("validationCode") String validationCode, @UnwrapValidatedValue HashMap<String, Object> information) {
-    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+  public Response validatePhoneNumber(HashMap<String, Object> inputMap) {
+
+    if (inputMap.get("id") == null) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("No customer ID provided."));
+    }
+    if (inputMap.get("validationCode") == null) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("No validation code provided."));
+    }
+
     try {
-      if (information.get("id") == null) {
-        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(String.format("Please provide customer ID", "Please provide customer ID")));
+      String customerId = inputMap.get("id").toString();
+      String validationCode = inputMap.get("validationCode").toString();
+      Customer customer = customerDao.findOne(customerId);
+
+      if (customer == null) {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Customer does not exist."));
       }
-      String idCustomer = information.get("id").toString();
-      Customer cus = customerDao.findOne(idCustomer);
-      if (cus != null) {
-        if (cus.getValidationCode() != null && cus.getValidationCodeTime().getTime() <= new Date().getTime()) {
-          cus.setValidationCode(null);
-          cus.setValidationCodeTime(null);
-          cus.setPhone_number_valid(false);
-          customerDao.update(cus);
-          return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("validationCode expired!!!!!"));
-        }
 
-        if (cus.getValidationCode() != null && validationCode.equals(cus.getValidationCode())) {
-          cus.setValidationCode(null);
-          cus.setValidationCodeTime(null);
-          cus.setPhone_number_valid(true);
+      if (customer.getValidationCode() != null && customer.getValidationCodeTime().getTime() <= new Date().getTime()) {
+        customer.setValidationCode(null);
+        customer.setValidationCodeTime(null);
+        customerDao.update(customer);
+        return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("Validation code has expired."));
+      }
 
-          if (!cus.isPhone_point()) {
-            cus.setPoint(cus.getPoint() + Utils.DUMMY_POINT);
-            cus.setPhone_point(true);
-          }
-          customerDao.update(cus);
-          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Phone number has been verified."));
+      if (customer.getValidationCode() != null && validationCode.equalsIgnoreCase(customer.getValidationCode())) {
+        customer.setValidationCode(null);
+        customer.setValidationCodeTime(null);
+        customer.setIsPhoneNumberValid(true);
+
+        if (!customer.isPhonePoint()) {
+          customer.setPoint(customer.getPoint() + Constants.POINTS_FOR_PHONE_NUMBER_CONFIRMATION);
+          customer.setPhonePoint(true);
         }
-        else {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("incorrect validation code"));
-        }
+        customerDao.update(customer);
+        return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Phone number has been verified."));
+      }
+      else if (customer.getIsPhoneNumberValid()) {
+        return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("This phone number has already been verified."));
       }
       else {
-        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("c"));
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Incorrect validation code."));
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
       return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, new ServiceErrorMessage("Exception: " + e.getMessage()));
     }
   }
 
 
   @POST
-  @ApiOperation(value = "api resent validation code", notes = "id of customer<br/><br/><pre><code>{\"id\":\"88d91bd5-a7bb-48a5-a368-6432ab9387f1\"}</code></pre>")
+  @ApiOperation(value = "resent validation code")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "validation code send to phone"),
       @ApiResponse(code = 400, message = "cannot send SMS"),
@@ -497,29 +454,27 @@ public class SecuredResource {
       @ApiResponse(code = 404, message = "not found customer")
   })
   @Path("/resend")
-  public Response resendValidationPhone(HashMap<String, Object> information) {
+  public Response resendValidationCode(HashMap<String, Object> inputMap) {
     try {
-      String idCustomer = information.get("id").toString();
-
-
-      Customer cus = customerDao.findOne(idCustomer);
-
-      if (cus != null) {
-        String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
-
-        if (Utils.sendSMSCode("Validation", token, cus.getPhoneNumber())) {
-          cus.setValidationCode(token);
-          Date timeValidation = DateUtils.addHours(new Date(), DineNowApplication.timeValidationCode);
-          cus.setValidationCodeTime(timeValidation);
-          customerDao.update(cus);
-          return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Validation code send to phone"));
-        }
-        else {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("cannot send SMS"));
-        }
+      if (inputMap.get("id") == null) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("No customer ID provided."));
       }
-      else {
-        return ResourceUtils.asSuccessResponse(Status.NOT_FOUND, new ServiceErrorMessage("not found customer"));
+
+      Customer customer = customerDao.findOne(inputMap.get("id").toString());
+      if (customer == null) {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Customer does not exist."));
+      }
+
+      try {
+        String validationCode = RandomStringUtils.random(Constants.VALIDATION_CODE_LENGTH, 0, 0, false, true, null, new SecureRandom());
+        Utils.sendSMSCode(Constants.SMS_VALIDATION_MESSAGE + validationCode, customer.getPhoneNumber());
+        customer.setValidationCode(validationCode);
+        customer.setValidationCodeTime(DateUtils.addHours(new Date(), DineNowApplication.timeValidationCode));
+        customerDao.update(customer);
+        return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("Validation code sent."));
+      }
+      catch (TwilioRestException e) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Error sending SMS to " + customer.getPhoneNumber().substring(1)));
       }
     }
     catch (Exception e) {
@@ -624,9 +579,9 @@ public class SecuredResource {
         try {
           PhoneNumber swissNumberProto = phoneUtil.parse(phoneNumber, Locale.getDefault().getCountry());
           if (PhoneNumberUtil.getInstance().isValidNumber(swissNumberProto)) {
-            String token = RandomStringUtils.random(6, 0, 0, false, true, null, new SecureRandom());
-            if (Utils.sendSMSCode("Validation", token, phoneNumber)) {
-              customer.setPhone_number_valid(false);
+            String token = RandomStringUtils.random(Constants.VALIDATION_CODE_LENGTH, 0, 0, false, true, null, new SecureRandom());
+            if (Utils.sendSMSCode(Constants.SMS_VALIDATION_MESSAGE + token, phoneNumber)) {
+              customer.setIsPhoneNumberValid(false);
               ;
               customer.setValidationCode(token);
               Date timeValidation = DateUtils.addHours(new Date(), DineNowApplication.timeResetKey);
@@ -659,7 +614,6 @@ public class SecuredResource {
 
 
   private Map<String, Object> generateToken(String id, UserRole role, Object user, Restaurant restaurant) {
-
     String signedToken = "";
     HashMap<String, Object> rdto = new HashMap<String, Object>();
     if (user instanceof RestaurantUser) {
@@ -678,7 +632,7 @@ public class SecuredResource {
               .builder()
               .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
               .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(EXPIRY_IN_SECONDS))
+              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
               .build()).build();
       signedToken = signer.sign(access_token);
     }
@@ -697,7 +651,7 @@ public class SecuredResource {
               .builder()
               .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
               .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(EXPIRY_IN_SECONDS))
+              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
               .build()).build();
       signedToken = signer.sign(access_token);
     }
@@ -717,7 +671,7 @@ public class SecuredResource {
               .builder()
               .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
               .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(EXPIRY_IN_SECONDS))
+              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
               .build()).build();
       signedToken = signer.sign(access_token);
     }

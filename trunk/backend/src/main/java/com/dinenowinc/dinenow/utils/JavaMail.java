@@ -6,11 +6,11 @@ import javax.mail.internet.*;
 import java.util.*;
 
 public class JavaMail {    
-    String d_email = "abhinav.kumar@udaantechnologies.com", //"hiennguyen922@gmail.com",
-            d_password = "Abhi@1234", // "nvh03101992",
+    String d_email = "dinenow24@gmail.com",
+            d_password = "XFyP&N[fTi9vV!*",
             d_host = "smtp.gmail.com",
             d_port = "465",
-            m_to =  "abhinav.kumar@udaantechnologies.com", //"hiennguyen92@gmail.com",
+            m_to =  "",
             m_subject = "Testing",
             m_text = "please click link below to change the password!";
     

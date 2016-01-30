@@ -1,4 +1,4 @@
-package com.dinenowinc.dinenow;
+package com.dinenowinc;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

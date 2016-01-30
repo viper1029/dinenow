@@ -120,7 +120,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 		if(dto.containsKey("phoneNumber")){
 			if(!entity.getPhoneNumber().equals(dto.get("phoneNumber").toString()))
 			{
-			   entity.setPhone_number_valid(false);
+			   entity.setIsPhoneNumberValid(false);
 			   entity.setPhoneNumber(dto.get("phoneNumber").toString());
 			}
 		}
@@ -391,7 +391,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 				if (dto.containsKey("phoneNumber")) {
 					if(!customer.getPhoneNumber().equals(dto.get("phoneNumber").toString()))
 					{
-						customer.setPhone_number_valid(false);
+						customer.setIsPhoneNumberValid(false);
 						customer.setPhoneNumber(dto.get("phoneNumber").toString());
 					}
 					

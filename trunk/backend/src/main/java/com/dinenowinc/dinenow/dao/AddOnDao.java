@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 
 import com.dinenowinc.dinenow.model.AddOn;
@@ -25,7 +26,7 @@ public class AddOnDao extends BaseEntityDAOImpl<AddOn, String> {
           .setParameter("value", restaurantId).getResultList();
       return addOns;
     }
-    catch (Exception e) {
+    catch (NoResultException e) {
       return null;
     }
   }
