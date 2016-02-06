@@ -146,6 +146,54 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   private AbstractResource<Size> size1;
 
   @POST
+  @ApiOperation(value = "add new restaurant")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 401, message = "access denied for user"),
+      @ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
+  })
+  @Override
+  public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
+    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
+      return super.create(access, inputMap);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+  }
+
+  @PUT
+  @ApiOperation(value = "api update restaurant")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 401, message = "access denied for user"),
+      @ApiResponse(code = 500, message = "Cannot update entity. Error message: ###")
+  })
+  @Path("/{id}")
+  @Override
+  public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      return super.update(access, id, inputMap);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+  }
+
+  @DELETE
+  @Path("/{id}")
+  @ApiOperation(value = "api delete restaurant")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = ""),
+      @ApiResponse(code = 401, message = "access denied for user"),
+      @ApiResponse(code = 500, message = "Cannot delete entity. Error message: ###"),
+      @ApiResponse(code = 404, message = "Cannot found entity")
+  })
+  @Override
+  public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
+    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
+      return super.delete(access, id);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+  }
+
+  @POST
   @Path("/{restaurant_id}/checkout")
   @ApiOperation(value = "api CheckOut for Customer")
   @ApiResponses(value = {
@@ -156,7 +204,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   public Response checkOut(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
     try {
       if (access.getRole() == UserRole.CUSTOMER) {
-        Restaurant restaurant = restaurantDao.findOne(restaurant_id);
+        Restaurant restaurant = restaurantDao.get(restaurant_id);
         if (restaurant != null) {
 
           Order co = new Order();
@@ -188,8 +236,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
               OrderDetail od = new OrderDetail();
               od.setQuantity(Integer.parseInt(hashMap.get("quantity").toString()));
 
-              Item item = itemDao.findOne(hashMap.get("id").toString());
-              ItemInfo itemInfo = itemInfoDao.findOne(hashMap.get("info").toString());
+              Item item = itemDao.get(hashMap.get("id").toString());
+              ItemInfo itemInfo = itemInfoDao.get(hashMap.get("info").toString());
 
 
               HashMap<String, Object> sizes = (HashMap<String, Object>) hashMap.get("sizes");
@@ -204,7 +252,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
               co.addOrderDetail(od);
             }
           }
-          Customer cus = customerDao.findOne(access.getId().toString());
+          Customer cus = customerDao.get(access.getId().toString());
           cus.addCustomerOrder(co);
 
 
@@ -254,7 +302,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @GET
   public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,
       @QueryParam("query") String query, @QueryParam("customer_phone") String c_ph, @QueryParam("order_no") long o_no) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       if (query != null) {
         List<Order> entities = new ArrayList<Order>();
         entities = customerOrderDao.searchByOrder(restaurant_id, query);
@@ -304,7 +352,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   })
   @GET
   public Response getDeliverByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<DeliveryZone> entities = deliveryZoneDao.getAllDeliveryZonesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -332,7 +380,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     int iPage = 1;
     int iSize = 50;
 
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
 
       if (page != null) {
         try {
@@ -507,7 +555,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @ApiResponse(code = 401, message = "access denied for user")
   })
   public Response getUsersByRestaurantID(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) == null) {
+    if (restaurantDao.get(restaurant_id) == null) {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
     }
     else if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -527,7 +575,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Items By Restaurant")
   @GET
   public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Item> entities = itemDao.getListByRestaurant(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -565,7 +613,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Sizes By Restaurant")
   @GET
   public Response getSizesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Size> entities = sizeDao.getSizesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
@@ -584,7 +632,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All AddOns By Restaurant")
   @GET
   public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<AddOn> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
@@ -603,7 +651,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Categories By Restaurant")
   @GET
   public Response getCategoriesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Category> entities = categoryDao.getCategoriesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -623,7 +671,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Taxes By Restaurant")
   @GET
   public Response getTaxesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Tax> entities = taxDao.getTaxesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -638,9 +686,9 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @Path("/{restaurant_id}/aboutus")
   @GET
   public Response getAboutUsByRestaurantId(@PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
 			/*List<Restaurant> entities = null ;
-			List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);*/
+			List<HashMap<String, Object>> dtos = ModelHelpers.getMapListFromEntities(entities);*/
       return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("this is Utilsing for Aboutus"));
     }
     else {
@@ -652,7 +700,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All SubMenus By Restaurant")
   @GET
   public Response getSubMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<SubMenu> entities = submenuDao.getListByRestaurant(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -687,7 +735,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Menus By Restaurant")
   @GET
   public Response getMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Menu> entities = menuDao.getMenusByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -715,7 +763,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Reviews By Restaurant")
   @GET
   public Response getReviewsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Review> entities = reviewDao.getReviewsByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -731,7 +779,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation("Get All Modifier By Restaurant")
   @GET
   public Response getModifiersByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.findOne(restaurant_id) != null) {
+    if (restaurantDao.get(restaurant_id) != null) {
       List<Modifier> entities = modifierDao.getModifiersByRestaurantId(restaurant_id);
       System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + entities.size());
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
@@ -773,7 +821,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @ApiOperation(value = "Set time  Dine-In Hours, Accept Delivery, Accept TakeOut")
   @PUT
   public Response setRestaurantHoliday(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
-    Restaurant restaurant = restaurantDao.findOne(restaurant_id);
+    Restaurant restaurant = restaurantDao.get(restaurant_id);
     if (restaurant != null) {
 
       System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
@@ -802,7 +850,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         restaurant.setClosedDay(arrHour);
       }
       dao.update(restaurant);
-      return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(restaurant));
+      return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(restaurant));
     }
     else {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
@@ -853,7 +901,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       + "<br/>}</code></pre>")
   @PUT
   public Response setTimeRestaurant(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
-    Restaurant restaurant = restaurantDao.findOne(restaurant_id);
+    Restaurant restaurant = restaurantDao.get(restaurant_id);
     if (restaurant != null) {
 
       String timezone = dto.get("timeZoneId").toString();
@@ -962,14 +1010,14 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       }
       if (dto.containsKey("acceptDelivery")) {
         boolean acceptDelivery = Boolean.parseBoolean(dto.get("acceptDelivery").toString());
-        restaurant.setAccept_delivery(acceptDelivery);
+        restaurant.setAcceptDelivery(acceptDelivery);
       }
       if (dto.containsKey("acceptTakeOut")) {
         boolean acceptTakeOut = Boolean.parseBoolean(dto.get("acceptTakeOut").toString());
-        restaurant.setAccept_takeout(acceptTakeOut);
+        restaurant.setAcceptTakeout(acceptTakeOut);
       }
       dao.update(restaurant);
-      return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(restaurant));
+      return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(restaurant));
     }
     else {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
@@ -977,149 +1025,102 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   }
 
   @Override
-  protected HashMap<String, Object> fromEntity(Restaurant entity) {
+  protected HashMap<String, Object> getMapFromEntity(Restaurant entity) {
     HashMap<String, Object> dto = new HashMap<String, Object>();
     dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
     return dto;
   }
 
-/*	@Override
-	protected List<HashMap<String, Object>> fromEntities(List<Restaurant> entities)	{
-		List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
-//		
-		for (Restaurant entity : entities) {
-			dtos.add(fromEntity(entity));			
-		}
-//		
-		return dtos;
-		
-		//return ModelHelpers.fromEntities(entities);
-	}*/
-
 
   @SuppressWarnings("unchecked")
   @Override
-  protected Restaurant fromAddDto(HashMap<String, Object> dto) {
-    Restaurant entity = super.fromAddDto(dto);
-    entity.setName(dto.get("name").toString());
-    entity.setDescription(dto.get("description").toString());
-    entity.setAccept_delivery(dto.containsKey("acceptDelivery") ? Boolean.parseBoolean(dto.get(
-        "acceptDelivery").toString()) : false);
-    entity.setAccept_dinein(dto.containsKey("acceptDineIn") ? Boolean.parseBoolean(dto.get(
-        "acceptDineIn").toString()) : false);
-    entity.setAccept_takeout(dto.containsKey("acceptTakeOut") ? Boolean.parseBoolean(dto.get(
-        "acceptTakeOut").toString()) : false);
-    entity.setAddress_1(dto.get("address1").toString());
-    entity.setAddress_2(dto.get("address2").toString());
-    entity.setCity(dto.get("city").toString());
-    entity.setKeyword(dto.get("keyword").toString());
-    entity.setProvince(dto.get("province").toString());
-    entity.setCountry(dto.get("country").toString());
-    entity.setPostal_code(dto.get("postalCode").toString());
-    entity.setPhone_number(dto.containsKey("phoneNumber") ? dto.get("phoneNumber").toString() : null);
-    entity.setWebsite(dto.get("webSite").toString());
-    entity.setContactPerson(dto.get("contactPerson").toString());
-    //	entity.setActive(entity.parseBoolean(Boolean.parseBoolean(dto.get("active").toString()));.parseInt(dto.get("active").toString()));
-    //	entity.setActive(Boolean.parseBoolean(dto.get("active").toString()));
-    entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
-    if (dto.containsKey("location")) {
-      HashMap<String, Double> loca = (HashMap<String, Double>) dto.get("location");
-      double lat = loca.get("lat");
-      double lng = loca.get("lng");
-      GeometryFactory gf = new GeometryFactory();
-      Point point = gf.createPoint(new Coordinate(lat, lng));
-      entity.setLocation(point);
-    }
-    entity.setTimezoneId(dto.containsKey("timeZoneId") ? dto.get("timeZoneId").toString() : "UTC");
-    if (dto.containsKey("stripe")) {
-      entity.setStripe(dto.get("stripe").toString());
-    }
-    if (dto.containsKey("cuisine")) {
-      entity.setCuisine(dto.get("cuisine").toString());
-    }
-    if (dto.containsKey("logo")) {
-      entity.setLogo(dto.get("logo").toString());
-    }
+  protected Restaurant getEntityForInsertion(HashMap<String, Object> inputMap) {
+    Restaurant entity = super.getEntityForInsertion(inputMap);
+    entity.setName(inputMap.get("name").toString());
+    entity.setDescription(inputMap.get("description").toString());
+    entity.setAcceptDelivery(inputMap.containsKey("acceptDelivery") ? Boolean.parseBoolean(inputMap.get("acceptDelivery").toString()) : false);
+    entity.setAcceptDineIn(inputMap.containsKey("acceptDineIn") ? Boolean.parseBoolean(inputMap.get("acceptDineIn").toString()) : false);
+    entity.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") ? Boolean.parseBoolean(inputMap.get("acceptTakeOut").toString()) : false);
+    entity.setAddress1(inputMap.get("address1").toString());
+    entity.setAddress2(inputMap.containsKey("address2") ? inputMap.get("address2").toString() : null);
+    entity.setCity(inputMap.get("city").toString());
+    entity.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() :null);
+    entity.setProvince(inputMap.get("province").toString());
+    entity.setCountry(inputMap.get("country").toString());
+    entity.setPostalCode(inputMap.get("postalCode").toString());
+    entity.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
+    entity.setWebsite(inputMap.get("webSite").toString());
+    entity.setContactPerson(inputMap.containsKey("contactPerson") ? inputMap.get("contactPerson").toString(): null);
+    entity.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
+    entity.setContactPerson(inputMap.containsKey("stripe") ? inputMap.get("stripe").toString(): null);
+    entity.setContactPerson(inputMap.containsKey("cuisine") ? inputMap.get("cuisine").toString(): null);
+    entity.setContactPerson(inputMap.containsKey("logo") ? inputMap.get("logo").toString(): null);
+    entity.setContactPerson(inputMap.containsKey("deliveryFee") ? inputMap.get("deliveryFee").toString(): null);
+    entity.setContactPerson(inputMap.containsKey("minimumOrder") ? inputMap.get("minimumOrder").toString(): null);
+    entity.setTimezoneId(inputMap.containsKey("timeZoneId") ? inputMap.get("timeZoneId").toString() : "UTC");
+    HashMap<String, Double> location = (HashMap<String, Double>) inputMap.get("location");
+    GeometryFactory gf = new GeometryFactory();
+    Point point = gf.createPoint(new Coordinate(location.get("lat"), location.get("lng")));
+    entity.setLocation(point);
 
-    if (dto.containsKey("deliveryFee")) {
-      entity.setLogo(dto.get("deliveryFee").toString());
-    }
-
-    if (dto.containsKey("minimumOrder")) {
-      entity.setLogo(dto.get("minimumOrder").toString());
-    }
-		
-/*		if (dto.containsKey("discount_allowed")) {
-			entity.setDiscount(Boolean.parseBoolean(dto.get("discount_allowed").toString()));
-		}*/
-
-/*		if (dto.containsKey("acceptDeliveryHours")) {
-			entity.setAccept_delivery_hours(dto.get("acceptDeliveryHours").toString());
-		}
-		if (dto.containsKey("acceptTakeOutHours")) {
-			entity.setAccept_takeout_hours(dto.get("acceptTakeOutHours").toString());
-		}*/
-    if (dto.containsKey("paymentTypes")) {
-      ArrayList<String> listKeyPaymentTypes = (ArrayList<String>) dto.get("paymentTypes");
+    if (inputMap.containsKey("paymentTypes")) {
+      ArrayList<String> listKeyPaymentTypes = (ArrayList<String>) inputMap.get("paymentTypes");
       for (String key : listKeyPaymentTypes) {
-        PaymentType paymentType = paymentTypeDao.findOne(key);
+        PaymentType paymentType = paymentTypeDao.get(key);
         entity.addPaymentTypes(paymentType);
-
       }
     }
     return entity;
   }
 
-
   @Override
-  protected Restaurant fromUpdateDto(Restaurant t, HashMap<String, Object> dto) {
-    Restaurant entity = super.fromUpdateDto(t, dto);
-    entity.setName(dto.containsKey("name") ? dto.get("name").toString() : entity.getName());
-    entity.setDescription(dto.containsKey("description") ? dto.get("description").toString() : entity.getDescription());
-    entity.setAccept_delivery(dto.containsKey("acceptDelivery") ? Boolean.parseBoolean(dto.get(
+  protected Restaurant getEntityForUpdate(Restaurant restaurant, HashMap<String, Object> inputMap) {
+    restaurant.setName(inputMap.containsKey("name") ? inputMap.get("name").toString() : restaurant.getName());
+    restaurant.setDescription(inputMap.containsKey("description") ? inputMap.get("description").toString() : restaurant.getDescription());
+    restaurant.setAcceptDelivery(inputMap.containsKey("acceptDelivery") ? Boolean.parseBoolean(inputMap.get(
         "acceptDelivery").toString()) : false);
-    entity.setAccept_dinein(dto.containsKey("acceptDineIn") ? Boolean.parseBoolean(dto.get(
+    restaurant.setAcceptDineIn(inputMap.containsKey("acceptDineIn") ? Boolean.parseBoolean(inputMap.get(
         "acceptDineIn").toString()) : false);
-    entity.setAccept_takeout(dto.containsKey("acceptTakeOut") ? Boolean.parseBoolean(dto.get(
+    restaurant.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") ? Boolean.parseBoolean(inputMap.get(
         "acceptTakeOut").toString()) : false);
-    entity.setAddress_1(dto.get("address1").toString());
-    entity.setAddress_2(dto.get("address2").toString());
-    entity.setCity(dto.get("city").toString());
-    entity.setKeyword(dto.containsKey("keyword") ? dto.get("keyword").toString() : entity.getKeyword());
-    entity.setProvince(dto.get("province").toString());
-    entity.setCountry(dto.get("country").toString());
-    entity.setPostal_code(dto.get("postalCode").toString());
-    entity.setPhone_number(dto.containsKey("phoneNumber") ? dto.get("phoneNumber").toString() : null);
-    entity.setWebsite(dto.get("webSite").toString());
-    entity.setContactPerson(dto.get("contactPerson").toString());
-    entity.setActive(dto.containsKey("active") ? Boolean.parseBoolean(dto.get("active").toString()) : entity.isActive());
-    entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : entity.getNetworkStatus());
-    if (dto.containsKey("location")) {
-      HashMap<String, Double> loca = (HashMap<String, Double>) dto.get("location");
+    restaurant.setAddress1(inputMap.get("address1").toString());
+    restaurant.setAddress2(inputMap.get("address2").toString());
+    restaurant.setCity(inputMap.get("city").toString());
+    restaurant.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() : restaurant.getKeyword());
+    restaurant.setProvince(inputMap.get("province").toString());
+    restaurant.setCountry(inputMap.get("country").toString());
+    restaurant.setPostalCode(inputMap.get("postalCode").toString());
+    restaurant.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
+    restaurant.setWebsite(inputMap.get("webSite").toString());
+    restaurant.setContactPerson(inputMap.get("contactPerson").toString());
+    restaurant.setActive(inputMap.containsKey("active") ? Boolean.parseBoolean(inputMap.get("active").toString()) : restaurant.isActive());
+    restaurant.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : restaurant.getNetworkStatus());
+    if (inputMap.containsKey("location")) {
+      HashMap<String, Double> loca = (HashMap<String, Double>) inputMap.get("location");
       double lat = loca.get("lat");
       double lng = loca.get("lng");
       GeometryFactory gf = new GeometryFactory();
       Point point = gf.createPoint(new Coordinate(lat, lng));
-      entity.setLocation(point);
+      restaurant.setLocation(point);
     }
-    if (dto.containsKey("logo")) {
-      entity.setLogo(dto.get("logo").toString());
-    }
-
-    if (dto.containsKey("deliveryFee")) {
-      entity.setLogo(dto.get("deliveryFee").toString());
+    if (inputMap.containsKey("logo")) {
+      restaurant.setLogo(inputMap.get("logo").toString());
     }
 
-    if (dto.containsKey("minimumOrder")) {
-      entity.setLogo(dto.get("minimumOrder").toString());
+    if (inputMap.containsKey("deliveryFee")) {
+      restaurant.setLogo(inputMap.get("deliveryFee").toString());
+    }
+
+    if (inputMap.containsKey("minimumOrder")) {
+      restaurant.setLogo(inputMap.get("minimumOrder").toString());
     }
 		
 /*		if (dto.containsKey("discount_allowed")) {
 			entity.setDiscount(Boolean.parseBoolean(dto.get("discount_allowed").toString()));
 		}*/
 
-    if (dto.containsKey("cuisine")) {
-      entity.setCuisine(dto.get("cuisine").toString());
+    if (inputMap.containsKey("cuisine")) {
+      restaurant.setCuisine(inputMap.get("cuisine").toString());
     }
 /*		if (dto.containsKey("acceptDeliveryHours")) {
 			entity.setAccept_delivery_hours(dto.get("acceptDeliveryHours").toString());
@@ -1128,28 +1129,28 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 			entity.setAccept_takeout_hours(dto.get("acceptTakeOutHours").toString());
 		}*/
 
-    return entity;
+    return restaurant;
   }
 
 
   @Override
-  protected HashMap<String, Object> onGet(Restaurant entity) {
+  protected HashMap<String, Object> onGet(Restaurant entity, User access) {
     HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
     dto.put("id", entity.getId());
     dto.put("name", entity.getName());
     dto.put("description", entity.getDescription());
-    dto.put("acceptDelivery", entity.isAccept_delivery());
-    dto.put("acceptDineIn", entity.isAccept_dinein());
-    dto.put("acceptTakeOut", entity.isAccept_takeout());
+    dto.put("acceptDelivery", entity.isAcceptDelivery());
+    dto.put("acceptDineIn", entity.isAcceptDineIn());
+    dto.put("acceptTakeOut", entity.isAcceptTakeout());
     dto.put("location", entity.getLocation() != null ? new LatLng(entity.getLocation().getX(), entity.getLocation().getY()) : "");
-    dto.put("address1", entity.getAddress_1());
-    dto.put("address2", entity.getAddress_2());
+    dto.put("address1", entity.getAddress1());
+    dto.put("address2", entity.getAddress2());
     dto.put("city", entity.getCity());
     dto.put("keyword", entity.getKeyword());
     dto.put("province", entity.getProvince());
-    dto.put("postalCode", entity.getPostal_code());
+    dto.put("postalCode", entity.getPostalCode());
     dto.put("country", entity.getCountry());
-    dto.put("phoneNumber", entity.getPhone_number());
+    dto.put("phoneNumber", entity.getPhoneNumber());
     dto.put("networkStatus", entity.getNetworkStatus());
     dto.put("contactPerson", entity.getContactPerson());
     dto.put("webSite", entity.getWebsite());
@@ -1290,8 +1291,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return dtos;
   }
 
-  protected HashMap<String, Object> onGetApp(Restaurant entity) {
-    HashMap<String, Object> dto = super.onGet(entity);
+  protected HashMap<String, Object> onGetApp(Restaurant entity, User access) {
+    HashMap<String, Object> dto = super.onGet(entity, access);
     // menus
     ArrayList<HashMap<String, Object>> menuDtos = new ArrayList<HashMap<String, Object>>();
     for (Menu menu : entity.getMenus()) {
@@ -1437,8 +1438,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         }
       }
 
-      List<Restaurant> entities = this.dao.findAll(iPage, iSize);
-      List<HashMap<String, Object>> dtos = fromEntities(entities);
+      List<Restaurant> entities = this.dao.getByPage(iPage, iSize);
+      List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
       dto.put(getClassT().getSimpleName().toLowerCase() + 's', dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
@@ -1471,106 +1472,15 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   })
   public Response getApp(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 
-    Restaurant entity = dao.findOne(id);
+    Restaurant entity = dao.get(id);
     if (entity != null) {
-      HashMap<String, Object> dto = onGetApp(entity);
+      HashMap<String, Object> dto = onGetApp(entity, access);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
     else {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
     }
   }
-
-
-  @POST
-  @ApiOperation(value = "api add new restaurant", notes = "<pre><code>{"
-      + "<br/>  \"acceptTakeOutOrders\": false,"
-      + "<br/>  \"tax\": \"b5eaf69c-0025-44d8-96e1-ada02a4723f3\","
-      + "<br/>  \"phoneNumber\": \"06666\","
-      + "<br/>  \"webSite\": \"http://abc.com\","
-      + "<br/>  \"linkImage\": \"Res1.jpg\","
-      + "<br/>  \"status\": \"ONLINE\","
-      + "<br/>  \"address\": \"59 hoang viet\","
-      + "<br/>  \"restaurantDescription\": \"restaurent 2\","
-      + "<br/>  \"deliveryPaymentType\": \"DEBIT\","
-      + "<br/>  \"acceptDeliveryOrders\": false,"
-      + "<br/>  \"restaurantName\": \"Res 2\","
-      + "<br/>  \"location\": {"
-      + "<br/>    \"lat\": 10.455,"
-      + "<br/>    \"lng\": 106.676"
-      + "<br/>  },"
-      + "<br/>  \"cuisine\": ["
-      + "<br/>    \"abc\","
-      + "<br/>    \"abc\""
-      + "<br/>  ]"
-      + "<br/>}</code></pre>")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
-  })
-  @Override
-  public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
-    System.out.println("############" + dto);
-    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
-      return super.add(access, dto);
-    }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
-  }
-
-  @PUT
-  @ApiOperation(value = "api update restaurant", notes = ""
-      + "<code><pre>{<br/>  \"id\": \"34c192b0-e6e9-4668-b714-d88c9b1476b4\","
-      + "<br/>  \"acceptTakeOutOrders\": false," + "<br/>  \"tax\": \"b5eaf69c-0025-44d8-96e1-ada02a4723f3\","
-      + "<br/>  \"phoneNumber\": \"06666\","
-      + "<br/>  \"webSite\": \"http://abc.com\","
-      + "<br/>  \"linkImage\": \"Res1.jpg\","
-      + "<br/>  \"status\": \"ONLINE\","
-      + "<br/>  \"address\": \"59 hoang viet\","
-      + "<br/>  \"restaurantDescription\": \"restaurent 2\","
-      + "<br/>  \"deliveryPaymentType\": \"DEBIT\","
-      + "<br/>  \"acceptDeliveryOrders\": false,"
-      + "<br/>  \"restaurantName\": \"Res 2\","
-      + "<br/>  \"location\": {"
-      + "<br/>    \"lat\": 10.455,"
-      + "<br/>    \"lng\": 106.676"
-      + "<br/>  },"
-      + "<br/>  \"cuisine\": ["
-      + "<br/>    \"abc\","
-      + "<br/>    \"abc\""
-      + "<br/>  ]"
-      + "<br/>}</code></pre>")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot update entity. Error message: ###")
-  })
-  @Path("/{id}")
-  @Override
-  public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
-    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      return super.update(access, id, dto);
-    }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
-  }
-
-  @DELETE
-  @Path("/{id}")
-  @ApiOperation(value = "api delete restaurant")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = ""),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot delete entity. Error message: ###"),
-      @ApiResponse(code = 404, message = "Cannot found entity")
-  })
-  @Override
-  public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
-    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
-      return super.delete(access, id);
-    }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
-  }
-
 
   private List<HashMap<String, Object>> fromEntitiesSearch(List<Restaurant> entities) {
     List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
@@ -1581,18 +1491,18 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       dto.put("id", entity.getId());
       dto.put("name", entity.getName());
       dto.put("description", entity.getDescription());
-      dto.put("acceptDelivery", entity.isAccept_delivery());
-      dto.put("acceptDineIn", entity.isAccept_dinein());
-      dto.put("acceptTakeOut", entity.isAccept_takeout());
+      dto.put("acceptDelivery", entity.isAcceptDelivery());
+      dto.put("acceptDineIn", entity.isAcceptDineIn());
+      dto.put("acceptTakeOut", entity.isAcceptTakeout());
       dto.put("location", entity.getLocation() != null ? new LatLng(entity.getLocation().getX(), entity.getLocation().getY()) : "");
-      dto.put("address1", entity.getAddress_1());
-      dto.put("address2", entity.getAddress_2());
+      dto.put("address1", entity.getAddress1());
+      dto.put("address2", entity.getAddress2());
       dto.put("city", entity.getCity());
       dto.put("keyword", entity.getKeyword());
       dto.put("province", entity.getProvince());
-      dto.put("postalCode", entity.getPostal_code());
+      dto.put("postalCode", entity.getPostalCode());
       dto.put("country", entity.getCountry());
-      dto.put("phoneNumber", entity.getPhone_number());
+      dto.put("phoneNumber", entity.getPhoneNumber());
       dto.put("networkStatus", entity.getNetworkStatus());
       dto.put("contactPerson", entity.getContactPerson());
       dto.put("webSite", entity.getWebsite());
@@ -1651,7 +1561,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
         LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("restaurants", fromEntitiesSearch(entities));
-        return ResourceUtils.asSuccessResponse(Status.OK, dto);//fromEntities(entities));
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);//getMapListFromEntities(entities));
       }
       else {
 
@@ -1696,7 +1606,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
                 location.getLat(), location.getLng())),
             distance, SearchOrderBy.DISTANCE); // 25KM
         LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("restaurants", fromEntities(entities));
+        dto.put("restaurants", getMapListFromEntities(entities));
         return ResourceUtils.asSuccessResponse(Status.OK,
             dto);
       }
@@ -1721,12 +1631,12 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @ApiResponse(code = 200, message = "data")
   })
   public Response getPolygon(@ApiParam(access = "internal") @Auth User access) {
-    List<Restaurant> entities = this.dao.findAll();
+    List<Restaurant> entities = this.dao.getAll();
 
     List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
 
     for (Restaurant entity : entities) {
-      HashMap<String, Object> entitys = fromEntity(entity);
+      HashMap<String, Object> entitys = getMapFromEntity(entity);
       List<DeliveryZone> dzs = deliveryZoneDao
           .getAllDeliveryZonesByRestaurantId(entity.getId());
 
@@ -1770,52 +1680,14 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @ApiResponse(code = 404, message = "restaurant found info")
   })
   public Response getInfo(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    Restaurant res = restaurantDao.findOne(restaurant_id);
+    Restaurant res = restaurantDao.get(restaurant_id);
     if (res != null) {
-      return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(res));
+      return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(res));
     }
     return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant found info"));
   }
 
 
-  /**
-   * {
-   * "coupons": "id coupons",
-   * "deliveryAddress": "51 hoang viet",
-   * "deliveryTime": "Apr 20, 2015 2:07:58 PM",
-   * "items": [
-   * {
-   * "spacialNotes": "Cai gif dos",
-   * "addOns": [],
-   * "availabilityStatus": "AVAILABLE",
-   * "info": "543c42a1-a83e-467f-a96c-fe4b29f4f69f",
-   * "itemDescription": "Item Utils",
-   * "itemName": "Item Utils",
-   * "linkImage": "empty",
-   * "notes": "Item Utils",
-   * "sizes": {
-   * "price": "10.0",
-   * "sizeDescription": "Medium",
-   * "sizeName": "Medium",
-   * "id": "4cafb028-2926-46c8-8c85-d8e4e42f0181"
-   * },
-   * "price": 0,
-   * "quantity": 5,
-   * "isVegeterian": false,
-   * "spiceLevel": 2,
-   * "id": "d37ae2d9-0d8d-4335-9809-c737bedd130c"
-   * }
-   * ],
-   * "orderType": "DELIVERY",
-   * "tip": 3.6
-   * }
-   *
-   * @param itemOrder
-   * @param tip
-   * @param tax
-   * @param discount
-   * @return
-   */
 
   private double calculatorAmount(ArrayList<HashMap<String, Object>> itemOrder, double tip, double tax, double discount) {
     double total = 0;

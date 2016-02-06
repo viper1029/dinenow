@@ -64,7 +64,7 @@ public class SubMenu extends BaseEntity{
 	}
     
     public void addCategory(CategoryInfo category){
-    	getCategories().add(category);
+    	getCategories().create(category);
     }
     
     public void addAllCategory(ArrayList<CategoryInfo> categorys){

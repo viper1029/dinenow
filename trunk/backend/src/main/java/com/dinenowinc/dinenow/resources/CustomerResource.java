@@ -63,68 +63,34 @@ public class CustomerResource extends AbstractResource<Customer>{
 	private CartDao cartDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(Customer entity) {
+	protected HashMap<String, Object> getMapFromEntity(Customer entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
 
-/*	@Override
-	protected List<HashMap<String, Object>> fromEntities(List<Customer> entities)	{
-		List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
-		for (Customer entity : entities) {
-			dtos.add(fromEntity(entity));			
-		}
-		return dtos;
-		
-	}*/
-	//POST/PUT
 	@Override
-	protected Customer fromFullDto(HashMap<String, Object> dto) {
-		Customer entity = super.fromFullDto(dto);
-		entity.setEmail(dto.get("email").toString());
-		entity.setPassword(dto.get("password").toString());
-		entity.setFirstName(dto.get("firstName").toString());
-		entity.setLastName(dto.get("lastName").toString());
-		entity.setPhoneNumber(dto.get("phoneNumber").toString());
-		Cart cart = new Cart();
-		cart.setCreatedBy(dto.get("firstName").toString());
-		cart.setCreatedDate(new Date());
-		cart.setCustomer(entity);
-		entity.setCart(cart);
-		cartDao.save(cart);
-		return entity;
-	}
-	
-	
-	
-	@Override
-	protected Customer fromUpdateDto(Customer t, HashMap<String, Object> dto) {
-		System.out.println(dto.entrySet());
-		Customer entity = super.fromUpdateDto(t, dto);
-//		if(dto.containsKey("address")){
-//			entity.setAddress(dto.get("address").toString());
-//		}
-		if(dto.containsKey("email")){
-			entity.setEmail(dto.get("email").toString());
+	protected Customer getEntityForUpdate(Customer customer, HashMap<String, Object> inputMap) {
+		if(inputMap.containsKey("email")){
+			customer.setEmail(inputMap.get("email").toString());
 		}
-		if(dto.containsKey("password")){
-			entity.setPassword(MD5Hash.md5Spring(dto.get("password").toString()));
+		if(inputMap.containsKey("password")){
+			customer.setPassword(MD5Hash.md5Spring(inputMap.get("password").toString()));
 		}
-		if(dto.containsKey("firstName")){
-			entity.setFirstName(dto.get("firstName").toString());
+		if(inputMap.containsKey("firstName")){
+			customer.setFirstName(inputMap.get("firstName").toString());
 		}
-		if(dto.containsKey("lastName")){
-			entity.setLastName(dto.get("lastName").toString());
+		if(inputMap.containsKey("lastName")){
+			customer.setLastName(inputMap.get("lastName").toString());
 		}
-		if(dto.containsKey("phoneNumber")){
-			if(!entity.getPhoneNumber().equals(dto.get("phoneNumber").toString()))
+		if(inputMap.containsKey("phoneNumber")){
+			if(!customer.getPhoneNumber().equals(inputMap.get("phoneNumber").toString()))
 			{
-			   entity.setIsPhoneNumberValid(false);
-			   entity.setPhoneNumber(dto.get("phoneNumber").toString());
+			   customer.setIsPhoneNumberValid(false);
+			   customer.setPhoneNumber(inputMap.get("phoneNumber").toString());
 			}
 		}
-		return entity;
+		return customer;
 	}
 	
 
@@ -161,8 +127,8 @@ public class CustomerResource extends AbstractResource<Customer>{
 			}
 
 			LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-			List<Customer> entities = this.dao.findAll(iPage, iSize);	
-			List<HashMap<String, Object>> dtos = fromEntities(entities);
+			List<Customer> entities = this.dao.getByPage(iPage, iSize);
+			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 			dto.put(getClassT().getSimpleName().toLowerCase()+'s', dtos);
 			return ResourceUtils.asSuccessResponse(Status.OK, dto);
 		}
@@ -207,9 +173,9 @@ public class CustomerResource extends AbstractResource<Customer>{
 	public Response add(HashMap<String, Object> dto) {
 		System.out.println("%%%%%%%%%%%%%%%%%%%%" + dto);
 //		if(access == null){
-//			return super.add(dto);
+//			return super.create(dto);
 //		}else if (access.getRole() == UserRole.ADMIN) {
-//			return super.add(access, dto);
+//			return super.create(access, dto);
 //		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
 	}
@@ -223,12 +189,12 @@ public class CustomerResource extends AbstractResource<Customer>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		
-		if(access == null){
-			return super.add(dto);
-		}else if (access.getRole() == UserRole.ADMIN) {
-			return super.update(access, id, dto);
+		//if(access == null){
+			//return super.add(dto);
+		 if (access.getRole() == UserRole.ADMIN) {
+			return super.update(access, id, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Only for Admin"));
 	}
@@ -267,7 +233,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	@Path("/{id}/order_details")
 	public Response getOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
-			if (customerDao.findOne(id) != null) {
+			if (customerDao.get(id) != null) {
 				List<Order> entities = orderDao.findByCustomer(id);
 				List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
 				for (Order dto : entities) {
@@ -296,7 +262,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	public Response getOrderDetail(@ApiParam(access = "internal") @Auth User access, @PathParam("customerId") String customerId
 			, @PathParam("orderId") String orderId){
 		if (access.getRole() == UserRole.CUSTOMER) {
-			if (customerDao.findOne(customerId) != null) {
+			if (customerDao.get(customerId) != null) {
 				 Order order = orderDao.findByCustomerAndOrder(customerId , orderId);
 				LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 				dto.put("order", onGetOrder(order));
@@ -319,7 +285,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	@Path("/{id}/cart")
 	public Response getCart(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
-			Customer customer = customerDao.findOne(id);
+			Customer customer = customerDao.get(id);
 			if (customer != null) {
 				HashMap<String, Object> dto = new HashMap<String, Object>();
 				dto.put("cart", fromEntity(customer.getCart()));
@@ -342,7 +308,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	@Path("/{id}/address_book")
 	public Response getAddressBook(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.CUSTOMER) {
-			Customer customer = customerDao.findOne(id);
+			Customer customer = customerDao.get(id);
 			if (customer != null) {
 				HashMap<String, Object> dto = new HashMap<String, Object>();
 				dto.put("addressbooks", customer.getAddressBooks());
@@ -386,7 +352,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	@Path("/{id}/edit")
 	public Response editCustomer(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto){
 		if (access.getRole() == UserRole.CUSTOMER) {
-			Customer customer = customerDao.findOne(id);
+			Customer customer = customerDao.get(id);
 			if (customer != null) {
 				if (dto.containsKey("phoneNumber")) {
 					if(!customer.getPhoneNumber().equals(dto.get("phoneNumber").toString()))

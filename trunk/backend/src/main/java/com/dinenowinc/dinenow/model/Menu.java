@@ -124,7 +124,7 @@ public class Menu extends BaseEntity {
 	}
 
 	public void addSubMenu(SubMenu submenu) {
-		getSubMenus().add(submenu);
+		getSubMenus().create(submenu);
 	}*/
 
 	public String getMenuDescription() {

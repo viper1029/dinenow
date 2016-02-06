@@ -80,7 +80,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(DeliveryZone entity) {
+	protected HashMap<String, Object> getMapFromEntity(DeliveryZone entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 /*		dto.put("id", entity.getId());
 		dto.put("name", entity.getName());
@@ -92,7 +92,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 		for (int i = 0; i < entity.getCoordinates().getCoordinates().length; i++) {
 			Coordinate  coord = entity.getCoordinates().getCoordinates()[i];
 			LatLng latlng = new LatLng(coord.x, coord.y);
-			coords.add(latlng);
+			coords.create(latlng);
 		}
 		dto.put("coordinates", coords);*/
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
@@ -100,46 +100,18 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected DeliveryZone fromFullDto(HashMap<String, Object> dto) {
-		DeliveryZone entity = super.fromFullDto(dto);
-		entity.setName(dto.get("name").toString());
-		entity.setDescription(dto.get("description").toString());
-		entity.setMinimum(Double.parseDouble(dto.get("minimum").toString()));
-		entity.setFee(Double.parseDouble(dto.get("fee").toString()));
-		entity.setType(DeliveryZoneType.valueOf(dto.get("type").toString()));		
-		/*
-		HashMap<String, Double> loca = (HashMap<String, Double>)dto.get("deliveryZoneCoords");		
-		double lat = loca.get("lat");
-		double lng = loca.get("lng");
-		entity.setLat(lat);
-		entity.setLng(lng);
-		*/
-		List<LinkedHashMap<String,Double>> polygon = (List<LinkedHashMap<String,Double>>)dto.get("coordinates");
-		Coordinate[] coordinates = new Coordinate[polygon.size()];
-		for (int i = 0; i < polygon.size(); i++) {
-			coordinates[i] = new Coordinate(polygon.get(i).get("lat"), polygon.get(i).get("lng"));
-		}
-		GeometryFactory gf = new GeometryFactory();
-		entity.setCoordinates(gf.createPolygon(coordinates));
-		return entity;
-	}
-	
-	
-	
 	/**
 	 * lat long need at least 3 and last one as same as first
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected DeliveryZone fromAddDto(HashMap<String, Object> dto) {
-		DeliveryZone entity = super.fromAddDto(dto);
-		entity.setName(dto.get("name").toString());
-		entity.setDescription(dto.get("description").toString());
-		entity.setMinimum(Double.parseDouble(dto.get("minimum").toString()));
-		entity.setFee(Double.parseDouble(dto.get("fee").toString()));
-		entity.setType(DeliveryZoneType.valueOf(dto.get("type").toString()));
+	protected DeliveryZone getEntityForInsertion(HashMap<String, Object> inputMap) {
+		DeliveryZone entity = super.getEntityForInsertion(inputMap);
+		entity.setName(inputMap.get("name").toString());
+		entity.setDescription(inputMap.get("description").toString());
+		entity.setMinimum(Double.parseDouble(inputMap.get("minimum").toString()));
+		entity.setFee(Double.parseDouble(inputMap.get("fee").toString()));
+		entity.setType(DeliveryZoneType.valueOf(inputMap.get("type").toString()));
 		/*
 		HashMap<String, Double> loca = (HashMap<String, Double>)dto.get("deliveryZoneCoords");		
 		double lat = loca.get("lat");
@@ -149,7 +121,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 		*/
 	
 
-		List<LinkedHashMap<String,Double>> polygon = (List<LinkedHashMap<String,Double>>)dto.get("coordinates");
+		List<LinkedHashMap<String,Double>> polygon = (List<LinkedHashMap<String,Double>>) inputMap.get("coordinates");
 		Coordinate[] coordinates = new Coordinate[polygon.size()];
 		for (int i = 0; i < polygon.size(); i++) {
 			coordinates[i] = new Coordinate(polygon.get(i).get("lat"), polygon.get(i).get("lng"));
@@ -163,14 +135,12 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected DeliveryZone fromUpdateDto(DeliveryZone t, HashMap<String, Object> dto) {
-		DeliveryZone entity = super.fromUpdateDto(t, dto);
-		
-		entity.setName(dto.get("name").toString());
-		entity.setDescription(dto.get("description").toString());
-		entity.setMinimum(Double.parseDouble(dto.get("minimum").toString()));
-		entity.setFee(Double.parseDouble(dto.get("fee").toString()));
-		entity.setType(DeliveryZoneType.valueOf(dto.get("type").toString()));
+	protected DeliveryZone getEntityForUpdate(DeliveryZone deliveryZone, HashMap<String, Object> inputMap) {
+		deliveryZone.setName(inputMap.get("name").toString());
+		deliveryZone.setDescription(inputMap.get("description").toString());
+		deliveryZone.setMinimum(Double.parseDouble(inputMap.get("minimum").toString()));
+		deliveryZone.setFee(Double.parseDouble(inputMap.get("fee").toString()));
+		deliveryZone.setType(DeliveryZoneType.valueOf(inputMap.get("type").toString()));
 		/*
 		HashMap<String, Double> loca = (HashMap<String, Double>)dto.get("deliveryZoneCoords");		
 		double lat = loca.get("lat");
@@ -178,14 +148,14 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 		entity.setLat(lat);
 		entity.setLng(lng);
 		*/
-		List<LinkedHashMap<String,Double>> polygon = (List<LinkedHashMap<String,Double>>)dto.get("coordinates");
+		List<LinkedHashMap<String,Double>> polygon = (List<LinkedHashMap<String,Double>>) inputMap.get("coordinates");
 		Coordinate[] coordinates = new Coordinate[polygon.size()];
 		for (int i = 0; i < polygon.size(); i++) {
 			coordinates[i] = new Coordinate(polygon.get(i).get("lat"), polygon.get(i).get("lng"));
 		}
 		GeometryFactory gf = new GeometryFactory();
-		entity.setCoordinates(gf.createPolygon(coordinates));
-		return entity;
+		deliveryZone.setCoordinates(gf.createPolygon(coordinates));
+		return deliveryZone;
 	}
 	
 	
@@ -196,34 +166,17 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	
 	//==============================ACTION====================================//
 	@Override
-	protected Response onAdd(User access, DeliveryZone entity, Restaurant restaurant) {
+	protected Response onCreate(User access, DeliveryZone entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
 		restaurant.addDeliveryZone(entity);
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 	}
 	
-	@Override
-	protected Response onUpdate(User access, DeliveryZone entity, Restaurant restaurant) {
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));	
-	}
-	
-	@Override
-	protected Response onDelete(User access, DeliveryZone entity) {
-		try {
-			dao.delete(entity);
-			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
-		} catch (RollbackException e) {
-			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED,"has relationship");
-		}
-	}
-	
-	
-	
-	
+
+
 	
 	//===========================METHOD=================================//
 	
@@ -239,7 +192,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 //		if (access.getRole() == UserRole.OWNER) {
 //			List<DeliveryZone> entities = deliveryZoneDao.getListByUser(access);		
-//			List<HashMap<String, Object>> dtos = fromEntities(entities);
+//			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 //			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 //		}
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -298,11 +251,11 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
-		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, dto);
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
+		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, inputMap);
 		List<ServiceErrorMessage> mListError = deliveryZoneValidator.validateForAdd();
 		if (mListError.size() == 0) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 	}
@@ -341,11 +294,11 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
-		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, dto);
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
+		DeliveryZoneValidator deliveryZoneValidator = new DeliveryZoneValidator(deliveryZoneDao, inputMap);
 		ServiceErrorValidationMessage mListError = deliveryZoneValidator.validateForUpdate();
 		if (mListError.getErrors().size() == 0) {
-			return super.update(access, id, dto);
+			return super.update(access, id, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 	}
@@ -379,7 +332,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 		else if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			String res_id=dto.get("restaurantId").toString();		
 			List<DeliveryZone> entities = deliveryZoneDao.getAllDeliveryZonesByRestaurantId(res_id);
-			List<HashMap<String, Object>> dtos = fromEntities(entities);
+			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));	

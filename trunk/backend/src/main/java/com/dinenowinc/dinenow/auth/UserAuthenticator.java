@@ -20,12 +20,14 @@ public class UserAuthenticator implements Authenticator<JsonWebToken, Principal>
     Object userId = token.claim().getParameter("id");
     Object name = token.claim().getParameter("name").toString();
     Object role = token.claim().getParameter("role");
+    Object email = token.claim().getParameter("email");
 
     if (userId != null && role != null) {
       final User user = new User();
       user.setId(UUID.fromString(userId.toString()));
       user.setName(name.toString());
       user.setRole(UserRole.valueOf(role.toString()));
+      user.setEmail(email.toString());
       return Optional.of((Principal) user);
     }
 

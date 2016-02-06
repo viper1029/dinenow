@@ -45,7 +45,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 	private AddressBookDao addressBookDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(AddressBook entity) {
+	protected HashMap<String, Object> getMapFromEntity(AddressBook entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::");
@@ -53,58 +53,52 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 	}
 	
 	@Override
-	protected AddressBook fromAddDto(HashMap<String, Object> dto) {
-		AddressBook addressBook = super.fromAddDto(dto);
-		addressBook.setName(dto.get("name").toString());
-		addressBook.setAddress1(dto.get("address_1").toString());
-		addressBook.setAddress2(dto.get("address_2").toString());
-		addressBook.setCity(dto.get("city").toString());
-		addressBook.setProvince(dto.get("province").toString());
-		addressBook.setCountry(dto.get("country").toString());
-		addressBook.setPostalCode(dto.get("postal_code").toString());
-		addressBook.setDeliveryInstructions(dto.get("delivery_instructions").toString());
+	protected AddressBook getEntityForInsertion(HashMap<String, Object> inputMap) {
+		AddressBook addressBook = super.getEntityForInsertion(inputMap);
+		addressBook.setName(inputMap.get("name").toString());
+		addressBook.setAddress1(inputMap.get("address_1").toString());
+		addressBook.setAddress2(inputMap.get("address_2").toString());
+		addressBook.setCity(inputMap.get("city").toString());
+		addressBook.setProvince(inputMap.get("province").toString());
+		addressBook.setCountry(inputMap.get("country").toString());
+		addressBook.setPostalCode(inputMap.get("postal_code").toString());
+		addressBook.setDeliveryInstructions(inputMap.get("delivery_instructions").toString());
 	//	HashMap<String, Double> location = (HashMap<String, Double>)dto.get("location");
 	//	LatLng latlng = new LatLng(location.get("lat"), location.get("lng"));
 	//	addressBook.setLocation(latlng);
 		
 		return addressBook;
 	}
+
+	@Override
+	protected AddressBook getEntityForUpdate(AddressBook addressBook, HashMap<String, Object> inputMap) {
+		addressBook.setName(inputMap.get("name").toString());
+		addressBook.setAddress1(inputMap.get("address_1").toString());
+		addressBook.setAddress2(inputMap.get("address_2").toString());
+		addressBook.setCity(inputMap.get("city").toString());
+		addressBook.setProvince(inputMap.get("province").toString());
+		addressBook.setCountry(inputMap.get("country").toString());
+		addressBook.setPostalCode(inputMap.get("postal_code").toString());
+		addressBook.setDeliveryInstructions(inputMap.get("delivery_instructions").toString());
+		//	HashMap<String, Double> location = (HashMap<String, Double>)dto.get("location");
+		//	LatLng latlng = new LatLng(location.get("lat"), location.get("lng"));
+		//	addressBook.setLocation(latlng);
+
+		return addressBook;
+	}
 	
 	@Override
-	protected Response onAdd(User access, AddressBook entity, Restaurant restaurant) {
+	protected Response onCreate(User access, AddressBook entity, Restaurant restaurant) {
 		
-		Customer cus = customerDao.findOne(access.getId().toString());
+		Customer cus = customerDao.get(access.getId().toString());
 		dao.save(entity);
 		cus.addAddressBook(entity);
 		customerDao.update(cus);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 	}
+
 	
-	
-	
-	@Override
-	protected HashMap<String, Object> onGet(AddressBook entity) {
-		return super.onGet(entity);
-	}
-	
-	
-	@Override
-	protected AddressBook fromUpdateDto(AddressBook t, HashMap<String, Object> dto) {
-		AddressBook addressBook = super.fromUpdateDto(t, dto);
-		addressBook.setName(dto.get("name").toString());
-		addressBook.setAddress1(dto.get("address_1").toString());
-		addressBook.setAddress2(dto.get("address_2").toString());
-		addressBook.setCity(dto.get("city").toString());
-		addressBook.setProvince(dto.get("province").toString());
-		addressBook.setCountry(dto.get("country").toString());
-		addressBook.setPostalCode(dto.get("postal_code").toString());
-		addressBook.setDeliveryInstructions(dto.get("delivery_instructions").toString());
-	//	HashMap<String, Double> location = (HashMap<String, Double>)dto.get("location");
-	//	LatLng latlng = new LatLng(location.get("lat"), location.get("lng"));
-    //	addressBook.setLocation(latlng);
-		
-		return addressBook;
-	}
+
 	
 	
 	
@@ -117,7 +111,7 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			})
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		/*List<AddressBook> entities = addressBookDao.getByCustomer(access.getId().toString());
-		List<HashMap<String, Object>> dtos = fromEntities(entities);
+		List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 		return ResourceUtils.asSuccessResponse(Status.OK, dtos);*/
 		return super.getAll(access);
 	}
@@ -151,12 +145,12 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.CUSTOMER) {
-			AddressBookValidator typeValidator = new AddressBookValidator(dto);
+			AddressBookValidator typeValidator = new AddressBookValidator(inputMap);
 			List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
 			if (mListError.size() == 0) {
-				return super.add(access, dto);
+				return super.create(access, inputMap);
 			}
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}
@@ -171,12 +165,12 @@ public class AddressBookResource extends AbstractResource<AddressBook>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.CUSTOMER) {
-				AddressBookValidator typeValidator = new AddressBookValidator(dto);
+				AddressBookValidator typeValidator = new AddressBookValidator(inputMap);
 				List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
 				if (mListError.size() == 0) {
-					return super.update(access, id, dto);
+					return super.update(access, id, inputMap);
 				}
 				return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}

@@ -12,7 +12,7 @@ public interface IAbstractResource {
 
   Response get(@Auth User access, @PathParam("id") String id);
 
-  Response add(@Auth User access, HashMap<String, Object> dto);
+  Response create(@Auth User access, HashMap<String, Object> dto);
 
   Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto);
 

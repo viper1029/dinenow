@@ -57,50 +57,23 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 	private ItemDao itemDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(OrderDetail entity) {
+	protected HashMap<String, Object> getMapFromEntity(OrderDetail entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("price", entity.getPrice());
 		dto.put("quantity", entity.getQuantity());
 		return dto;
 	}
+
 	
 	
-	
-	@Override
-	protected OrderDetail fromFullDto(HashMap<String, Object> dto) {
-		OrderDetail od = super.fromFullDto(dto);
-		od.setQuantity(Integer.parseInt(dto.get("quantity").toString()));
-		od.setPrice(Double.parseDouble(dto.get("price").toString()));
-		return od;
-	}
-	
-	
-	
-	
-	
-	//======================================ACTION======================================//
+
 	
 	@Override
-	protected HashMap<String, Object> onGet(OrderDetail entity) {
-		return super.onGet(entity);
+	protected Response onCreate(User access, OrderDetail entity, Restaurant restaurant) {
+		return super.onCreate(access, entity, restaurant);
 	}
-	
-	@Override
-	protected Response onAdd(User access, OrderDetail entity, Restaurant restaurant) {
-		return super.onAdd(access, entity, restaurant);
-	}
-	
-	@Override
-	protected Response onUpdate(User access, OrderDetail entity, Restaurant restaurant) {
-		return super.onUpdate(access, entity, restaurant);
-	}
-	
-	
-	@Override
-	protected Response onDelete(User access, OrderDetail entity) {
-		return super.onDelete(access, entity);
-	}
+
 	
 	
 	
@@ -147,9 +120,9 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@Auth User access, HashMap<String, Object> dto) {
+	public Response create(@Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.CUSTOMER) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, "");
 	}
@@ -171,8 +144,8 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###") 
 			})
 	@Override
-	public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
-		return super.update(access, id, dto);
+	public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
+		return super.update(access, id, inputMap);
 	}
 	
 	
@@ -204,7 +177,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 		int iPage = 1;
 		int iSize = 50;
 		
-		if (restaurantDao.findOne(restaurant_id) != null) {
+		if (restaurantDao.get(restaurant_id) != null) {
 
 			if (page != null) {
 				try {
@@ -278,7 +251,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			@ApiResponse(code = 404, message = "restaurant not found") 
 			})
 	public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("query") String query){
-		if (restaurantDao.findOne(restaurant_id) != null) {
+		if (restaurantDao.get(restaurant_id) != null) {
 			if (query != null) {
 				List<Order> entities = new ArrayList<Order>();
 				entities = orderDao.searchByOrder(restaurant_id, query);

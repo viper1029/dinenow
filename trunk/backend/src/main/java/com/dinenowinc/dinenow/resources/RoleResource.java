@@ -39,27 +39,21 @@ public class RoleResource extends AbstractResource<Role>{
 	
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(Role entity) {
+	protected HashMap<String, Object> getMapFromEntity(Role entity) {
 		return entity.toDto();
 	}
 	
 	@Override
-	protected Role fromAddDto(HashMap<String, Object> dto) {
-		Role role = super.fromAddDto(dto);
-		role.setName(dto.get("name").toString());
+	protected Role getEntityForInsertion(HashMap<String, Object> inputMap) {
+		Role role = super.getEntityForInsertion(inputMap);
+		role.setName(inputMap.get("name").toString());
 		return role;
-	}
-	
-	@Override
-	protected HashMap<String, Object> onGet(Role entity) {
-		return super.onGet(entity);
 	}
 
 	
 	@Override
-	protected Role fromUpdateDto(Role t, HashMap<String, Object> dto) {
-		Role role = super.fromUpdateDto(t, dto);
-		role.setName(dto.get("name").toString());
+	protected Role getEntityForUpdate(Role role, HashMap<String, Object> inputMap) {
+		role.setName(inputMap.get("name").toString());
 		return role;
 	}	
 	
@@ -101,9 +95,9 @@ public class RoleResource extends AbstractResource<Role>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN ||access.getRole() == UserRole.OWNER) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED,new ServiceErrorMessage("access denied for user"));
 	}
@@ -116,9 +110,9 @@ public class RoleResource extends AbstractResource<Role>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-				return super.update(access, id, dto);
+				return super.update(access, id, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
 	}

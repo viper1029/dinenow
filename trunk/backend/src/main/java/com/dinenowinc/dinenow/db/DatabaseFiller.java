@@ -115,7 +115,7 @@ public class DatabaseFiller {
 
 
 			
-			//restaurants.add(res);				
+			//restaurants.create(res);
 				
 		}
 		restaurantService.restaurantDao.saveAll(restaurants);
@@ -257,16 +257,16 @@ public class DatabaseFiller {
 			
 			CategoryInfo cInfo = new CategoryInfo();
 			Set<ItemInfo> itemsinfo1 = new HashSet<ItemInfo>();
-			itemsinfo1.add(new ItemInfo(item1,"trong",date));
-			itemsinfo1.add(new ItemInfo(item2,"trong",date));
-			itemsinfo1.add(new ItemInfo(item3,"trong",date));
+			itemsinfo1.create(new ItemInfo(item1,"trong",date));
+			itemsinfo1.create(new ItemInfo(item2,"trong",date));
+			itemsinfo1.create(new ItemInfo(item3,"trong",date));
 			cInfo.setCategory(cate1);
 			cInfo.setItems(itemsinfo1);
 			cInfo.setCreatedBy("trong");
 			cInfo.setCreatedDate(date);
 			
 			Set<CategoryInfo> categoryinfo = new HashSet<CategoryInfo>();
-			categoryinfo.add(cInfo);
+			categoryinfo.create(cInfo);
 			
 			SubMenu sub1 = new SubMenu();
 			sub1.setMenuSubName("Sub Name 1");

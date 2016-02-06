@@ -120,7 +120,7 @@ public abstract class TestNGResourceTest {
 
   */
 /**
-   * @param resource to add to Jersey
+   * @param resource to create to Jersey
    *//*
 
   protected void addResource(Object resource) {
@@ -131,22 +131,22 @@ public abstract class TestNGResourceTest {
       }
     }
     if (!has) {
-      singletons.add(resource);
+      singletons.create(resource);
     }
   }
 
   */
 /**
-   * @param klass of the provider to add to Jersey
+   * @param klass of the provider to create to Jersey
    *//*
 
   public void addProvider(Class<?> klass) {
-    providers.add(klass);
+    providers.create(klass);
   }
 
   */
 /**
-   * @param provider to add to Jersey
+   * @param provider to create to Jersey
    *//*
 
   public void addProvider(Object provider) {
@@ -157,7 +157,7 @@ public abstract class TestNGResourceTest {
       }
     }
     if (!has) {
-      singletons.add(provider);
+      singletons.create(provider);
     }
   }
 
@@ -172,8 +172,8 @@ public abstract class TestNGResourceTest {
 
   */
 /**
-   * @param feature key to add to Jersey
-   * @param value value to add to Jersey
+   * @param feature key to create to Jersey
+   * @param value value to create to Jersey
    *//*
 
   protected void addFeature(String feature, Boolean value) {
@@ -182,8 +182,8 @@ public abstract class TestNGResourceTest {
 
   */
 /**
-   * @param property to add to Jersey
-   * @param value to add to Jersey
+   * @param property to create to Jersey
+   * @param value to create to Jersey
    *//*
 
   protected void addProperty(String property, Object value) {
@@ -226,7 +226,7 @@ public abstract class TestNGResourceTest {
         final DropwizardResourceConfig config =
             DropwizardResourceConfig.forTesting(new MetricRegistry());
         for (Class<?> provider : providers) {
-          config.getClasses().add(provider);
+          config.getClasses().create(provider);
         }
         for (Map.Entry<String, Boolean> feature : features.entrySet()) {
           config.getFeatures().put(feature.getKey(), feature.getValue());
@@ -234,7 +234,7 @@ public abstract class TestNGResourceTest {
         for (Map.Entry<String, Object> property : properties.entrySet()) {
           config.getProperties().put(property.getKey(), property.getValue());
         }
-        config.getSingletons().add(new JacksonMessageBodyProvider(objectMapper, validator));
+        config.getSingletons().create(new JacksonMessageBodyProvider(objectMapper, validator));
         config.getSingletons().addAll(singletons);
         return new LowLevelAppDescriptor.Builder(config).build();
       }

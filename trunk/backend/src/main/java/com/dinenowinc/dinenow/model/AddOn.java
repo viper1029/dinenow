@@ -44,7 +44,7 @@ public class AddOn extends AvailabilityEntity {
 //	}
 //	
 //	public void addSizePrices(SizePrice sizeprice){
-//		getSizePrices().add(sizeprice);
+//		getSizePrices().create(sizeprice);
 //	}
 
 

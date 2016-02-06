@@ -343,7 +343,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 			case DELIVERY:
 				result = new ArrayList<Restaurant>();
 				for (Restaurant restaurant : restaurants) {
-					if (restaurant.isAccept_delivery()) {
+					if (restaurant.isAcceptDelivery()) {
 						result.add(restaurant);
 					}
 				}
@@ -351,7 +351,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 			case PICKUP:
 				result = new ArrayList<Restaurant>();
 				for (Restaurant restaurant : restaurants) {
-					if (restaurant.isAccept_takeout()) {
+					if (restaurant.isAcceptTakeout()) {
 						result.add(restaurant);
 					}
 				}

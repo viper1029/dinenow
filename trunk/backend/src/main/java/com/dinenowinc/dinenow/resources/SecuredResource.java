@@ -2,6 +2,7 @@ package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.Constants;
 import com.dinenowinc.dinenow.DineNowApplication;
+import com.dinenowinc.dinenow.auth.TokenGenerator;
 import com.dinenowinc.dinenow.dao.AdminDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
@@ -19,10 +20,6 @@ import com.dinenowinc.dinenow.service.RestaurantUserService;
 import com.dinenowinc.dinenow.utils.JavaMail;
 import com.dinenowinc.dinenow.utils.MD5Hash;
 import com.dinenowinc.dinenow.utils.Utils;
-import com.github.toastshaman.dropwizard.auth.jwt.hmac.HmacSHA512Signer;
-import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebToken;
-import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebTokenClaim;
-import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebTokenHeader;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
@@ -36,7 +33,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,17 +160,17 @@ public class SecuredResource {
             return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Invalid username or password."));
           }
           else {
-            Map<String, Object> data = generateToken(customer.getId(), UserRole.CUSTOMER, customer, null);
+            Map<String, Object> data = TokenGenerator.generateToken(customer.getId(), UserRole.CUSTOMER, customer, null);
             return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
           }
         }
         else {
-          Map<String, Object> data = generateToken(admin.getId(), UserRole.ADMIN, admin, null);
+          Map<String, Object> data = TokenGenerator.generateToken(admin.getId(), UserRole.ADMIN, admin, null);
           return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
         }
       }
       Restaurant restaurant = restaurantDao.findByIDUser(restaurantUser.getId());
-      Map<String, Object> data = generateToken(restaurantUser.getId(), restaurantUser.getRole(), restaurantUser, restaurant);
+      Map<String, Object> data = TokenGenerator.generateToken(restaurantUser.getId(), restaurantUser.getRole(), restaurantUser, restaurant);
       return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
     }
     catch (Exception e) {
@@ -376,7 +372,7 @@ public class SecuredResource {
       catch (TwilioRestException e) {
         return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Error sending SMS to " + customer.getPhoneNumber().substring(1)));
       }
-      Map<String, Object> token = generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
+      Map<String, Object> token = TokenGenerator.generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
       return ResourceUtils.asSuccessResponse(Status.OK, token);
     }
     catch (Exception e) {
@@ -407,7 +403,7 @@ public class SecuredResource {
     try {
       String customerId = inputMap.get("id").toString();
       String validationCode = inputMap.get("validationCode").toString();
-      Customer customer = customerDao.findOne(customerId);
+      Customer customer = customerDao.get(customerId);
 
       if (customer == null) {
         return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Customer does not exist."));
@@ -460,7 +456,7 @@ public class SecuredResource {
         return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("No customer ID provided."));
       }
 
-      Customer customer = customerDao.findOne(inputMap.get("id").toString());
+      Customer customer = customerDao.get(inputMap.get("id").toString());
       if (customer == null) {
         return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Customer does not exist."));
       }
@@ -534,7 +530,7 @@ public class SecuredResource {
         return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, serviceResult.getErrors());
       }
       int expire_in_seconds = 60 * 1440;
-      Map<String, Object> data = generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
+      Map<String, Object> data = TokenGenerator.generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
       return ResourceUtils.asSuccessResponse(Status.OK, data);
     }
     catch (Exception e) {
@@ -562,7 +558,7 @@ public class SecuredResource {
     try {
       String id = info.get("id").toString();
       String phoneNumber = info.get("phoneNumber").toString();
-      Customer customer = customerDao.findOne(id);
+      Customer customer = customerDao.get(id);
       if (customer != null) {
 
         HashMap<String, Object> dto = new HashMap<String, Object>();
@@ -611,114 +607,4 @@ public class SecuredResource {
       return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: " + e.getMessage()));
     }
   }
-
-
-  private Map<String, Object> generateToken(String id, UserRole role, Object user, Restaurant restaurant) {
-    String signedToken = "";
-    HashMap<String, Object> rdto = new HashMap<String, Object>();
-    if (user instanceof RestaurantUser) {
-      RestaurantUser ruser = (RestaurantUser) user;
-      rdto.put("id", ruser.getId());
-      rdto.put("firstName", ruser.getFirstName());
-      rdto.put("lastName", ruser.getLastName());
-      rdto.put("email", ruser.getEmail());
-      rdto.put("phoneNumber", ruser.getPhone());
-
-      final HmacSHA512Signer signer = new HmacSHA512Signer(tokenSecret);
-      final JsonWebToken access_token = JsonWebToken
-          .builder()
-          .header(JsonWebTokenHeader.HS512())
-          .claim(JsonWebTokenClaim
-              .builder()
-              .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
-              .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
-              .build()).build();
-      signedToken = signer.sign(access_token);
-    }
-    if (user instanceof Admin) {
-      Admin ruser = (Admin) user;
-      rdto.put("id", ruser.getId());
-      rdto.put("firstName", ruser.getFirstName());
-      rdto.put("lastName", ruser.getLastName());
-      rdto.put("email", ruser.getEmail());
-
-      final HmacSHA512Signer signer = new HmacSHA512Signer(tokenSecret);
-      final JsonWebToken access_token = JsonWebToken
-          .builder()
-          .header(JsonWebTokenHeader.HS512())
-          .claim(JsonWebTokenClaim
-              .builder()
-              .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
-              .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
-              .build()).build();
-      signedToken = signer.sign(access_token);
-    }
-    if (user instanceof Customer) {
-      Customer ruser = (Customer) user;
-      rdto.put("id", ruser.getId());
-      rdto.put("firstName", ruser.getFirstName());
-      rdto.put("lastName", ruser.getLastName());
-      rdto.put("email", ruser.getEmail());
-      rdto.put("phoneNumber", ruser.getPhoneNumber());
-
-      final HmacSHA512Signer signer = new HmacSHA512Signer(tokenSecret);
-      final JsonWebToken access_token = JsonWebToken
-          .builder()
-          .header(JsonWebTokenHeader.HS512())
-          .claim(JsonWebTokenClaim
-              .builder()
-              .param("id", id).param("role", role).param("name", ruser.getFirstName() + ' ' + ruser.getLastName())
-              .issuedAt(new DateTime())
-              .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
-              .build()).build();
-      signedToken = signer.sign(access_token);
-    }
-
-
-    Map<String, Object> data = new HashMap<String, Object>();
-    data.put("access_token", signedToken);
-
-    //	System.out.println(signedToken);
-    //	data.put("expire_in_seconds", expire_in_seconds);
-
-    data.put("user", rdto);
-    data.put("role", role);
-
-    if (restaurant != null) {
-      HashMap<String, Object> dto = new HashMap<String, Object>();
-      dto.put("id", restaurant.getId());
-      dto.put("name", restaurant.getName());
-      dto.put("active", restaurant.isActive());
-      dto.put("description", restaurant.getDescription());
-      dto.put("acceptDelivery", restaurant.isAccept_delivery());
-      dto.put("acceptTakeOut", restaurant.isAccept_takeout());
-      dto.put("acceptDineIn", restaurant.isAccept_dinein());
-      dto.put("address1", restaurant.getAddress_1());
-      dto.put("address2", restaurant.getAddress_2());
-      dto.put("city", restaurant.getCity());
-      dto.put("keyword", restaurant.getKeyword());
-      dto.put("province", restaurant.getProvince());
-      dto.put("postalCode", restaurant.getPostal_code());
-      dto.put("country", restaurant.getCountry());
-      dto.put("networkStatus", restaurant.getNetworkStatus());
-      dto.put("contactPerson", restaurant.getContactPerson());
-      dto.put("webSite", restaurant.getWebsite());
-      dto.put("stripe", restaurant.getStripe());
-      dto.put("phoneNumber", restaurant.getPhone_number());
-      dto.put("dineInHours", restaurant.getDineInHours());
-      dto.put("acceptDeliveryHours", restaurant.getAcceptDeliveryHours());
-      dto.put("acceptTakeOutHours", restaurant.getAcceptTakeOutHours());
-      dto.put("cuisine", restaurant.getCuisine());
-
-      data.put("restaurant", dto);
-    }/*else {
-			data.put("restaurant", null);
-		}*/
-    System.out.println(data);
-    return data;
-  }
-
-
 }

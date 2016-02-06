@@ -63,7 +63,7 @@ public class Modifier extends BaseEntity{
 //		return items;
 //	}
 //	public void addItem(Item item){
-//		getItems().add(item);
+//		getItems().create(item);
 //	}
 //
 //	public Set<AddOnInfo> getAddOns() {
@@ -71,7 +71,7 @@ public class Modifier extends BaseEntity{
 //	}
 //	
 //	public void addAddOn(AddOnInfo addonInfo){
-//		getAddOns().add(addonInfo);
+//		getAddOns().create(addonInfo);
 //	}
 	
 

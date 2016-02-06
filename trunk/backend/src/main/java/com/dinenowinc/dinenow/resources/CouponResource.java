@@ -48,7 +48,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 	private CouponDao couponDao;
 
 	@Override
-	protected HashMap<String, Object> fromEntity(Coupon entity) {
+	protected HashMap<String, Object> getMapFromEntity(Coupon entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("couponCode", entity.getCoupon_code());
@@ -64,21 +64,21 @@ public class CouponResource extends AbstractResource<Coupon> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Coupon fromAddDto(HashMap<String, Object> dto) {
-		Coupon entity = super.fromAddDto(dto);
+	protected Coupon getEntityForInsertion(HashMap<String, Object> inputMap) {
+		Coupon entity = super.getEntityForInsertion(inputMap);
 
-		entity.setCoupon_code(Long.parseLong(dto.get("couponCode").toString()));
-		entity.setCoupon_type(CouponType.valueOf(dto.get("couponType").toString()));
-		entity.setNetworkStatus(NetworkStatus.valueOf(dto.get("networkStatus").toString()));
-		entity.setDiscount_value(Integer.parseInt(dto.get("discountValue").toString()));
-		entity.setMaximum_value(Integer.parseInt(dto.get("maximumValue").toString()));
-		entity.setMinimum_value(Integer.parseInt(dto.get("manimumValue").toString()));
-		entity.setStart_date(new Date(Long.parseLong(dto.get("startDate").toString())));
-		entity.setEnd_date(new Date(Long.parseLong(dto.get("endDate").toString())));
-		if (dto.containsKey("restaurants")) {
-			ArrayList<String> listKeyRestaurants = (ArrayList<String>) dto.get("restaurants");
+		entity.setCoupon_code(Long.parseLong(inputMap.get("couponCode").toString()));
+		entity.setCoupon_type(CouponType.valueOf(inputMap.get("couponType").toString()));
+		entity.setNetworkStatus(NetworkStatus.valueOf(inputMap.get("networkStatus").toString()));
+		entity.setDiscount_value(Integer.parseInt(inputMap.get("discountValue").toString()));
+		entity.setMaximum_value(Integer.parseInt(inputMap.get("maximumValue").toString()));
+		entity.setMinimum_value(Integer.parseInt(inputMap.get("manimumValue").toString()));
+		entity.setStart_date(new Date(Long.parseLong(inputMap.get("startDate").toString())));
+		entity.setEnd_date(new Date(Long.parseLong(inputMap.get("endDate").toString())));
+		if (inputMap.containsKey("restaurants")) {
+			ArrayList<String> listKeyRestaurants = (ArrayList<String>) inputMap.get("restaurants");
 			for (String key : listKeyRestaurants) {
-				Restaurant restaurant = restaurantDao.findOne(key);
+				Restaurant restaurant = restaurantDao.get(key);
 				entity.addRestaurants(restaurant);
 			}
 		}
@@ -90,25 +90,23 @@ public class CouponResource extends AbstractResource<Coupon> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Coupon fromUpdateDto(Coupon t, HashMap<String, Object> dto) {
-		Coupon entity = super.fromUpdateDto(t, dto);
-		
-		entity.setCoupon_code(Long.parseLong(dto.get("couponCode").toString()));
-		entity.setCoupon_type(CouponType.valueOf(dto.get("couponType").toString()));
-		entity.setNetworkStatus(NetworkStatus.valueOf(dto.get("networkStatus").toString()));
-		entity.setDiscount_value(Integer.parseInt(dto.get("discountValue").toString()));
-		entity.setMaximum_value(Integer.parseInt(dto.get("maximumValue").toString()));
-		entity.setMinimum_value(Integer.parseInt(dto.get("manimumValue").toString()));
-		entity.setStart_date(new Date(Long.parseLong(dto.get("startDate").toString())));
-		entity.setEnd_date(new Date(Long.parseLong(dto.get("endDate").toString())));
-		if (dto.containsKey("restaurants")) {
-			ArrayList<String> listKeyRestaurants = (ArrayList<String>) dto.get("restaurants");
+	protected Coupon getEntityForUpdate(Coupon coupon, HashMap<String, Object> inputMap) {
+		coupon.setCoupon_code(Long.parseLong(inputMap.get("couponCode").toString()));
+		coupon.setCoupon_type(CouponType.valueOf(inputMap.get("couponType").toString()));
+		coupon.setNetworkStatus(NetworkStatus.valueOf(inputMap.get("networkStatus").toString()));
+		coupon.setDiscount_value(Integer.parseInt(inputMap.get("discountValue").toString()));
+		coupon.setMaximum_value(Integer.parseInt(inputMap.get("maximumValue").toString()));
+		coupon.setMinimum_value(Integer.parseInt(inputMap.get("manimumValue").toString()));
+		coupon.setStart_date(new Date(Long.parseLong(inputMap.get("startDate").toString())));
+		coupon.setEnd_date(new Date(Long.parseLong(inputMap.get("endDate").toString())));
+		if (inputMap.containsKey("restaurants")) {
+			ArrayList<String> listKeyRestaurants = (ArrayList<String>) inputMap.get("restaurants");
 			for (String key : listKeyRestaurants) {
-				Restaurant restaurant = restaurantDao.findOne(key);
-				entity.addRestaurants(restaurant);
+				Restaurant restaurant = restaurantDao.get(key);
+				coupon.addRestaurants(restaurant);
 			}
 		}
-		return entity;
+		return coupon;
 	}
 
 
@@ -116,40 +114,13 @@ public class CouponResource extends AbstractResource<Coupon> {
 	//==============================ACTION====================================//
 
 
-	@Override
-	protected HashMap<String, Object> onGet(Coupon entity) {
-
-		HashMap<String, Object> dto = new HashMap<String, Object>();
-		dto = super.onGet(entity);
-		return dto;
-	}
-
-
 
 
 	@Override
-	protected Response onAdd(User access, Coupon entity, Restaurant restaurant) {
+	protected Response onCreate(User access, Coupon entity, Restaurant restaurant) {
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity, access));
 	}
-
-	@Override
-	protected Response onUpdate(User access, Coupon entity, Restaurant restaurant) {
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));	
-	}
-
-	@Override
-	protected Response onDelete(User access,Coupon entity) {
-		try {
-			dao.delete(entity);
-			return ResourceUtils.asSuccessResponse(Status.OK, null);
-		} catch (RollbackException e) {
-			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED, new ServiceErrorMessage("has relationship"));
-		}
-	}
-
-
 
 	//============================METHOD=====================================//
 
@@ -202,9 +173,9 @@ public class CouponResource extends AbstractResource<Coupon> {
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 	})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
@@ -226,11 +197,11 @@ public class CouponResource extends AbstractResource<Coupon> {
 	})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN) {
-			Coupon coupon = couponDao.findOne(id);
+			Coupon coupon = couponDao.get(id);
 			if (coupon != null) {
-				return super.update(access, id, dto);
+				return super.update(access, id, inputMap);
 			}
 			else {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Add on not found"));
@@ -252,7 +223,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 	@Override
 	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN ) {
-			Coupon coupon = couponDao.findOne(id);
+			Coupon coupon = couponDao.get(id);
 			if (coupon != null) {
 				return super.delete(access, id);
 			}else {

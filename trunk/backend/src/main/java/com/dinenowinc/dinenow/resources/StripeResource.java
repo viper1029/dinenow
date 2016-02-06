@@ -5,7 +5,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Customer;
-import com.dinenowinc.dinenow.model.PaymentMethod;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.google.inject.Inject;
 import com.stripe.exception.APIConnectionException;
@@ -33,7 +31,6 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Card;
 import com.stripe.model.DeletedPlan;
 //import com.stripe.model.PaymentSource;
 import com.stripe.model.Plan;
@@ -60,7 +57,7 @@ public class StripeResource {
 //	@SuppressWarnings("unchecked")
 //	@POST
 //	@Path("/addCard")
-//	@ApiOperation(value="api add card stripe to customer", notes="<pre><code>{"
+//	@ApiOperation(value="api create card stripe to customer", notes="<pre><code>{"
 //			+ "<br/>  \"user\": \"\","
 //			+ "<br/>  \"user\": \"tokenStripe\","
 //			+ "<br/>  \"paymentMethod\": {"
@@ -72,7 +69,7 @@ public class StripeResource {
 //	public Response addTokenStripe(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 //		try {
 //			if (dto.containsKey("user") && dto.containsKey("paymentMethod")) {
-//				Customer customer = customerDao.findOne(dto.get("user").toString());
+//				Customer customer = customerDao.get(dto.get("user").toString());
 //				String tokenStripe = dto.get("tokenStripe").toString();
 //				if (customer != null) {
 //					String name = null;
@@ -91,7 +88,7 @@ public class StripeResource {
 //					
 //					return ResourceUtils.asSuccessResponse(Status.OK, customer);
 //				}
-//				RestaurantUser restaurantUser = restaurantUserDao.findOne(dto.get("user").toString());
+//				RestaurantUser restaurantUser = restaurantUserDao.get(dto.get("user").toString());
 //				if (restaurantUser != null) {
 //					String name = null;
 //					if (((HashMap<String, String>)dto.get("paymentMethod")).containsKey("name")) {
@@ -130,7 +127,7 @@ public class StripeResource {
 //	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 //		try {
 //			if (dto.containsKey("user") && dto.containsKey("paymentMethod")) {
-//				Customer customer = customerDao.findOne(dto.get("user").toString());
+//				Customer customer = customerDao.get(dto.get("user").toString());
 //				if (customer != null) {
 //					String cardStripe = ((HashMap<String, String>)dto.get("paymentMethod")).get("cardStripe");
 //					
@@ -140,7 +137,7 @@ public class StripeResource {
 //					
 //					return ResourceUtils.asSuccessResponse(Status.OK, customer);
 //				}
-//				RestaurantUser restaurantUser = restaurantUserDao.findOne(dto.get("user").toString());
+//				RestaurantUser restaurantUser = restaurantUserDao.get(dto.get("user").toString());
 //				if (restaurantUser != null) {
 //					String cardStripe = ((HashMap<String, String>)dto.get("paymentMethod")).get("cardStripe");
 //					restaurantUser.deleteTokenStrip(cardStripe);				
@@ -161,7 +158,7 @@ public class StripeResource {
 //	@Path("/{customer_id}/getCard")
 //	@ApiOperation(value="api get all token stripe to customer", notes="")
 //	public Response deleteTokenStripe(@ApiParam(access = "internal") @Auth User access, @PathParam("customer_id") String customer_id) {
-//			Customer customer = customerDao.findOne(customer_id);
+//			Customer customer = customerDao.get(customer_id);
 //			if (customer != null) {
 //				return ResourceUtils.asSuccessResponse(Status.OK, customer.getCardStrip());
 //			}
@@ -202,7 +199,7 @@ public class StripeResource {
 	
 //	@POST
 //	@Path("/register_plan/{restaurant_id}")
-//	@ApiOperation(value="api add plan to restaurant", notes="<code><pre>{"
+//	@ApiOperation(value="api create plan to restaurant", notes="<code><pre>{"
 //			+ "<br/>  \"tokenStripe\":\"\""
 //			+ "<br/>}</pre></code>")
 //	public Response registerPlan(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,  HashMap<String, Object> dto){
@@ -255,18 +252,18 @@ public class StripeResource {
 	/*
 	@POST
 	@Path("/addCardToCustomer/{user_id}")
-	@ApiOperation(value="api add new card to customer", notes="user_id can is customer_id or restaurant_user_id <br/><code><pre>{"
+	@ApiOperation(value="api create new card to customer", notes="user_id can is customer_id or restaurant_user_id <br/><code><pre>{"
 			+ "<br/>  \"tokenStripe\":\"\""
 			+ "<br/>}</pre></code>")
 	public Response addCardToCustomer(@ApiParam(access = "internal") @Auth User access, @PathParam("user_id") String user_id, HashMap<String, Object> dto){
 		try {
 			String token_card = dto.get("tokenStripe").toString();
-			Customer customer = customerDao.findOne(user_id);
+			Customer customer = customerDao.get(user_id);
 			if (customer != null) {
 				Card card = DineNowApplication.stripe.addCardToCustomer(customer.getCustomerStripe(), token_card);
 				return ResourceUtils.asSuccessResponse(Status.OK, card);
 			}
-			RestaurantUser restaurant_user = restaurantUserDao.findOne(user_id);
+			RestaurantUser restaurant_user = restaurantUserDao.get(user_id);
 			if (restaurant_user != null) {
 				Card card = DineNowApplication.stripe.addCardToCustomer(restaurant_user.getCustomerStripe(), token_card);
 				return ResourceUtils.asSuccessResponse(Status.OK, card);
@@ -284,21 +281,21 @@ public class StripeResource {
 	public Response getListCard(@ApiParam(access = "internal") @Auth User access, @PathParam("user_id") String user_id){
 		try {
 			List<PaymentMethod> listResult = new ArrayList<PaymentMethod>();
-			Customer customer = customerDao.findOne(user_id);
+			Customer customer = customerDao.get(user_id);
 			if (customer != null) {
 				List<PaymentSource> result = DineNowApplication.stripe.getAllCardToCustomer(customer.getCustomerStripe());
 				for (PaymentSource paymentSource : result) {
 					Card card = (Card)paymentSource;
-					listResult.add(new PaymentMethod(card.getBrand(), card.getId(), card.getLast4()));
+					listResult.create(new PaymentMethod(card.getBrand(), card.getId(), card.getLast4()));
 				}
 				return ResourceUtils.asSuccessResponse(Status.OK, listResult);
 			}
-			RestaurantUser restaurant_user = restaurantUserDao.findOne(user_id);
+			RestaurantUser restaurant_user = restaurantUserDao.get(user_id);
 			if (restaurant_user != null) {
 				List<PaymentSource> result = DineNowApplication.stripe.getAllCardToCustomer(restaurant_user.getCustomerStripe());
 				for (PaymentSource paymentSource : result) {
 					Card card = (Card)paymentSource;
-					listResult.add(new PaymentMethod(card.getBrand(), card.getId(), card.getLast4()));
+					listResult.create(new PaymentMethod(card.getBrand(), card.getId(), card.getLast4()));
 				}
 				return ResourceUtils.asSuccessResponse(Status.OK, listResult);
 			}
@@ -315,12 +312,12 @@ public class StripeResource {
 	@ApiOperation(value="api delete card", notes="user_id can is customer_id or restaurant_user_id")
 	public Response deletePlan(@ApiParam(access = "internal") @Auth User access,@PathParam("user_id") String user_id, @PathParam("card_id") String card_id) {
 		try {
-			Customer customer = customerDao.findOne(user_id);
+			Customer customer = customerDao.get(user_id);
 			if (customer != null) {
 				//DineNowApplication.stripe.deleteCard(customer.getCustomerStripe(), card_id);
 				return ResourceUtils.asSuccessResponse(Status.OK, null);
 			}
-			RestaurantUser restaurant_user = restaurantUserDao.findOne(user_id);
+			RestaurantUser restaurant_user = restaurantUserDao.get(user_id);
 			if (restaurant_user != null) {
 				//DineNowApplication.stripe.deleteCard(restaurant_user.getCustomerStripe(), card_id);
 				return ResourceUtils.asSuccessResponse(Status.OK, null);

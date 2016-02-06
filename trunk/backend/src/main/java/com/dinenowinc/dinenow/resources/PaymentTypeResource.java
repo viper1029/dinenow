@@ -44,25 +44,24 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 	private RestaurantDao restaurantDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(PaymentType entity) {
+	protected HashMap<String, Object> getMapFromEntity(PaymentType entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
 	
 	@Override
-	protected PaymentType fromAddDto(HashMap<String, Object> dto) {
-		PaymentType paymentType = super.fromAddDto(dto);
-			paymentType.setName(dto.get("name").toString());
+	protected PaymentType getEntityForInsertion(HashMap<String, Object> inputMap) {
+		PaymentType paymentType = super.getEntityForInsertion(inputMap);
+			paymentType.setName(inputMap.get("name").toString());
 		return paymentType;
 	}
 	
 
 	
 	@Override
-	protected PaymentType fromUpdateDto(PaymentType t, HashMap<String, Object> dto) {
-		PaymentType paymentType = super.fromUpdateDto(t, dto);
-		paymentType.setName(dto.get("name").toString());
+	protected PaymentType getEntityForUpdate(PaymentType paymentType, HashMap<String, Object> inputMap) {
+		paymentType.setName(inputMap.get("name").toString());
 		return paymentType;
 	}	
 	
@@ -104,12 +103,12 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, dto);
+			PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, inputMap);
 			List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
 			if (mListError.size() == 0) {
-				return super.add(access, dto);
+				return super.create(access, inputMap);
 			}
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}
@@ -124,12 +123,12 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-				PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, dto);
+				PaymentTypeValidator typeValidator = new PaymentTypeValidator(paymentTypeDao, inputMap);
 				List<ServiceErrorMessage> mListError = typeValidator.validateForAdd();
 				if (mListError.size() == 0) {
-					return super.update(access, id, dto);
+					return super.update(access, id, inputMap);
 				}
 				return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}

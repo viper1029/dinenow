@@ -1,24 +1,16 @@
 package com.dinenowinc.dinenow.dao;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-
-import com.dinenowinc.dinenow.model.Category;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.jpa.HibernateEntityManager;
-
 import com.dinenowinc.dinenow.model.BaseEntity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.List;
 
 public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBaseEntityDAO<E, P> {
 
@@ -38,7 +30,6 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
     entity.setCreatedDate(new Date());
     entity.setModifiedDate(new Date());
     emf.get().persist(entity);
-
     return (P) entity.getId();
   }
 
@@ -53,17 +44,25 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
   }
 
   @Override
-  public E findOne(P id) {
+  public E get(P id) {
     return emf.get().find(getEntityClass(), id);
   }
 
   @SuppressWarnings("unchecked")
-  public E findByCriteria(Criterion con) {
-    HibernateEntityManager hem = getEntityManager().unwrap(HibernateEntityManager.class);
-    Session session = hem.getSession();
-    Criteria cr = session.createCriteria(getEntityClass());
-    cr.add(con);
-    return (E) cr.uniqueResult();
+  @Override
+  public List<E> getAll() {
+    return this.emf.get().createNamedQuery(getEntityClass().getSimpleName() + ".GetAll").getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<E> getByPage(int page, int size) {
+
+    int maxRecords = size;
+    int startRow = (page - 1) * size;
+
+    return this.emf.get().createNamedQuery(
+        getEntityClass().getSimpleName() + ".GetAll").setFirstResult(startRow).setMaxResults(maxRecords).getResultList();
   }
 
   @Override
@@ -71,7 +70,7 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
   public void update(E entity) {
     entity.setModifiedDate(new Date());
     if (entity.getCreatedBy() == null) {
-      entity.setCreatedBy("own");
+      entity.setCreatedBy("system");
     }
     if (entity.getCreatedDate() == null) {
       entity.setCreatedDate(new Date());
@@ -104,9 +103,7 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
       Type type = getClass().getGenericSuperclass();
       if (type instanceof ParameterizedType) {
         ParameterizedType paramType = (ParameterizedType) type;
-
         entityClass = (Class<E>) paramType.getActualTypeArguments()[0];
-
       }
       else {
         throw new IllegalArgumentException(
@@ -116,33 +113,7 @@ public abstract class BaseEntityDAOImpl<E extends BaseEntity, P> implements IBas
     return entityClass;
   }
 
-  public List<E> getAll() {
-    return this.emf.get().createQuery(
-        "SELECT c.* FROM " + getEntityClass().getSimpleName()  + " c WHERE c.id_restaurant = :value",
-        getEntityClass()).getResultList();
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<E> findAll() {
-    return this.emf.get().createNamedQuery(
-        getEntityClass().getSimpleName() + ".GetAll").getResultList();
-  }
-
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<E> findAll(int page, int size) {
-
-    int maxRecords = size;
-    int startRow = (page - 1) * size;
-
-    return this.emf.get().createNamedQuery(
-        getEntityClass().getSimpleName() + ".GetAll").setFirstResult(startRow).setMaxResults(maxRecords).getResultList();
-  }
-
   public EntityTransaction getTransaction() {
     return getEntityManager().getTransaction();
   }
-
 }

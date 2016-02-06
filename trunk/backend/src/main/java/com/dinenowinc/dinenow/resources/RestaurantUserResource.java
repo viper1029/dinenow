@@ -56,41 +56,30 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 
 
 	@Override
-	protected HashMap<String, Object> fromEntity(RestaurantUser entity) {
+	protected HashMap<String, Object> getMapFromEntity(RestaurantUser entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
-	}	
-	
-	
-	//POST/ PUT
-	@Override
-	protected RestaurantUser fromFullDto(HashMap<String, Object> dto) {
-		RestaurantUser ru = super.fromFullDto(dto);
-		ru.setEmail(dto.get("email").toString());
-		ru.setPassword(dto.get("password").toString());
-		ru.setRole(UserRole.valueOf(dto.get("role").toString()));
-		return ru;
 	}
 	
 	
 	@Override
-	protected RestaurantUser fromAddDto(HashMap<String, Object> dto) {
-		System.out.println("@Override@Override@Override @Override@Override@Override "+dto);
-		RestaurantUser entity = super.fromAddDto(dto);
+	protected RestaurantUser getEntityForInsertion(HashMap<String, Object> inputMap) {
+		System.out.println("@Override@Override@Override @Override@Override@Override "+ inputMap);
+		RestaurantUser entity = super.getEntityForInsertion(inputMap);
 		
-		entity.setEmail(dto.get("email").toString());
-		entity.setPassword(MD5Hash.md5Spring(dto.get("password").toString()));
-		entity.setRole(UserRole.valueOf(dto.get("role").toString()));
-		entity.setFirstName(dto.get("firstName").toString());
-		entity.setLastName(dto.get("lastName").toString());
-		entity.setPhone(dto.get("phone").toString());
+		entity.setEmail(inputMap.get("email").toString());
+		entity.setPassword(MD5Hash.md5Spring(inputMap.get("password").toString()));
+		entity.setRole(UserRole.valueOf(inputMap.get("role").toString()));
+		entity.setFirstName(inputMap.get("firstName").toString());
+		entity.setLastName(inputMap.get("lastName").toString());
+		entity.setPhone(inputMap.get("phone").toString());
 		entity.setRegisteredDate(new Date());
 	//	entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
-		if (dto.containsKey("roles")) {
-			ArrayList<String> listKeyRoles = (ArrayList<String>)dto.get("roles");
+		if (inputMap.containsKey("roles")) {
+			ArrayList<String> listKeyRoles = (ArrayList<String>) inputMap.get("roles");
 			for (String key : listKeyRoles) {
-				Role role = roleDao.findOne(key);
+				Role role = roleDao.get(key);
 				entity.addRestaurant(role);
 			}
 		}
@@ -99,17 +88,16 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 	
 	
 	@Override
-	protected RestaurantUser fromUpdateDto(RestaurantUser t, HashMap<String, Object> dto) {
-		RestaurantUser entity = super.fromUpdateDto(t, dto);
-		entity.setEmail(dto.containsKey("email") ? dto.get("email").toString() : t.getEmail());
-		entity.setPassword(dto.containsKey("password") ? MD5Hash.md5Spring(dto.get("password").toString()) : t.getPassword());
-		entity.setRole(dto.containsKey("role") ? UserRole.valueOf(dto.get("role").toString()) : t.getRole());
-		entity.setFirstName(dto.get("firstName").toString());
-		entity.setLastName(dto.get("lastName").toString());
-		entity.setPhone(dto.get("phone").toString());
+	protected RestaurantUser getEntityForUpdate(RestaurantUser restaurantUser, HashMap<String, Object> inputMap) {
+		restaurantUser.setEmail(inputMap.containsKey("email") ? inputMap.get("email").toString() : restaurantUser.getEmail());
+		restaurantUser.setPassword(inputMap.containsKey("password") ? MD5Hash.md5Spring(inputMap.get("password").toString()) : restaurantUser.getPassword());
+		restaurantUser.setRole(inputMap.containsKey("role") ? UserRole.valueOf(inputMap.get("role").toString()) : restaurantUser.getRole());
+		restaurantUser.setFirstName(inputMap.get("firstName").toString());
+		restaurantUser.setLastName(inputMap.get("lastName").toString());
+		restaurantUser.setPhone(inputMap.get("phone").toString());
 		//entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
 		//entity.setNumberOfOrders(Integer.parseInt(dto.get("numberOfOrders").toString()));
-		return entity;
+		return restaurantUser;
 	}
 	
 	
@@ -121,13 +109,13 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 	
 	
 	@Override
-	protected Response onAdd(User access, RestaurantUser entity, Restaurant restaurant) {
+	protected Response onCreate(User access, RestaurantUser entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
 		restaurant.addUser(entity);
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 	}
 	
 	
@@ -186,24 +174,24 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		// Create Restaurant Owner by admin.(Give details of Restaurant for both)
-	    if (access.getRole() == UserRole.ADMIN && dto.get("role").toString().equals("OWNER")) {
-			RestaurantUser user = fromAddDto(dto);
+	    if (access.getRole() == UserRole.ADMIN && inputMap.get("role").toString().equals("OWNER")) {
+			RestaurantUser user = getEntityForInsertion(inputMap);
 			ServiceResult<RestaurantUser> result = userService.createNewUser(user);
 			
 			if (!result.hasErrors()) {
-				return super.add(access, dto);
+				return super.create(access, inputMap);
 			}else {
 				return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, result.getErrors());
 			}	
 		}
 		else if (access.getRole() == UserRole.OWNER) {
-			RestaurantUser user = fromAddDto(dto);
+			RestaurantUser user = getEntityForInsertion(inputMap);
 			ServiceResult<RestaurantUser> result = userService.createNewUser(user);
 			
 			if (!result.hasErrors()) {
-				return super.add(access, dto);
+				return super.create(access, inputMap);
 			}else {
 				return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, result.getErrors());
 			}
@@ -229,9 +217,9 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN && access.getRole() == UserRole.OWNER )
-		return super.update(access, id, dto);
+		return super.update(access, id, inputMap);
 		else
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied"));
 	}
@@ -246,19 +234,18 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 			})
 	@Override
 	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
-		RestaurantUser entity = dao.findOne(id);
+		RestaurantUser entity = dao.get(id);
 		Response response = ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage(String.format("deleted succesfully", "deleted succesfully" )));
 		
     	if (entity != null) {
     		System.out.println(entity.toString());
     		try {
-    			onChangeStatus(access,entity);
+    			//onChangeStatus(access,entity);
     		}
     		catch(Exception ex) {
     			ex.printStackTrace();
     						
     		}
-    		
     		return response;
     	} else {    		
     		return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
@@ -280,7 +267,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 		else if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			String res_id=dto.get("restaurantId").toString();		
 			List<RestaurantUser> entities  = restaurantUserDao.getAddonsByRestaurantId(res_id);
-			List<HashMap<String, Object>> dtos = fromEntities(entities);
+			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));	

@@ -48,7 +48,7 @@ public class CartItemResources extends AbstractResource<CartItem>{
 	private OrderDao orderDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(CartItem entity) {
+	protected HashMap<String, Object> getMapFromEntity(CartItem entity) {
 		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 /*		dto.put("id", entity.getId());
 		dto.put("orderType", entity.getOrderType());
@@ -64,7 +64,7 @@ public class CartItemResources extends AbstractResource<CartItem>{
 			itemdto.put("price", item.getPrice());
 			itemdto.put("quantity", item.getQuantity());
 			itemdto.put("notes", item.getNote());
-			items.add(itemdto);
+			items.create(itemdto);
 		}
 		dto.put("cartItems", items);*/
 		

@@ -63,15 +63,6 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	@Inject
 	private RestaurantDao restaurantDao;
 
-
-
-	@Override
-	protected HashMap<String, Object> fromEntity(Order entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
-		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
-		return dto;
-	}
-
 	//POST/PUT
 //	@Override
 //	protected Order fromFullDto(HashMap<String, Object> dto) {
@@ -90,8 +81,8 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 //			double lng = loca.get("lng");
 //			co.setLocation(new LatLng(lat, lng));
 //		}
-//		co.setAddress_1(dto.get("address1").toString());
-//		co.setAddress_2(dto.get("address2").toString());
+//		co.setAddress1(dto.get("address1").toString());
+//		co.setAddress2(dto.get("address2").toString());
 //		co.setCity(dto.get("city").toString());
 //		co.setProvince(dto.get("provinence").toString());
 //		co.setCountry(dto.get("country").toString());
@@ -108,7 +99,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 //				orderDetail.setCreatedDate(new Date());
 //				orderDetail.setPrice(Double.parseDouble(hashMap.get("price").toString()));
 //				orderDetail.setPrice(Integer.parseInt(hashMap.get("quantity").toString()));
-//				Item item = itemDao.findOne(hashMap.get("item").toString(),dto.get("restaurantId").toString());
+//				Item item = itemDao.get(hashMap.get("item").toString(),dto.get("restaurantId").toString());
 //				item.addOrderDetails(orderDetail);
 //				co.addOrderDetail(orderDetail);
 //			}
@@ -148,72 +139,54 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 //			p.setStatus(0);
 //			co.addPoints(p);*/
 //		if (dto.containsKey("restaurantId")) {
-//			Restaurant restaurant = restaurantDao.findOne(dto.get("restaurantId").toString());	
+//			Restaurant restaurant = restaurantDao.get(dto.get("restaurantId").toString());
 //			restaurant.addOrder(co);
 //		}
 //		return co;
 //	}
 
 
-
-	@SuppressWarnings("unchecked")
 	@Override
-	protected Order fromUpdateDto(Order t, HashMap<String, Object> dto) {
-
-		Order entity = super.fromUpdateDto(t, dto);
-		if (!dto.containsKey("id")) {
-			entity.setReceivedAt(new Date());
-		}
-		entity.setOrderStatus(dto.containsKey("orderStatus") ? OrderStatus.valueOf(dto.get("orderStatus").toString()) : entity.getOrderStatus());
-		entity.setOrderType(dto.containsKey("orderType") ? OrderType.valueOf(dto.get("orderType").toString()) : entity.getOrderType());
-		entity.setAvailstatus(dto.containsKey("orderAvailStatus") ? AvailabilityStatus.valueOf(dto.get("orderAvailStatus").toString()) : entity.getAvailstatus());
-		entity.setTip(dto.containsKey("tip") ? Double.parseDouble(dto.get("tip").toString()) : entity.getTip());
-		entity.setTotal(dto.containsKey("total") ? Double.parseDouble(dto.get("total").toString()): entity.getTotal());
-		if (dto.containsKey("expectedCompletionAt") && dto.get("expectedCompletionAt") != null) {
-			entity.setExpectedCompletionAt(new Date(Long.parseLong(dto.get("expectedCompletionAt").toString())));
-		}
-		if (dto.containsKey("completionAt") && dto.get("completionAt") != null) {
-			entity.setCompletionAt(new Date(Long.parseLong(dto.get("completionAt").toString())));
-		}
-		if (dto.containsKey("location")) {
-			HashMap<String, Double> loca = (HashMap<String, Double>)dto.get("location");
-			double lat = loca.get("lat");
-			double lng = loca.get("lng");
-			entity.setLocation(new LatLng(lat, lng));
-		}
-		return entity;
+	protected HashMap<String, Object> getMapFromEntity(Order entity) {
+		HashMap<String, Object> dto = new HashMap<String, Object>();
+		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
+		return dto;
 	}
 
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Order getEntityForUpdate(Order order, HashMap<String, Object> inputMap) {
+		if (!inputMap.containsKey("id")) {
+			order.setReceivedAt(new Date());
+		}
+		order.setOrderStatus(inputMap.containsKey("orderStatus") ? OrderStatus.valueOf(inputMap.get("orderStatus").toString()) : order.getOrderStatus());
+		order.setOrderType(inputMap.containsKey("orderType") ? OrderType.valueOf(inputMap.get("orderType").toString()) : order.getOrderType());
+		order.setAvailstatus(inputMap.containsKey("orderAvailStatus") ? AvailabilityStatus.valueOf(inputMap.get("orderAvailStatus").toString()) : order.getAvailstatus());
+		order.setTip(inputMap.containsKey("tip") ? Double.parseDouble(inputMap.get("tip").toString()) : order.getTip());
+		order.setTotal(inputMap.containsKey("total") ? Double.parseDouble(inputMap.get("total").toString()): order.getTotal());
+		if (inputMap.containsKey("expectedCompletionAt") && inputMap.get("expectedCompletionAt") != null) {
+			order.setExpectedCompletionAt(new Date(Long.parseLong(inputMap.get("expectedCompletionAt").toString())));
+		}
+		if (inputMap.containsKey("completionAt") && inputMap.get("completionAt") != null) {
+			order.setCompletionAt(new Date(Long.parseLong(inputMap.get("completionAt").toString())));
+		}
+		if (inputMap.containsKey("location")) {
+			HashMap<String, Double> loca = (HashMap<String, Double>) inputMap.get("location");
+			double lat = loca.get("lat");
+			double lng = loca.get("lng");
+			order.setLocation(new LatLng(lat, lng));
+		}
+		return order;
+	}
 
-	/*
-	 * "id": "19e69dac-34cf-4e1a-bc80-6a0bd66eb3c6",
-              "availabilityStatus": "AVAILABLE",
-              "itemName": "item 2",
-              "itemDescription": "item Utils 2",
-              "notes": "notes Utils 2",
-              "spiceLevel": 3,
-              "keywords": "item Utils, item Utils 2 note",
-              "price": 67,
-              "linkImage": null,
-              "orderDetails": [
-                {
-                  "id": "56fad99c-ff63-409e-8b84-05e2294071d0",
-                  "unitPrice": 67,
-                  "quantity": 5,
-                  "discount": 0
-                }
-              ],
-              "vegeterian": false(non-Javadoc)
-	 * @see com.dinenowinc.dinenow.resources.AbstractResource#onGet(com.dinenowinc.dinenow.model.BaseEntity)
-	 */
 
 
 	//======================================ACTION======================================//
 
 
 	@Override
-	protected HashMap<String, Object> onGet(Order entity) {
+	protected HashMap<String, Object> onGet(Order entity, User access) {
 		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("orderNumber", entity.getOrderNumber());
@@ -263,27 +236,17 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	}
 
 	@Override
-	protected Response onAdd(User access, Order entity, Restaurant restaurant) {
+	protected Response onCreate(User access, Order entity, Restaurant restaurant) {
 		//corrected
-		Customer cus = customerDao.findOne(access.getId().toString());
+		Customer cus = customerDao.get(access.getId().toString());
 		entity.setCreatedBy(cus.getLastName());
 		entity.setOrderStatus(OrderStatus.OPEN);
 		cus.addCustomerOrder(entity);
 		dao.save(entity);
 		customerDao.update(cus);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 	}
 
-	@Override
-	protected Response onUpdate(User access, Order entity, Restaurant restaurant) {
-		return super.onUpdate(access, entity, restaurant);
-	}
-
-
-	@Override
-	protected Response onDelete(User access, Order entity) {
-		return super.onDelete(access, entity);
-	}
 
 
 
@@ -346,14 +309,14 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			if (!dto.containsKey("restaurantId")) {
 				return ResourceUtils.asSuccessResponse(Status.NOT_ACCEPTABLE, "missing field resturantId");
 			}
-			Restaurant restaurant = restaurantDao.findOne(dto.get("restaurantId").toString());	
+			Restaurant restaurant = restaurantDao.get(dto.get("restaurantId").toString());
 			if(restaurant.getNetworkStatus() == NetworkStatus.OFFLINE){
 				return ResourceUtils.asSuccessResponse(Status.NOT_ACCEPTABLE, "Reastaurant is OFFLINE");						
 			}
 			if(!dto.containsKey("orderType")){
 				return ResourceUtils.asSuccessResponse(Status.NOT_ACCEPTABLE, "missing field orderType");
 			}
-			Customer cus = customerDao.findOne(access.getId().toString());
+			Customer cus = customerDao.get(access.getId().toString());
 			Order co = new Order();
 			co.setAvailstatus(AvailabilityStatus.AVAILABLE);
 			co.setOrderStatus(OrderStatus.OPEN);
@@ -523,7 +486,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			dao.save(co);
 			customerDao.update(cus);
 
-			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(co));
+			return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(co));
 		}else {
 			return ResourceUtils.asSuccessResponse(Status.UNAUTHORIZED, "only for customer");
 		}
@@ -533,39 +496,6 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	}
 
 	}
-
-
-	//	@GET
-	//	@Path("/orderByOwner")
-	//	@ApiOperation(value="api get List Order for Owner", notes="<pre><code></code></pre>")
-	//	public Response getOrderByOwner(@Auth User access){
-	//		if (access.getRole() == UserRole.OWNER) {
-	//			List<CustomerOrder> entities = customerOrderDao.findByOwner(access.getId().toString());
-	//			List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
-	//			for (CustomerOrder dto : entities) {
-	//				dtos.add(onGet(dto));
-	//			}
-	//			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
-	//		}
-	//		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, "only for Owner");
-	//	}
-
-
-	//	@GET
-	//	@ApiOperation("get order by customer")
-	//	@Path("/orderByCustomer")
-	//	public Response getOrder(@Auth User access){
-	//		if (access.getRole() == UserRole.CUSTOMER) {
-	//			List<CustomerOrder> entities = customerOrderDao.findByCustomer(access.getId().toString());
-	//			List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
-	//			for (CustomerOrder dto : entities) {
-	//				dtos.add(onGet(dto));
-	//			}
-	//			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
-	//		}
-	//		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, "only for customer");
-	//	}
-
 
 
 	@GET
@@ -587,7 +517,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 
 	/*	
 	@POST
-	@ApiOperation(value="api add new Customer Order", notes="<pre><code>{"
+	@ApiOperation(value="api create new Customer Order", notes="<pre><code>{"
 			+ "<br/>    \"receivedAt\": 1423475871505,"
 			+ "<br/>    \"status\": \"AVAILABLE\","
 			+ "<br/>    \"orderType\": \"PICKUP\","
@@ -597,11 +527,11 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			+ "<br/>    \"tip\": 0"
 			+ "<br/>  }</code></pre>")
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
 		System.out.println("@@@@@@@@@" + dto);
 		if (access.getRole() == UserRole.CUSTOMER) {
-			return onAdd(access, fromFullDto(dto), null);
-			//return add(access, dto);
+			return onCreate(access, fromFullDto(dto), null);
+			//return create(access, dto);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, "only for customer");
 	}*/
@@ -620,8 +550,8 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			+ "<br/>  }</code></pre>")
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
-		return super.update(access, id, dto);
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
+		return super.update(access, id, inputMap);
 	}
 
 

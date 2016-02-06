@@ -50,7 +50,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	private RestaurantDao restaurantDao;
 
 	@Override
-	protected HashMap<String, Object> fromEntity(AddOn entity) {
+	protected HashMap<String, Object> getMapFromEntity(AddOn entity) {
 		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("name", entity.getAddOnName());
@@ -87,7 +87,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	//				double price = Double.parseDouble(hashMap.get("price").toString());
 	//				SizePrice sizePrice = new SizePrice();
 	//				sizePrice.setPrice(price);
-	//				Size size = sizeDao.findOne(iSize);
+	//				Size size = sizeDao.get(iSize);
 	//				sizePrice.setSize(size);
 	//				//entity.addSizePrices(sizePrice);
 	//			}
@@ -98,19 +98,19 @@ public class AddOnResource extends AbstractResource<AddOn>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected AddOn fromAddDto(HashMap<String, Object> dto) {
-		AddOn entity = super.fromAddDto(dto);
+	protected AddOn getEntityForInsertion(HashMap<String, Object> inputMap) {
+		AddOn entity = super.getEntityForInsertion(inputMap);
 
-		entity.setAddOnName(dto.get("name").toString());
-		entity.setAddOnDescription(dto.get("description").toString());
-		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(dto.get("availabilityStatus").toString()));
+		entity.setAddOnName(inputMap.get("name").toString());
+		entity.setAddOnDescription(inputMap.get("description").toString());
+		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(inputMap.get("availabilityStatus").toString()));
 
-		if (dto.containsKey("sizePrices")) {
+		if (inputMap.containsKey("sizePrices")) {
 			ArrayList<SizeInfo> listsInfo = new ArrayList<SizeInfo>();
 
-			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) dto.get("sizePrices");
+			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
 			for (HashMap<String, Object> hashMap : listSizePrice) {
-				Size s = sizeDao.findOne(hashMap.get("size").toString());
+				Size s = sizeDao.get(hashMap.get("size").toString());
 				double price = Double.parseDouble(hashMap.get("price").toString());
 				SizeInfo sInfo = new SizeInfo();
 				sInfo.setSize(s);
@@ -126,18 +126,17 @@ public class AddOnResource extends AbstractResource<AddOn>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected AddOn fromUpdateDto(AddOn t, HashMap<String, Object> dto) {
-		AddOn entity = super.fromUpdateDto(t, dto);
-		entity.setAddOnName(dto.get("name").toString());
-		entity.setAddOnDescription(dto.get("description").toString());
-		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(dto.get("availabilityStatus").toString()));
+	protected AddOn getEntityForUpdate(AddOn entity, HashMap<String, Object> inputMap) {
+		entity.setAddOnName(inputMap.get("name").toString());
+		entity.setAddOnDescription(inputMap.get("description").toString());
+		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(inputMap.get("availabilityStatus").toString()));
 
-		if (dto.containsKey("sizePrices")) {
+		if (inputMap.containsKey("sizePrices")) {
 			ArrayList<SizeInfo> listsInfo = new ArrayList<SizeInfo>();
 
-			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) dto.get("sizePrices");
+			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
 			for (HashMap<String, Object> hashMap : listSizePrice) {
-				Size s = sizeDao.findOne(hashMap.get("size").toString());
+				Size s = sizeDao.get(hashMap.get("size").toString());
 				double price = Double.parseDouble(hashMap.get("price").toString());
 				SizeInfo sInfo = new SizeInfo();
 				sInfo.setSize(s);
@@ -152,67 +151,15 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	}
 
 
-
-	//==============================ACTION====================================//
-
-
-/*	@Override
-	protected HashMap<String, Object> onGet(AddOn entity) {
-
-		HashMap<String, Object> dto = new HashMap<String, Object>();
-		dto = super.onGet(entity);
-		//		ArrayList<HashMap<String, Object>> listSizePrice = new ArrayList<HashMap<String, Object>>();
-		//		for (SizePrice size_price : entity.getSizePrices()) {
-		//			HashMap<String, Object> obj = new HashMap<String, Object>();
-		//			obj.put("id", size_price.getId());
-		//			obj.put("size", size_price.getSize().getId());
-		//			obj.put("price", size_price.getPrice());
-		//			listSizePrice.add(obj);
-		//		}
-		//		dto.put("sizePrices", listSizePrice);
-
-		ArrayList<HashMap<String, Object>> listAddOn = new ArrayList<HashMap<String, Object>>();
-		for (SizeInfo sInfo : entity.getSizes()) {
-			HashMap<String, Object> en = new HashMap<String, Object>();
-			en.put("size", sInfo.getSize().getId());
-			en.put("price", sInfo.getPrice());
-			listAddOn.add(en);
-		}
-		dto.put("sizePrices", listAddOn);
-
-
-		return dto;
-	}*/
-
-
-
-
 	@Override
-	protected Response onAdd(User access, AddOn entity, Restaurant restaurant) {
+	protected Response onCreate(User access, AddOn entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
 		restaurant.addAddOns(entity);
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, entity);
 	}
-
-	@Override
-	protected Response onUpdate(User access, AddOn entity, Restaurant restaurant) {
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));	
-	}
-
-	@Override
-	protected Response onDelete(User access,AddOn entity) {
-		try {
-			dao.delete(entity);
-			return ResourceUtils.asSuccessResponse(Status.OK, null);
-		} catch (RollbackException e) {
-			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED, new ServiceErrorMessage("has relationship"));
-		}
-	}
-
 
 
 	//============================METHOD=====================================//
@@ -227,7 +174,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 		//		if (access.getRole() == UserRole.OWNER) {
 		//			List<AddOn> entities = addOnDao.getListByUser(access);
-		//			List<HashMap<String, Object>> dtos = fromEntities(entities);
+		//			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 		//			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 		//		}
 		if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
@@ -276,9 +223,9 @@ public class AddOnResource extends AbstractResource<AddOn>{
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 	})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
@@ -313,11 +260,11 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	})
 	@Path("/{id}")
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			AddOn addon = addOnDao.findOne(id);
+			AddOn addon = addOnDao.get(id);
 			if (addon != null) {
-				return super.update(access, id, dto);
+				return super.update(access, id, inputMap);
 			}
 			else {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Add on not found"));
@@ -339,7 +286,7 @@ public class AddOnResource extends AbstractResource<AddOn>{
 	@Override
 	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id){
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			AddOn addon = addOnDao.findOne(id);
+			AddOn addon = addOnDao.get(id);
 			if (addon != null) {
 				return super.delete(access, id);
 			}else {

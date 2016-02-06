@@ -10,6 +10,7 @@ public class User implements Principal {
   private UUID id;
   private UserRole role;
   private String name;
+  private String email;
 
   public UUID getId() {
     return id;
@@ -33,5 +34,13 @@ public class User implements Principal {
 
   public void setRole(UserRole role) {
     this.role = role;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(final String email) {
+    this.email = email;
   }
 }

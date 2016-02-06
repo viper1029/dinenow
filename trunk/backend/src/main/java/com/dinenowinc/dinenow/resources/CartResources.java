@@ -71,7 +71,7 @@ public class CartResources extends AbstractResource<Cart> {
 	private OrderDao orderDao;
 
 	@Override
-	protected HashMap<String, Object> fromEntity(Cart entity) {
+	protected HashMap<String, Object> getMapFromEntity(Cart entity) {
 		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("orderType", entity.getOrderType());
@@ -103,7 +103,7 @@ public class CartResources extends AbstractResource<Cart> {
 		double tax = 0;
 		double discount = 0;
 		try{
-		Customer cus = customerDao.findOne(access.getId().toString());
+		Customer cus = customerDao.get(access.getId().toString());
 		System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMM"+cus.getCart());
 		Cart co = (cus.getCart()!=null)?cus.getCart():new Cart();
 		double total = co.getTotal();
@@ -138,7 +138,7 @@ public class CartResources extends AbstractResource<Cart> {
 			System.out.println(":::::::::::::::::::::::::::::::::"+total);
 		total = total+ subtotal + tip + tax + discount;
 		co.setTotal(total);
-				Restaurant restaurant = restaurantDao.findOne(dto.get("restaurantId").toString());	
+				Restaurant restaurant = restaurantDao.get(dto.get("restaurantId").toString());
 				restaurant.addCarts(co);
 		return co;
 		}catch(Exception e){
@@ -149,7 +149,7 @@ public class CartResources extends AbstractResource<Cart> {
 	
 	protected Response onDelete(User access, String id) {
 		try{
-			CartItem item = cartItemDao.findOne(id);
+			CartItem item = cartItemDao.get(id);
 			Cart cart  = item.getCart();
 			cart.setTotal(cart.getTotal()-item.getPrice());
 			cart.getCartItems().remove(item);
@@ -165,17 +165,17 @@ public class CartResources extends AbstractResource<Cart> {
 	}
 	
 	@Override
-	protected Response onAdd(User access, Cart entity, Restaurant restaurant) {
+	protected Response onCreate(User access, Cart entity, Restaurant restaurant) {
 		//corrected
 		try{
-		Customer cus = customerDao.findOne(access.getId().toString());
+		Customer cus = customerDao.get(access.getId().toString());
 		entity.setCreatedBy(cus.getFirstName());
 		entity.setOrderStatus(OrderStatus.OPEN);
 		cus.setCart(entity);
 		entity.setCustomer(cus);
 		dao.save(entity);
 		customerDao.update(cus);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 		}catch(Exception e){
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("entity not found"));
 		}
@@ -206,10 +206,10 @@ public class CartResources extends AbstractResource<Cart> {
 			+ "<br/>    \"orderStatus\": \"OPEN\","
 			+ "<br/>  }</code></pre>")
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
-		System.out.println("@@@@@@@@@" + dto);
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
+		System.out.println("@@@@@@@@@" + inputMap);
 		if (access.getRole() == UserRole.CUSTOMER) {
-			return onAdd(access, fromFullDto(access,dto), null);
+			return onCreate(access, fromFullDto(access, inputMap), null);
 		}
 		return ResourceUtils.asSuccessResponse(Status.UNAUTHORIZED, "only for customer");
 	}

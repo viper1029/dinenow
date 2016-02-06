@@ -42,38 +42,33 @@ public class ReviewResource extends AbstractResource<Review>{
 	RestaurantDao  rDao;
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(Review entity) {
+	protected HashMap<String, Object> getMapFromEntity(Review entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
 	
 	@Override
-	protected Review fromAddDto(HashMap<String, Object> dto) {
-		Review review = super.fromAddDto(dto);
-		review.setRating(Integer.parseInt(dto.get("rating").toString()));
-		review.setReviews(dto.get("reviews").toString());
+	protected Review getEntityForInsertion(HashMap<String, Object> inputMap) {
+		Review review = super.getEntityForInsertion(inputMap);
+		review.setRating(Integer.parseInt(inputMap.get("rating").toString()));
+		review.setReviews(inputMap.get("reviews").toString());
 		return review;
 	}
-	
-	@Override
-	protected HashMap<String, Object> onGet(Review entity) {
-		return super.onGet(entity);
-	}
+
 
 	
 	@Override
-	protected Review fromUpdateDto(Review t, HashMap<String, Object> dto) {
-		Review review = super.fromUpdateDto(t, dto);
-		review.setRating(Integer.parseInt(dto.get("rating").toString()));
-		review.setReviews(dto.get("reviews").toString());
+	protected Review getEntityForUpdate(Review review, HashMap<String, Object> inputMap) {
+		review.setRating(Integer.parseInt(inputMap.get("rating").toString()));
+		review.setReviews(inputMap.get("reviews").toString());
 		return review;
 	}	
 	
 	//=================================ACTION==================================//	
 	
 		@Override
-		protected Response onAdd(User access, Review review, Restaurant restaurant) {
+		protected Response onCreate(User access, Review review, Restaurant restaurant) {
 			if (restaurant == null) {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 			}
@@ -86,14 +81,9 @@ public class ReviewResource extends AbstractResource<Review>{
 			System.out.println(l);
 			restaurant.setRating(l);
 			rDao.update(restaurant);
-			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(review));
+			return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(review));
 		}
-		
-		@Override
-		protected Response onUpdate(User access,  Review review, Restaurant restaurant) {
-			dao.update(review);
-			return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(review));	
-		}
+
 	
 	@GET
 	@ApiOperation(value = "api get all reviews", notes = "")
@@ -128,10 +118,10 @@ public class ReviewResource extends AbstractResource<Review>{
 			@ApiResponse(code = 200, message = "data") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		System.out.println(":::::::::::"+access.getName());
 		if (access.getRole() == UserRole.CUSTOMER) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED,new ServiceErrorMessage("Only for Customer"));
 	}

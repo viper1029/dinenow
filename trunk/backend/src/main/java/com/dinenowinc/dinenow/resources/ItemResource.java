@@ -24,15 +24,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.apache.commons.lang.RandomStringUtils;
 
 import com.dinenowinc.dinenow.dao.CategoryDao;
 import com.dinenowinc.dinenow.dao.ItemDao;
@@ -41,21 +38,14 @@ import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.*;
-import com.dinenowinc.dinenow.validation.ItemValidator;
 import com.google.inject.Inject;
 //import com.sun.jersey.core.header.FormDataContentDisposition;
 //import com.sun.jersey.multipart.FormDataParam;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiImplicitParam;
-import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-
-import static java.util.Collections.singletonMap;
 
 @Path("/items")
 @Api("/items")
@@ -76,7 +66,7 @@ public class ItemResource extends AbstractResource<Item> {
 	private RestaurantDao restaurantDao;
 
 	@Override
-	protected HashMap<String, Object> fromEntity(Item entity) {
+	protected HashMap<String, Object> getMapFromEntity(Item entity) {
 		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("name", entity.getItemName());
@@ -115,21 +105,21 @@ public class ItemResource extends AbstractResource<Item> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Item fromAddDto(HashMap<String, Object> dto) {
-		Item entity = super.fromAddDto(dto);
-		entity.setItemName(dto.get("name").toString());
-		entity.setItemDescription(dto.get("description").toString());
-		entity.setLinkImage(dto.get("linkImage") == null ? "" : dto.get("linkImage").toString());
-		entity.setNotes(dto.get("notes").toString());
-		entity.setVegeterian(Boolean.parseBoolean(dto.get("isVegeterian").toString()));
-		entity.setSpiceLevel(Integer.parseInt(dto.get("spiceLevel").toString()));
-		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(dto.get("availabilityStatus").toString()));
+	protected Item getEntityForInsertion(HashMap<String, Object> inputMap) {
+		Item entity = super.getEntityForInsertion(inputMap);
+		entity.setItemName(inputMap.get("name").toString());
+		entity.setItemDescription(inputMap.get("description").toString());
+		entity.setLinkImage(inputMap.get("linkImage") == null ? "" : inputMap.get("linkImage").toString());
+		entity.setNotes(inputMap.get("notes").toString());
+		entity.setVegeterian(Boolean.parseBoolean(inputMap.get("isVegeterian").toString()));
+		entity.setSpiceLevel(Integer.parseInt(inputMap.get("spiceLevel").toString()));
+		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(inputMap.get("availabilityStatus").toString()));
 		//entity.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
 	//	if (dto.containsKey("sizePrices")) {
 			ArrayList<SizeInfo> listsInfo = new ArrayList<SizeInfo>();
-			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) dto.get("sizePrices");
+			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
 			for (HashMap<String, Object> hashMap : listSizePrice) {
-				Size s = sizeDao.findOne(hashMap.get("size").toString());
+				Size s = sizeDao.get(hashMap.get("size").toString());
 				if (s != null) {
 					double price = Double.parseDouble(hashMap.get("price").toString());
 					SizeInfo sInfo = new SizeInfo();
@@ -142,11 +132,11 @@ public class ItemResource extends AbstractResource<Item> {
 			}
 			entity.addAllSize(listsInfo);
 	//	}
-		if (dto.containsKey("modifiers")) {
+		if (inputMap.containsKey("modifiers")) {
 			ArrayList<ModifierInfo> listmInfo = new ArrayList<ModifierInfo>();
-			List<HashMap<String, Object>> listModifier = (List<HashMap<String, Object>>) dto.get("modifiers");
+			List<HashMap<String, Object>> listModifier = (List<HashMap<String, Object>>) inputMap.get("modifiers");
 			for (HashMap<String, Object> hashMap : listModifier) {
-				Modifier modifies = modifierDao.findOne(hashMap.get("modifier").toString());
+				Modifier modifies = modifierDao.get(hashMap.get("modifier").toString());
 				if (modifies != null) {
 					ModifierInfo mInfo = new ModifierInfo();
 					if (hashMap.containsKey("availabilityStatus")) {
@@ -168,22 +158,21 @@ public class ItemResource extends AbstractResource<Item> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Item fromUpdateDto(Item t, HashMap<String, Object> dto) {
-		Item entity = super.fromUpdateDto(t, dto);
-		entity.setItemName(dto.get("name").toString());
-		entity.setItemDescription(dto.get("description").toString());
-		entity.setLinkImage(dto.get("linkImage") == null ? "" : dto.get("linkImage").toString());
-		entity.setNotes(dto.get("notes").toString());
-		entity.setVegeterian(Boolean.parseBoolean(dto.get("isVegeterian").toString()));
-		entity.setSpiceLevel(Integer.parseInt(dto.get("spiceLevel").toString()));
-		entity.setAvailabilityStatus(AvailabilityStatus.valueOf(dto.get("availabilityStatus").toString()));
-		entity.setSpiceLevel(Integer.parseInt(dto.get("spiceLevel").toString()));
+	protected Item getEntityForUpdate(Item item, HashMap<String, Object> inputMap) {
+		item.setItemName(inputMap.get("name").toString());
+		item.setItemDescription(inputMap.get("description").toString());
+		item.setLinkImage(inputMap.get("linkImage") == null ? "" : inputMap.get("linkImage").toString());
+		item.setNotes(inputMap.get("notes").toString());
+		item.setVegeterian(Boolean.parseBoolean(inputMap.get("isVegeterian").toString()));
+		item.setSpiceLevel(Integer.parseInt(inputMap.get("spiceLevel").toString()));
+		item.setAvailabilityStatus(AvailabilityStatus.valueOf(inputMap.get("availabilityStatus").toString()));
+		item.setSpiceLevel(Integer.parseInt(inputMap.get("spiceLevel").toString()));
 		//entity.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
-		if (dto.containsKey("sizePrices")) {
+		if (inputMap.containsKey("sizePrices")) {
 			ArrayList<SizeInfo> listsInfo = new ArrayList<SizeInfo>();
-			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) dto.get("sizePrices");
+			List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
 			for (HashMap<String, Object> hashMap : listSizePrice) {
-				Size s = sizeDao.findOne(hashMap.get("size").toString());
+				Size s = sizeDao.get(hashMap.get("size").toString());
 				if (s != null) {
 					double price = Double.parseDouble(hashMap.get("price").toString());
 					SizeInfo sInfo = new SizeInfo();
@@ -194,13 +183,13 @@ public class ItemResource extends AbstractResource<Item> {
 					listsInfo.add(sInfo);
 				}
 			}
-			entity.addAllSize(listsInfo);
+			item.addAllSize(listsInfo);
 		}
-		if (dto.containsKey("modifiers")) {
+		if (inputMap.containsKey("modifiers")) {
 			ArrayList<ModifierInfo> listmInfo = new ArrayList<ModifierInfo>();
-			List<HashMap<String, Object>> listModifier = (List<HashMap<String, Object>>) dto.get("modifiers");
+			List<HashMap<String, Object>> listModifier = (List<HashMap<String, Object>>) inputMap.get("modifiers");
 			for (HashMap<String, Object> hashMap : listModifier) {
-				Modifier modifies = modifierDao.findOne(hashMap.get("modifier").toString());
+				Modifier modifies = modifierDao.get(hashMap.get("modifier").toString());
 				if (modifies != null) {
 					ModifierInfo mInfo = new ModifierInfo();
 					if (hashMap.containsKey("availabilityStatus")) {
@@ -214,76 +203,23 @@ public class ItemResource extends AbstractResource<Item> {
 					listmInfo.add(mInfo);
 				}
 			}
-			entity.addAllModifier(listmInfo);
+			item.addAllModifier(listmInfo);
 		}
 
-		return entity;
+		return item;
 	}
 
 
-
-
-
-	//================================ACTION================================//
-
-/*	@Override
-	protected HashMap<String, Object> onGet(Item entity) {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-		dto = super.onGet(entity);
-		ArrayList<HashMap<String, Object>> listAddOn = new ArrayList<HashMap<String, Object>>();
-		for (SizeInfo sInfo : entity.getSizes()) {
-			HashMap<String, Object> en = new LinkedHashMap<String, Object>();
-			en.put("size", sInfo.getSize().getId());
-			en.put("name", sInfo.getSize().getSizeName());
-			en.put("price", sInfo.getPrice());
-			listAddOn.add(en);
-		}
-		dto.put("sizePrices", listAddOn);
-		ArrayList<HashMap<String, Object>> listModifiers = new ArrayList<HashMap<String, Object>>();
-		for (ModifierInfo mInfo : entity.getModifiers()) {
-			HashMap<String, Object> en = new LinkedHashMap<String, Object>();
-			en.put("name", mInfo.getModifier().getModifierName());
-			en.put("modifier", mInfo.getModifier().getId());
-			en.put("availabilityStatus", mInfo.getAvailabilityStatus());
-			listModifiers.add(en);
-		}
-		dto.put("modifiers", listModifiers);
-
-		return dto;
-	}*/
-
 	@Override
-	protected Response onAdd(User access, Item entity, Restaurant restaurant) {
+	protected Response onCreate(User access, Item entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
 		entity.setCompositeId(restaurant.getId());
 		restaurant.addItem(entity);
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity, access));
 	}
-
-
-	@Override
-	protected Response onUpdate(User access, Item entity, Restaurant restaurant) {
-		//entity.setCompositeId(restaurant.getId());
-		restaurant = restaurantDao.findByItemId(entity.getId());
-		entity.setCompositeId(restaurant.getId());
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity));
-	}
-
-	@Override
-	protected Response onDelete(User access,Item entity) {
-		try {
-			dao.delete(entity);
-			return ResourceUtils.asSuccessResponse(Status.OK, null);
-		} catch (RollbackException e) {
-			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED, new ServiceErrorMessage("has relationship"));
-		}
-	}
-
-
 
 	//=============================METHOD=============================//
 
@@ -297,7 +233,7 @@ public class ItemResource extends AbstractResource<Item> {
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 //		if (access.getRole() == UserRole.OWNER) {
 //			List<Item> entities = this.itemDao.getListByUser(access);
-//			List<HashMap<String, Object>> dtos = fromEntities(entities);
+//			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 //			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 //		}
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -360,13 +296,13 @@ public class ItemResource extends AbstractResource<Item> {
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
     /*
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			ItemValidator mItemValidator = new ItemValidator(itemDao, dto);
 			List<ServiceErrorMessage> mListError = mItemValidator.validateForAdd();
 			if (mListError.size() == 0) {
-				return super.add(access, dto);
+				return super.create(access, dto);
 			}
 			return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, mListError);
 		}
@@ -413,7 +349,7 @@ public class ItemResource extends AbstractResource<Item> {
 	@Override
 	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			Item item = itemDao.findOne(id);
+			Item item = itemDao.get(id);
 			if (item != null) {
 				ItemValidator mItemValidator = new ItemValidator(itemDao, dto);
 				List<ServiceErrorMessage> mListError = mItemValidator.validateForAdd();
@@ -442,7 +378,7 @@ public class ItemResource extends AbstractResource<Item> {
 	@Override
 	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			Item item = itemDao.findOne(id);
+			Item item = itemDao.get(id);
 			if (item != null) {
 				return super.delete(access, id);
 			}else {
@@ -471,7 +407,7 @@ public class ItemResource extends AbstractResource<Item> {
             paramType = "body"))
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(@PathParam("id") String id, @ApiParam(access = "internal") @FormDataParam("file") InputStream uploadedInputStream, @ApiParam(access = "internal") @FormDataParam("file") FormDataContentDisposition fileDetail)  {
-			Item item = itemDao.findOne(id);
+			Item item = itemDao.get(id);
 			if (item != null) {
 				try {
 					java.nio.file.Path photoPath = Paths.get(
@@ -528,7 +464,7 @@ public class ItemResource extends AbstractResource<Item> {
 			})
 	@Produces("image/jpg")
 	public Response getImage( @PathParam("id") String id, @PathParam("fileName") String fileName){
-			Item item = itemDao.findOne(id);
+			Item item = itemDao.get(id);
 			if (item != null) {
 				java.nio.file.Path photoPath = Paths.get(System.getProperty("user.dir"), "photos",fileName);
 				return returnFile(photoPath.toFile());

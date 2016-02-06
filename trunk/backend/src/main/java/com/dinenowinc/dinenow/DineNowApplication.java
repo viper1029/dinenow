@@ -25,7 +25,6 @@ import com.dinenowinc.dinenow.resources.SecuredResource;
 import com.dinenowinc.dinenow.resources.SizeResource;
 import com.dinenowinc.dinenow.resources.StripeResource;
 import com.dinenowinc.dinenow.resources.SubMenuResource;
-import com.dinenowinc.dinenow.resources.TestResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JWTAuthFilter;
 import com.github.toastshaman.dropwizard.auth.jwt.JsonWebTokenParser;
 import com.github.toastshaman.dropwizard.auth.jwt.hmac.HmacSHA512Verifier;
@@ -47,7 +46,6 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-import javax.servlet.FilterRegistration.Dynamic;
 import java.util.EnumSet;
 
 public class DineNowApplication extends Application<ApplicationConfiguration> {
@@ -144,7 +142,6 @@ public class DineNowApplication extends Application<ApplicationConfiguration> {
             .buildAuthFilter()));
     environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
     environment.jersey().register(RolesAllowedDynamicFeature.class);
-    environment.jersey().register(TestResource.class);
     environment.jersey().register(guiceBundle.getInjector().getInstance(OrderDetailsResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(CustomerOrderResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(CartResources.class));

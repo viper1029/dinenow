@@ -52,7 +52,7 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	
 	
 	@Override
-	protected HashMap<String, Object> fromEntity(SubMenu entity) {
+	protected HashMap<String, Object> getMapFromEntity(SubMenu entity) {
 		HashMap<String, Object> dto = new LinkedHashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("name", entity.getMenuSubName());
@@ -69,10 +69,10 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 					LinkedHashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
 					itemDto.put("id", item.getItem().getId());
 					itemDto.put("name", item.getItem().getItemName());
-					items.add(itemDto);
+					items.create(itemDto);
 				}
 				temp.put("items", items);
-				categories.add(temp);
+				categories.create(temp);
 			}*/
 			dto.put("categories", categories);
 		HashMap<String, Object> dtos = new LinkedHashMap<>();
@@ -81,77 +81,33 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	}
 
 	@Override
-	protected SubMenu fromDto(HashMap<String, Object> dto) {
-		SubMenu entity = super.fromDto(dto);
-		entity.setMenuSubName(dto.get("name").toString());
-		entity.setSubMenuDescription(dto.get("description").toString());	
-		entity.setSubMenuNotes(dto.get("notes").toString());
-		return entity;
-	}
-	
-	/*@Override
-	protected HashMap<String, Object> onGet(SubMenu entity) {
-		HashMap<String, Object> dto = super.onGet(entity);
-		
-		ArrayList<HashMap<String, Object>> listCate = new ArrayList<HashMap<String, Object>>();
-		for (CategoryInfo cInfo : entity.getCategories()) {
-			HashMap<String, Object> en = new HashMap<String, Object>();
-			en.put("categoryName", cInfo.getCategory().getCategoryName());
-			en.put("categoryDescription", cInfo.getCategory().getCategoryDescription());
-			en.put("id", cInfo.getCategory().getId());
-
-			ArrayList<HashMap<String, Object>> listItems = new ArrayList<HashMap<String, Object>>();
-			for (ItemInfo IInfo : cInfo.getItems()) {
-				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put("availabilityStatus", IInfo.getItem().getAvailabilityStatus());
-				item.put("itemDescription", IInfo.getItem().getItemDescription());
-				item.put("id", IInfo.getItem().getId());
-				item.put("itemName", IInfo.getItem().getItemName());
-				item.put("linkImage", IInfo.getItem().getLinkImage());
-				item.put("notes", IInfo.getItem().getNotes());
-				item.put("spiceLevel", IInfo.getItem().getSpiceLevel());
-				item.put("isVegeterian", IInfo.getItem().isVegeterian());
-
-				listItems.add(item);
-			}
-			en.put("items", listItems);
-			listCate.add(en);
-		}
-		dto.put("categories", listCate);
-		
-		return dto;		
-	}
-	*/
-	
-	
-	@Override
-	protected SubMenu fromAddDto(HashMap<String, Object> dto) {
-		SubMenu entity = super.fromAddDto(dto);
-		entity.setMenuSubName(dto.get("name").toString());
-		entity.setSubMenuDescription(dto.get("description").toString());	
-		entity.setSubMenuNotes(dto.get("notes").toString());
+	protected SubMenu getEntityForInsertion(HashMap<String, Object> inputMap) {
+		SubMenu entity = super.getEntityForInsertion(inputMap);
+		entity.setMenuSubName(inputMap.get("name").toString());
+		entity.setSubMenuDescription(inputMap.get("description").toString());
+		entity.setSubMenuNotes(inputMap.get("notes").toString());
 /*		if (dto.containsKey("categories")) {
 			ArrayList<CategoryInfo> listcInfo = new ArrayList<CategoryInfo>();
 			ArrayList<HashMap<String, Object>> listKeyCategories = (ArrayList<HashMap<String, Object>>)dto.get("categories");
 			for (int i = 0; i < listKeyCategories.size(); i++) {
 				//{"menuSubName":"Sub Name 1 sub menu","subMenuDescription":"sub menu des", "categories":[{"id":"b467544f-f78f-4141-83b1-3ed9c902dbb0","items":["2823f44a-e225-4584-9f96-60b4857ca2b1"]}]}
-				Category c = categoryDao.findOne(listKeyCategories.get(i).get("id").toString());
+				Category c = categoryDao.get(listKeyCategories.get(i).get("id").toString());
 				CategoryInfo cInfo = new CategoryInfo();
 				Set<ItemInfo> listItemInfo = new HashSet<ItemInfo>();
 				ArrayList<HashMap<String, Object>> listItems = (ArrayList<HashMap<String, Object>>)listKeyCategories.get(i).get("items");
 				
 				for (HashMap<String, Object> id_item : listItems) {
-					Item tmp = itemDao.findOne(id_item.get("id").toString());
+					Item tmp = itemDao.get(id_item.get("id").toString());
 					ItemInfo ItemInfotmp = new ItemInfo();
 					ItemInfotmp.setItem(tmp);
 			//		ItemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
-					listItemInfo.add(ItemInfotmp);
+					listItemInfo.create(ItemInfotmp);
 					ItemInfotmp.setCreatedBy("SUBMENU");
 					ItemInfotmp.setCreatedDate(new Date());
 				}
 				cInfo.setItems(listItemInfo);
 				cInfo.setCategory(c);
-				listcInfo.add(cInfo);
+				listcInfo.create(cInfo);
 				entity.addCategory(cInfo);
 				System.out.println("::::::::::::::::::::::::::::::::::::::LLLL");
 			}
@@ -161,35 +117,34 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	}
 	
 	@Override
-	protected SubMenu fromUpdateDto(SubMenu t, HashMap<String, Object> dto) {
-		SubMenu entity = super.fromUpdateDto(t, dto);
-		entity.setMenuSubName(dto.get("name").toString());
-		entity.setSubMenuDescription(dto.get("description").toString());	
-		entity.setSubMenuNotes(dto.get("notes").toString());
+	protected SubMenu getEntityForUpdate(SubMenu subMenu, HashMap<String, Object> inputMap) {
+		subMenu.setMenuSubName(inputMap.get("name").toString());
+		subMenu.setSubMenuDescription(inputMap.get("description").toString());
+		subMenu.setSubMenuNotes(inputMap.get("notes").toString());
 /*		if (dto.containsKey("categories")) {
 			ArrayList<CategoryInfo> listcInfo = new ArrayList<CategoryInfo>();
 			ArrayList<HashMap<String, Object>> listKeyCategories = (ArrayList<HashMap<String, Object>>)dto.get("categories");
 			for (int i = 0; i < listKeyCategories.size(); i++) {
 				//{"menuSubName":"Sub Name 1 sub menu","subMenuDescription":"sub menu des", "categories":[{"id":"b467544f-f78f-4141-83b1-3ed9c902dbb0","items":["2823f44a-e225-4584-9f96-60b4857ca2b1"]}]}
-				Category c = categoryDao.findOne(listKeyCategories.get(i).get("id").toString());
+				Category c = categoryDao.get(listKeyCategories.get(i).get("id").toString());
 				CategoryInfo cInfo = new CategoryInfo();
 				Set<ItemInfo> listItemInfo = new HashSet<ItemInfo>();
 				List<HashMap<String, Object>> listItems = (ArrayList<HashMap<String, Object>>)listKeyCategories.get(i).get("items");
 				
 				for (HashMap<String, Object> id_item : listItems) {
-					Item tmp = itemDao.findOne(id_item.get("id").toString());
+					Item tmp = itemDao.get(id_item.get("id").toString());
 					ItemInfo ItemInfotmp = new ItemInfo();
 					ItemInfotmp.setItem(tmp);
 					//ItemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
-					listItemInfo.add(ItemInfotmp);
+					listItemInfo.create(ItemInfotmp);
 				}
 				cInfo.setItems(listItemInfo);
 				cInfo.setCategory(c);
-				listcInfo.add(cInfo);
+				listcInfo.create(cInfo);
 			}
 			entity.addAllCategory(listcInfo);
 		}*/
-		return entity;
+		return subMenu;
 	}
 	
 	
@@ -200,35 +155,15 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	//==================================ACTION===========================================//
 	
 	@Override
-	protected Response onAdd(User access, SubMenu entity, Restaurant restaurant) {
+	protected Response onCreate(User access, SubMenu entity, Restaurant restaurant) {
 		if (restaurant == null) {
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
 		}
 		//restaurant.addSubMenu(entity);
 		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
+		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
 	}
-	
-	
-	@Override
-	protected Response onUpdate(User access, SubMenu entity, Restaurant restaurant) {
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));	
-	}
-	
-	@Override
-	protected Response onDelete(User access, SubMenu entity) {
-		try {
-			dao.delete(entity);
-			return ResourceUtils.asSuccessResponse(Status.OK,fromEntity(entity));
-		} catch (RollbackException e) {
-			return ResourceUtils.asFailedResponse(Status.PRECONDITION_FAILED,"has relationship");
-		}
-	}
-	
-	
-	
-	
+
 	
 	//====================================METHOD============================================//
 	
@@ -243,7 +178,7 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	public Response getAll(@ApiParam(access = "internal") @Auth User access) {
 //		if (access.getRole() == UserRole.OWNER) {
 //			List<SubMenu> entities = subMenuDao.getListByUser(access);	
-//			List<HashMap<String, Object>> dtos = fromEntities(entities);
+//			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 //			return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 //		}
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -325,9 +260,9 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 			@ApiResponse(code = 500, message = "Cannot add entity. Error message: ###") 
 			})
 	@Override
-	public Response add(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> dto) {
+	public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			return super.add(access, dto);
+			return super.create(access, inputMap);
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
 	}
@@ -386,11 +321,11 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###") 
 			})
 	@Override
-	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
+	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			SubMenu submenu = subMenuDao.findOne(id);
+			SubMenu submenu = subMenuDao.get(id);
 			if (submenu != null) {
-				return super.update(access, id, dto);
+				return super.update(access, id, inputMap);
 			}
 			else {
 				return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("submenu not found"));
@@ -412,7 +347,7 @@ public class SubMenuResource extends AbstractResource<SubMenu> {
 	@Override
 	public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-			SubMenu submenu = subMenuDao.findOne(id);
+			SubMenu submenu = subMenuDao.get(id);
 			if (submenu != null) {
 				return super.delete(access, id);
 			}else {

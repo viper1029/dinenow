@@ -7,13 +7,10 @@ import java.util.List;
 public class ModelHelpers {	
 	
 	public static List<HashMap<String, Object>> fromEntities(List<? extends BaseEntity> entities)	{
-		List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();		
-		
+		List<HashMap<String, Object>> returnMapList = new ArrayList<HashMap<String, Object>>();
 		for (BaseEntity entity : entities) {
-			
-			dtos.add(entity.toDto());			
+			returnMapList.add(entity.toDto());
 		}
-		
-		return dtos;
+		return returnMapList;
 	}
 }

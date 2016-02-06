@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.persistence.RollbackException;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -27,265 +28,170 @@ import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class AbstractResource<T extends BaseEntity> implements IAbstractResource{
+public abstract class AbstractResource<T extends BaseEntity> implements IAbstractResource {
 
-	@Inject
-	protected BaseEntityDAOImpl<T, String> dao;
-	
-	@Inject
-	private RestaurantDao restaurantDao;
-	
-	@Inject
-	private RestaurantUserDao restaurantUserDao;
-	
-	@Inject
-	private CustomerDao customerDao;
-	
-	@Inject
-	private AdminDao adminDao;
-	
-	
-	protected List<HashMap<String, Object>> fromEntities(List<T> entities)	{
-//		List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
-//		
-//		for (T entity : entities) {
-//			dtos.add(fromEntity(entity));			
-//		}
-//		
-//		return dtos;
-		
-		return ModelHelpers.fromEntities(entities);
-	}
-	protected abstract HashMap<String, Object> fromEntity(T entity);
-	
-	
-	private Class<?> mClass;
-	
-	public AbstractResource() {
-		ParameterizedType parameterizedType  = (ParameterizedType) (this.getClass().getGenericSuperclass());
-		mClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-	}	
+  @Inject
+  protected BaseEntityDAOImpl<T, String> dao;
 
-	public Class<?> getClassT(){		
-		return (Class<?>) mClass;
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected T fromDto(HashMap<String, Object> dto) {
-		try {
-			T entity = (T) getClassT().newInstance();
-			if(dto.containsKey("id")) {
-				entity.setId(dto.get("id").toString());			
-			}
-			return entity;
-		}
-		catch(Exception ex) {
-			return null;			
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected T fromFullDto(HashMap<String, Object> dto) {
-		try {
-			T entity = (T) getClassT().newInstance();
-			if(dto.containsKey("id")) {
-				entity.setId(dto.get("id").toString());			
-			}
-			return entity;
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-			return null;			
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected T fromAddDto(HashMap<String, Object> dto) {
-		try {
-			T entity = (T) getClassT().newInstance();
-			return entity;
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-			return null;			
-		}
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	protected T fromUpdateDto(T t, HashMap<String, Object> dto) {
-		try {
-			return t;
-		}
-		catch(Exception ex) {
-			return null;			
-		}
-	}
-	
-	protected Response onAdd(User access, T entity, Restaurant restaurant) {
-		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
-	}
-	
-	protected Response onAdd(T entity, Restaurant restaurant) {
-		dao.save(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
-	}
-	
-	
-	protected Response onUpdate(User access, T entity, Restaurant restaurant) {
-		dao.update(entity);
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
-	}
-	
-	
-	protected Response onDelete(User access,T entity) {
-		System.out.println(entity);
-		dao.delete(entity);
-		
-		return ResourceUtils.asSuccessResponse(Status.OK, null);
-	}
-	
-	protected Response onChangeStatus(User access,T entity) {
-		System.out.println(entity);
-		dao.changeStatus(entity);
-		
-		return ResourceUtils.asSuccessResponse(Status.OK, fromEntity(entity));
-	}
-	
-	@Override
-	public Response getAll(@Auth User access) {
-		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-		List<T> entities = this.dao.findAll();		
-		List<HashMap<String, Object>> dtos = fromEntities(entities);
-	//	System.out.println(entity.getClass().getSimpleName().toLowerCase()+":::::::::::::");
-		dto.put(getClassT().getSimpleName().toLowerCase()+'s', dtos);
-		return ResourceUtils.asSuccessResponse(Status.OK, dto);
-	}
-	
-	
-	@Override
-	public Response get(@Auth User access,@PathParam("id") String id) {
-		T entity = dao.findOne(id);
-    	if (entity != null) {
-    		HashMap<String, Object> dto = onGet(entity);
-    		    		
-    		return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    	} else {
-    		return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
-    	}		
-	}
-	
-	
-	protected HashMap<String, Object> onGet(T entity) {
-		HashMap<String, Object> dto = fromEntity(entity);
-		return dto;		
-	}	
-	
-	@Override
-	public Response add(@Auth User access, HashMap<String, Object> dto) {
-		T entity = fromAddDto(dto);
-		Admin adminUser;
-		RestaurantUser restaurantUser;
-		if(access.getRole() == UserRole.ADMIN){
-			adminUser = adminDao.getAdminById(access.getId().toString());
-			entity.setCreatedBy(adminUser.getLastName());
-		} else if(access.getRole() == UserRole.OWNER){
-			restaurantUser=restaurantUserDao.getRestaurantUserById(access.getId().toString());
-			entity.setCreatedBy(restaurantUser.getLastName());
-		} else if(access.getRole() == UserRole.CUSTOMER){
-			Customer customer= customerDao.getCustomerByID(access.getId().toString());
-			entity.setCreatedBy(customer.getLastName());
-		}
-		
-		Date date=new Date();
-		entity.setCreatedDate(date);
-		Response response = null;
-		try {
-			if (dto.containsKey("restaurantId")) {
-				response = onAdd(access, entity, restaurantDao.findOne(dto.get("restaurantId").toString()));
-				
-			}else {
-				response = onAdd(access, entity, null);
-			}
-		}
-		catch (javax.persistence.RollbackException e) { 
-			e.printStackTrace();
-			response = ResourceUtils.asFailedResponse(Status.NOT_ACCEPTABLE, new ServiceErrorMessage(String.format("Duplicate Entity, This's Already Exist")));
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-			response = ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot add entity. Error message: %s", ex.getMessage())));			
-		}		
-		return response;
-	}
-	
-	public Response add(HashMap<String, Object> dto) {
-		T entity = fromAddDto(dto);
-		Date date=new Date();
-		entity.setCreatedDate(date);
-		entity.setCreatedBy("self");
-		Response response = null;
-		try {
-			response = onAdd(entity, null);
-		}
-		catch (javax.persistence.RollbackException e) { 
-			e.printStackTrace();
-			response = ResourceUtils.asFailedResponse(Status.NOT_ACCEPTABLE, new ServiceErrorMessage(String.format("Duplicate Entity, This's Already Exist")));
-		}
-		catch(Exception ex) {
-			response = ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot add entity. Error message: %s", ex.getMessage())));			
-		}		
-		return response;
-		
-	}
-	
-	@Override
-	public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
-		T entity = dao.findOne(id);		
-		entity = fromUpdateDto(entity, dto);
-		Response response = null;
-		try {
-			if (dto.containsKey("restaurantId")) {
-				response = onUpdate(access, entity, restaurantDao.findOne(dto.get("restaurantId").toString()));
-			}else {
-				response = onUpdate(access, entity, null);
-			}
-		}
-		catch (javax.persistence.RollbackException e) { 
-			e.printStackTrace();
-			response = ResourceUtils.asFailedResponse(Status.NOT_ACCEPTABLE, new ServiceErrorMessage(String.format("Duplicate Entity, This's Already Exist")));
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-			return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot update entity. Error message: %s", ex.getMessage())));			
-		}	
-		return response;
-	}
+  @Inject
+  private RestaurantDao restaurantDao;
 
-	@Override
-	public Response delete(@Auth User access, @PathParam("id") String id) {
-		System.out.println(id);
-		T entity = dao.findOne(id);
-		System.out.println(entity);
-		Response response = null;
-		
-    	if (entity != null) {
-    		System.out.println(entity.toString());
-    		try {
-    			onChangeStatus(access,entity);
-    			response = onDelete(access,entity);
-    		}
-    		catch(Exception ex) {
-    			ex.printStackTrace();
-    			response = ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot delete entity, Only Update this entity. Error message: %s", ex.getMessage())));			
-    		}
-    		
-    		return response;
-    	} else {    		
-    		return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
-    	}
-	}
+  @Inject
+  private RestaurantUserDao restaurantUserDao;
+
+  @Inject
+  private CustomerDao customerDao;
+
+  @Inject
+  private AdminDao adminDao;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractResource.class);
+
+  private Class<?> mClass;
+
+  public AbstractResource() {
+    ParameterizedType parameterizedType = (ParameterizedType) (this.getClass().getGenericSuperclass());
+    mClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+  }
+
+  @Override
+  public Response getAll(@Auth User access) {
+    List<T> entities = this.dao.getAll();
+    LinkedHashMap<String, Object> returnMap = new LinkedHashMap<>();
+    returnMap.put(getClassT().getSimpleName().toLowerCase() + 's', getMapListFromEntities(entities));
+    return ResourceUtils.asSuccessResponse(Status.OK, returnMap);
+  }
+
+  @Override
+  public Response get(@Auth User access, @PathParam("id") String id) {
+    T entity = dao.get(id);
+    if (entity != null) {
+      return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity, access));
+    }
+    else {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Entity not found."));
+    }
+  }
+
+  protected HashMap<String, Object> onGet(T entity, User access) {
+    return getMapFromEntity(entity);
+  }
+
+  @Override
+  public Response create(@Auth User access, HashMap<String, Object> inputMap) {
+    Admin adminUser;
+    RestaurantUser restaurantUser;
+    Response response = null;
+    T entity = getEntityForInsertion(inputMap);
+
+    if (access.getRole() == UserRole.ADMIN) {
+      adminUser = adminDao.getAdminById(access.getId().toString());
+      entity.setCreatedBy(adminUser.getEmail());
+    }
+    else if (access.getRole() == UserRole.OWNER) {
+      restaurantUser = restaurantUserDao.getRestaurantUserById(access.getId().toString());
+      entity.setCreatedBy(restaurantUser.getEmail());
+    }
+    else if (access.getRole() == UserRole.CUSTOMER) {
+      Customer customer = customerDao.getCustomerByID(access.getId().toString());
+      entity.setCreatedBy(customer.getEmail());
+    }
+    entity.setCreatedDate(new Date());
+    try {
+      if (inputMap.containsKey("restaurantId")) {
+        response = onCreate(access, entity, restaurantDao.get(inputMap.get("restaurantId").toString()));
+      }
+      else {
+        response = onCreate(access, entity, null);
+      }
+    }
+    catch (RollbackException e) {
+      LOGGER.debug("Error creating entity.", e);
+      response = ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(String.format("This entity is already exists.")));
+    }
+    catch (Exception e) {
+      LOGGER.debug("Error creating entity.", e);
+      response = ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Error creating entity: %s", e.getMessage())));
+    }
+    return response;
+  }
+
+  protected Response onCreate(User access, T entity, Restaurant restaurant) {
+    dao.save(entity);
+    return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
+  }
+
+  @Override
+  public Response update(@Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
+    T entity = dao.get(id);
+    entity = getEntityForUpdate(entity, inputMap);
+    entity.setModifiedBy(access.getEmail());
+    Response response = null;
+    try {
+      dao.update(entity);
+      return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));
+    }
+    catch (RollbackException e) {
+      LOGGER.debug("Error updating entity.", e);
+      response = ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot update entity. Error message: %s", e.getMessage())));
+    }
+    catch (Exception e) {
+      LOGGER.debug("Error updating entity.", e);
+      return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot update entity. Error message: %s", e.getMessage())));
+    }
+    return response;
+  }
+
+  @Override
+  public Response delete(@Auth User access, @PathParam("id") String id) {
+    T entity = dao.get(id);
+    if (entity != null) {
+      try {
+        dao.delete(entity);
+        return ResourceUtils.asSuccessResponse(Status.OK, null);
+      }
+      catch (Exception e) {
+        LOGGER.debug("Error deleting entity.", e);
+        return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR,
+            new ServiceErrorMessage(String.format("Cannot delete entity. Error message: %s", e.getMessage())));
+      }
+    }
+    else {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Entity not found."));
+    }
+  }
+
+  protected HashMap<String, Object> getMapFromEntity(T entity) {
+    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    returnMap.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
+    return returnMap;
+  }
+
+  protected List<HashMap<String, Object>> getMapListFromEntities(List<T> entities) {
+    return ModelHelpers.fromEntities(entities);
+  }
+
+  public Class<?> getClassT() {
+    return mClass;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected T getEntityForInsertion(HashMap<String, Object> inputMap) {
+    try {
+      return (T) getClassT().newInstance();
+    }
+    catch (Exception e) {
+      LOGGER.error("Error creating object.", e);
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  protected T getEntityForUpdate(T entity, HashMap<String, Object> inputMap) {
+      return entity;
+  }
 }
 

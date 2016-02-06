@@ -43,7 +43,7 @@ public class CustomerValidator {
 //        if (customer.getSocialAccounts().get(0).startsWith("facebook:") || customer.getSocialAccounts().get(0).startsWith("google:")) {
 //        	
 //		}else {
-//			errors.add(new ServiceError(new ServiceErrorContext(FieldNames.SOCIAL_FORMAT), ServiceErrorMessage.SOCIAL_FORMAT_ERROR));
+//			errors.create(new ServiceError(new ServiceErrorContext(FieldNames.SOCIAL_FORMAT), ServiceErrorMessage.SOCIAL_FORMAT_ERROR));
 //		}
     return errors;
   }
