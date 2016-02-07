@@ -140,13 +140,7 @@ public class SizeResource extends AbstractResource<Size> {
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      Size size = sizeDao.get(id);
-      if (size != null) {
-        return super.delete(access, id);
-      }
-      else {
-        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Size not found"));
-      }
+      return super.delete(access, id);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }

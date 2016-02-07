@@ -23,8 +23,8 @@ public class InfoBaseSizeAddon <Size extends BaseEntity, Addon extends BaseEntit
 	public void setSize(Size size) {
 		this.size = size;
 	}
-	
-	
+
+
 	@OneToOne(cascade = CascadeType.PERSIST, fetch= FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn (name="id_addon",nullable=false)

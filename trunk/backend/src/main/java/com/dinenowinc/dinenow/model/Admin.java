@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.NamedQueries;
@@ -16,6 +18,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Admin.GetAll", query = "from Admin u") })
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = { "email" }, name = "admin_uk")
+)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Admin extends BaseEntity {
 

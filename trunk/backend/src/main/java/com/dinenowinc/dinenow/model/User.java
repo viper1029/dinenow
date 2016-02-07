@@ -1,6 +1,5 @@
 package com.dinenowinc.dinenow.model;
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.UUID;
 

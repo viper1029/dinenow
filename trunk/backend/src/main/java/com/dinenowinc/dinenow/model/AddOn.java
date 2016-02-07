@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -23,48 +25,33 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@Audited
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = { "name", "description" }, name = "addon_uk")
+)
 public class AddOn extends AvailabilityEntity {
 
   private static final long serialVersionUID = 5478762900596245767L;
 
-  @Column(nullable = false, unique = false)
+  @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false, unique = false, columnDefinition = "TEXT")
+  @Column(nullable = false)
   private String description;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
   @JoinColumn(name = "id_addon", foreignKey = @ForeignKey(name = "id_addon_addOn_size_info_Fk_2"))
-  private final Set<SizeInfo> sizes = new HashSet<SizeInfo>();
+  private final Set<AddOnSize> sizes = new HashSet<AddOnSize>();
 
-
-//	public Set<SizePrice> getSizePrices() {
-//		return sizePrices;
-//	}
-//	
-//	public void addSizePrices(SizePrice sizeprice){
-//		getSizePrices().create(sizeprice);
-//	}
-
-
-  public Set<SizeInfo> getSizes() {
+  public Set<AddOnSize> getSizes() {
     return sizes;
   }
 
-/*	public void setSizes(Set<SizeInfo> sizes) {
-    this.sizes = sizes;
-	}*/
-
-  public void addSize(SizeInfo size) {
-    getSizes().add(size);
+  public void addAllSize(ArrayList<AddOnSize> sizeList) {
+    sizes.clear();
+    sizes.addAll(sizeList);
   }
-
-  public void addAllSize(ArrayList<SizeInfo> sizes) {
-    getSizes().clear();
-    getSizes().addAll(sizes);
-  }
-
 
   public String getAddOnName() {
     return name;
@@ -81,7 +68,6 @@ public class AddOn extends AvailabilityEntity {
   public void setAddOnDescription(String addOnDescription) {
     this.description = addOnDescription;
   }
-
 
   @Override
   public HashMap<String, Object> toDto() {

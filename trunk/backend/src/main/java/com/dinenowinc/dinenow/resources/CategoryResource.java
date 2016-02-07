@@ -141,13 +141,7 @@ public class CategoryResource extends AbstractResource<Category> {
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      Category category = categoryDao.get(id);
-      if (category != null) {
         return super.delete(access, id);
-      }
-      else {
-        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Category not found."));
-      }
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }

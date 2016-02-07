@@ -256,7 +256,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
           cus.addCustomerOrder(co);
 
 
-          //	double defaultTax = restaurant.getTax() == null ? 0.0 : restaurant.getTax().getTaxeValue();
+          //	double defaultTax = restaurant.getTax() == null ? 0.0 : restaurant.getTax().getTaxValue();
 
           //	double amount = calculatorAmount((ArrayList<HashMap<String, Object>>)dto.get("items"), Double.parseDouble(dto.get("tip").toString()), defaultTax, 0);
 

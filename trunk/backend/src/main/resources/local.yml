@@ -20,7 +20,7 @@ logging:
   # Logger-specific levels.
   loggers:
     # Sets the level for 'com.example.app' to DEBUG.
-    com.example.app: INFO
+    com.example.app: DEBUG
     org.hibernate.SQL: INFO
     com.github.toastshaman: INFO
 
