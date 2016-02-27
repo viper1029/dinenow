@@ -4,6 +4,7 @@ import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.lang.reflect.*;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -170,7 +171,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
     return returnMap;
   }
 
-  protected List<HashMap<String, Object>> getMapListFromEntities(List<T> entities) {
+  protected List<HashMap<String, Object>> getMapListFromEntities(Collection<T> entities) {
     return ModelHelpers.fromEntities(entities);
   }
 

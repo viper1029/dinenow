@@ -3,7 +3,7 @@ package com.dinenowinc.dinenow;
 import com.dinenowinc.dinenow.auth.UserAuthenticator;
 import com.dinenowinc.dinenow.db.DatabaseFiller;
 import com.dinenowinc.dinenow.model.User;
-import com.dinenowinc.dinenow.resources.AddOnResource;
+import com.dinenowinc.dinenow.resources.AddonResource;
 import com.dinenowinc.dinenow.resources.AddressBookResource;
 import com.dinenowinc.dinenow.resources.CartResources;
 import com.dinenowinc.dinenow.resources.CategoryResource;
@@ -147,7 +147,7 @@ public class DineNowApplication extends Application<ApplicationConfiguration> {
     environment.jersey().register(guiceBundle.getInjector().getInstance(CartResources.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(ModifierResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(SizeResource.class));
-    environment.jersey().register(guiceBundle.getInjector().getInstance(AddOnResource.class));
+    environment.jersey().register(guiceBundle.getInjector().getInstance(AddonResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(DeliveryZoneResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(RestaurantUserResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(CustomerResource.class));

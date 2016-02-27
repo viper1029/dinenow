@@ -26,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Path("/categories")
 @Api("/categories")
@@ -46,7 +48,10 @@ public class CategoryResource extends AbstractResource<Category> {
   @Override
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      return super.getAll(access);
+      List<Category> entities = this.dao.getAll();
+      LinkedHashMap<String, Object> returnMap = new LinkedHashMap<>();
+      returnMap.put("categories", getMapListFromEntities(entities));
+      return ResourceUtils.asSuccessResponse(Status.OK, returnMap);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }
@@ -102,7 +107,7 @@ public class CategoryResource extends AbstractResource<Category> {
   }
 
   @PUT
-  @ApiOperation(value = "api update category")
+  @ApiOperation(value = "update category")
   @Path("/{id}")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "data"),

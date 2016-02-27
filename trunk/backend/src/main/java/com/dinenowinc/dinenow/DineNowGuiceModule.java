@@ -1,6 +1,6 @@
 package com.dinenowinc.dinenow;
 
-import com.dinenowinc.dinenow.dao.AddOnDao;
+import com.dinenowinc.dinenow.dao.AddonDao;
 import com.dinenowinc.dinenow.dao.AddressBookDao;
 import com.dinenowinc.dinenow.dao.BaseEntityDAOImpl;
 import com.dinenowinc.dinenow.dao.CartDao;
@@ -24,7 +24,7 @@ import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.dao.SubMenuDao;
 import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.dao.VersionDao;
-import com.dinenowinc.dinenow.model.AddOn;
+import com.dinenowinc.dinenow.model.Addon;
 import com.dinenowinc.dinenow.model.AddressBook;
 import com.dinenowinc.dinenow.model.Cart;
 import com.dinenowinc.dinenow.model.CartItem;
@@ -62,7 +62,7 @@ public class DineNowGuiceModule extends AbstractModule{
 		bind(new TypeLiteral<BaseEntityDAOImpl<Item, String>>() {}).to(ItemDao.class);
 		bind(new TypeLiteral<BaseEntityDAOImpl<SubMenu, String>>() {}).to(SubMenuDao.class);
 		bind(new TypeLiteral<BaseEntityDAOImpl<DeliveryZone, String>>() {}).to(DeliveryZoneDao.class);
-		bind(new TypeLiteral<BaseEntityDAOImpl<AddOn, String>>() {}).to(AddOnDao.class);
+		bind(new TypeLiteral<BaseEntityDAOImpl<Addon, String>>() {}).to(AddonDao.class);
 		bind(new TypeLiteral<BaseEntityDAOImpl<Size, String>>() {}).to(SizeDao.class);
 		bind(new TypeLiteral<BaseEntityDAOImpl<Modifier, String>>() {}).to(ModifierDao.class);
 		bind(new TypeLiteral<BaseEntityDAOImpl<OrderDetail, String>>() {}).to(OrderDetailsDao.class);

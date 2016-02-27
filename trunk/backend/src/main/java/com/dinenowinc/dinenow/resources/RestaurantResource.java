@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.dao.AddonDao;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
@@ -28,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.dinenowinc.dinenow.dao.AddOnDao;
 import com.dinenowinc.dinenow.dao.CategoryDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.DeliveryZoneDao;
@@ -45,7 +45,7 @@ import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.dao.SubMenuDao;
 import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.AddOn;
+import com.dinenowinc.dinenow.model.Addon;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.ClosedDay;
@@ -111,7 +111,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   PaymentTypeDao paymentTypeDao;
 
   @Inject
-  private AddOnDao addonDao;
+  private AddonDao addonDao;
 
   @Inject
   private CategoryDao categoryDao;
@@ -503,7 +503,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 				itemtemp.put("isVegeterian",item.isVegeterian());
 				
 				Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
-				for (SizeInfo sizeInfo : item.getSizes()) {
+				for (SizeInfo sizeInfo : item.getAddonSize()) {
 					Size size = sizeInfo.getSize();
 					HashMap<String, Object> sizeDto = new HashMap<String, Object>();
 					sizeDto.put("id", size.getId());
@@ -633,7 +633,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @GET
   public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
     if (restaurantDao.get(restaurant_id) != null) {
-      List<AddOn> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
+      List<Addon> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
       LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
@@ -1227,7 +1227,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 										.getPrice() : item.getPrice());
 						
 						ArrayList<HashMap<String, Object>> sizeDtos = new ArrayList<HashMap<String, Object>>();
-						for (SizeInfo sizeInfo : item.getSizes()) {
+						for (SizeInfo sizeInfo : item.getAddonSize()) {
 							Size size = sizeInfo.getSize();
 							HashMap<String, Object> sizeDto = new LinkedHashMap<String, Object>();
 							sizeDto.put("id", size.getId());
@@ -1256,12 +1256,12 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 							
 							//modifier addons
 							ArrayList<HashMap<String, Object>> addonDtos = new ArrayList<HashMap<String, Object>>();
-							for(ModifierAddOn modifierAddOn : modifier.getAddOns()){
-							     AddOn addon = modifierAddOn.getAddOn();
+							for(ModifierAddOn modifierAddOn : modifier.getAddons()){
+							     Addon addon = modifierAddOn.getAddOn();
 							     HashMap<String, Object> addonDto = new LinkedHashMap<String, Object>();
 							     addonDto.put("id", addon.getId());
-							     addonDto.put("name", addon.getAddOnName());
-							     addonDto.put("description", addon.getAddOnDescription());
+							     addonDto.put("name", addon.getAddonName());
+							     addonDto.put("description", addon.getAddonDescription());
 							     addonDto.put("price", modifierAddOn.getPrice());
 							     addonDto.put("availabilityStatus", addon.getAvailabilityStatus());
 							     addonDtos.add(addonDto);
@@ -1344,7 +1344,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 											.getPrice() : item.getPrice());
 							
 							Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
-							for (SizeInfo sizeInfo : item.getSizes()) {
+							for (SizeInfo sizeInfo : item.getAddonSize()) {
 								Size size = sizeInfo.getSize();
 								HashMap<String, Object> sizeDto = new HashMap<String, Object>();
 								sizeDto.put("id", size.getId());
@@ -1360,14 +1360,14 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 								Modifier modifier = modifierInfo.getModifier();
 								for (ItemSizeInfo hashMap : modifier.getItems()) {
 									if (hashMap.getItem().getId().equals(item.getId())) {
-										for (ModifierAddOn hashMap2 : modifier.getAddOns()) {
-											AddOn addon = hashMap2.getAddOn();
+										for (ModifierAddOn hashMap2 : modifier.getAddons()) {
+											Addon addon = hashMap2.getAddOn();
 											HashMap<String, Object> addOnDto = new HashMap<String, Object>();
 											addOnDto.put("id", addon.getId());
-											addOnDto.put("addOnName", addon.getAddOnName());
-											addOnDto.put("addOnDescription", addon.getAddOnDescription());
+											addOnDto.put("addOnName", addon.getAddonName());
+											addOnDto.put("addOnDescription", addon.getAddonDescription());
 //											addOnDto.put("isDefault", hashMap2.isDefault());
-											for (SizeInfo hashMap3 : addon.getSizes()) {
+											for (SizeInfo hashMap3 : addon.getAddonSize()) {
 												if (hashMap.getSize().getId().equals(hashMap3.getSize().getId())) {
 													addOnDto.put("price", hashMap3.getPrice());
 												}

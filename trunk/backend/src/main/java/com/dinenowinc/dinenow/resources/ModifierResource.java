@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.Addon;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
@@ -19,14 +20,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.dinenowinc.dinenow.dao.AddOnDao;
+import com.dinenowinc.dinenow.dao.AddonDao;
 import com.dinenowinc.dinenow.dao.ItemDao;
 import com.dinenowinc.dinenow.dao.ModifierDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.User;
-import com.dinenowinc.dinenow.model.AddOn;
 import com.dinenowinc.dinenow.model.ModifierAddOn;
 import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Modifier;
@@ -52,7 +52,7 @@ public class ModifierResource extends AbstractResource<Modifier> {
   private RestaurantDao restaurantDao;
 
   @Inject
-  private AddOnDao addOnDao;
+  private AddonDao addonDao;
 
   @Inject
   private ItemDao itemDao;
@@ -95,7 +95,7 @@ public class ModifierResource extends AbstractResource<Modifier> {
 
       List<HashMap<String, Object>> listAddOns = (List<HashMap<String, Object>>) inputMap.get("addOns");
       for (HashMap<String, Object> hashMap : listAddOns) {
-        AddOn addon = addOnDao.get(hashMap.get("addOn").toString());
+        Addon addon = addonDao.get(hashMap.get("addOn").toString());
         double price = Double.parseDouble(hashMap.get("price").toString());
         boolean isDefault = Boolean.parseBoolean(hashMap.get("isDefault").toString());
         AvailabilityStatus availabilityStatus = AvailabilityStatus.valueOf(hashMap.get("availabilityStatus").toString());
@@ -139,7 +139,7 @@ public class ModifierResource extends AbstractResource<Modifier> {
 
       List<HashMap<String, Object>> listAddOns = (List<HashMap<String, Object>>) inputMap.get("addOns");
       for (HashMap<String, Object> hashMap : listAddOns) {
-        AddOn addon = addOnDao.get(hashMap.get("addOn").toString());
+        Addon addon = addonDao.get(hashMap.get("addOn").toString());
         double price = Double.parseDouble(hashMap.get("price").toString());
         boolean isDefault = Boolean.parseBoolean(hashMap.get("isDefault").toString());
         AvailabilityStatus availabilityStatus = AvailabilityStatus.valueOf(hashMap.get("availabilityStatus").toString());

@@ -19,9 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @NamedQueries({@NamedQuery(name="ModifierAddOn.GetAll", query = "from ModifierAddOn a")})
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-//InfoBase<AddOn>
+//InfoBase<Addon>
 @JsonAutoDetect
-public class ModifierAddOn extends InfoAddOn<AddOn>{
+public class ModifierAddOn extends InfoAddOn<Addon>{
 
 	@Column(nullable=false)
 	private AvailabilityStatus availStatus;
@@ -37,7 +37,7 @@ public class ModifierAddOn extends InfoAddOn<AddOn>{
 		setCreatedDate(new Date());
 	}
 	
-	public ModifierAddOn(AddOn addon) {
+	public ModifierAddOn(Addon addon) {
 		setAddOn(addon);
 	}
 	
@@ -55,7 +55,7 @@ public class ModifierAddOn extends InfoAddOn<AddOn>{
 //	private final Set<Size> size = new HashSet<Size>();
 //	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch= FetchType.LAZY)
 //    @JoinColumn(name="id_addon")	
-//	private final Set<AddOn> addOns = new HashSet<AddOn>();
+//	private final Set<Addon> addOns = new HashSet<Addon>();
 	public double getPrice() {
 		return price;
 	}

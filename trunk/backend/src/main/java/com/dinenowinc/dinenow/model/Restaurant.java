@@ -163,7 +163,7 @@ public class Restaurant extends BaseEntity {
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_addOns")
-  private final Set<AddOn> addOns = new HashSet<AddOn>();
+  private final Set<Addon> addons = new HashSet<Addon>();
 
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
@@ -305,12 +305,12 @@ public class Restaurant extends BaseEntity {
   }
 
 
-  public Set<AddOn> getAddOns() {
-    return addOns;
+  public Set<Addon> getAddons() {
+    return addons;
   }
 
-  public void addAddOns(AddOn addon) {
-    getAddOns().add(addon);
+  public void addAddOns(Addon addon) {
+    getAddons().add(addon);
   }
 
 

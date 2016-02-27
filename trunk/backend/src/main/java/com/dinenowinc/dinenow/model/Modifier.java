@@ -66,12 +66,12 @@ public class Modifier extends BaseEntity{
 //		getItems().create(item);
 //	}
 //
-//	public Set<AddOnInfo> getAddOns() {
+//	public Set<AddOnInfo> getAddons() {
 //		return addOns;
 //	}
 //	
 //	public void addAddOn(AddOnInfo addonInfo){
-//		getAddOns().create(addonInfo);
+//		getAddons().create(addonInfo);
 //	}
 	
 

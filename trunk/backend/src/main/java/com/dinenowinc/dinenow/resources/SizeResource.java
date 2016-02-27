@@ -14,12 +14,15 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import io.dropwizard.auth.Auth;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.HashMap;
@@ -27,6 +30,8 @@ import java.util.HashMap;
 
 @Path("/sizes")
 @Api("/sizes")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class SizeResource extends AbstractResource<Size> {
 
   @Inject
@@ -61,7 +66,6 @@ public class SizeResource extends AbstractResource<Size> {
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
-
 
   @POST
   @ApiOperation(value = "api add new Size for restaurant")
