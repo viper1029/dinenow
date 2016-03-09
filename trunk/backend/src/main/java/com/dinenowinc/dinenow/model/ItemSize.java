@@ -21,22 +21,22 @@ import java.util.LinkedHashMap;
 
 @Entity
 @Audited
-@NamedQueries({ @NamedQuery(name = "AddonSize.GetAll", query = "from AddonSize a") })
-@Table(name = "addon_size",
-    uniqueConstraints = @UniqueConstraint(columnNames = { "id_size", "id_addon" }, name = "addon_size_uk")
+@NamedQueries({ @NamedQuery(name = "ItemSize.GetAll", query = "from ItemSize a") })
+@Table(name = "item_size",
+    uniqueConstraints = @UniqueConstraint(columnNames = { "id_size", "id_item" }, name = "item_size_uk")
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AddonSize extends AvailabilityEntity {
+public class ItemSize extends AvailabilityEntity {
 
   @JsonIgnore
   @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_size", nullable = false, foreignKey = @ForeignKey(name = "Fk_size_addOnSize"))
+  @JoinColumn(name = "id_size", foreignKey = @ForeignKey(name = "id_size_size_size_info_Fk"))
   private Size size = null;
 
   @JsonIgnore
   @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_addon", nullable = false, foreignKey = @ForeignKey(name = "Fk_addOn_addOnSize"))
-  private Addon addon = null;
+  @JoinColumn(name = "id_item", nullable = false, foreignKey = @ForeignKey(name = "Fk_item_itemSize"))
+  private Item item = null;
 
   @Column(nullable = false, columnDefinition = "Decimal(10,2)")
   private double price;
@@ -57,12 +57,12 @@ public class AddonSize extends AvailabilityEntity {
     this.size = size;
   }
 
-  public Addon getAddon() {
-    return addon;
+  public Item getItem() {
+    return item;
   }
 
-  public void setAddon(Addon addon) {
-    this.addon = addon;
+  public void setItem(final Item item) {
+    this.item = item;
   }
 
   @Override

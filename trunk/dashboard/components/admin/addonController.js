@@ -1,77 +1,101 @@
 angular.module("app.admin.restaurant.manage.menu.addon", [])
     .controller("AdminAddonController", ["$scope", "$modal", "$state", "$stateParams",
-        "$timeout", "ngTableConfig", "adminAddonResource", "adminSizesResource", function($scope, $modal, $state, $stateParams, $timeout, ngTableConfig, adminAddonResource) {
+        "$timeout", "ngTableConfig", "adminAddonResource", "adminSizesResource",
+        function ($scope, $modal, $state, $stateParams, $timeout, ngTableConfig, adminAddonResource) {
 
-
-            var initList = function () {
+            var initAddons = function () {
                 var restaurantID = $stateParams.restaurantId;
-                adminAddonResource.get(restaurantID).success(function (payload) {
-                    $scope.addons = payload.data.addons,
-                        $scope.tableParams = ngTableConfig.config($scope.addons)
+                adminAddonResource.getAll(restaurantID).success(function (payload) {
+                    $scope.addons = payload.data.addons;
+                    $scope.tableParams = ngTableConfig.config($scope.addons)
                 })
-            }
+            };
 
-            var open = function(item) {
-                console.log(item);
+            var open = function (item) {
                 var modalInstance = $modal.open({
                     templateUrl: "scripts/admin/restaurant/manage/menu/views/modal/addon.html",
                     resolve: {
-                        itemToProcess: function() {
+                        itemToProcess: function () {
                             return item
                         }
                     },
-                    controller: function($scope, $modalInstance, adminAddonResource, adminSizesResource, itemToProcess) {
-                        $scope.init = function() {
+                    controller: function ($scope, $modalInstance, adminAddonResource, adminSizesResource, itemToProcess) {
+                        var init = function () {
                             $scope.onShow = {
                                 size: !1
-                            }, $scope.itemToProcess = angular.copy(itemToProcess) || {};
-                            console.log($scope.itemToProcess);
-                            var restaurantID = $stateParams.restaurantId;
-                            setTimeout(function(){
-                                adminSizesResource.get(restaurantID).success(function(payload) {
-                                    $scope.listSizes = payload.data.sizes
-                                    console.log($scope.listSizes);
-                                })
-                            },200),
+                            };
 
-                                $scope.itemToProcess.id ? setTimeout(function() {
-                                    adminAddonResource.getByID($scope.itemToProcess).success(function(payload) {
-                                        console.log(payload);
-                                        $scope.itemToProcess = payload.data.addon,
-                                            console.log($scope.itemToProcess);
-                                        $scope.itemToProcess.sizePrices.push({
-                                            size: "",
-                                            price: 0
+                            $scope.itemToProcess = angular.copy(itemToProcess) || {};
+                            var restaurantID = $stateParams.restaurantId;
+
+                            adminSizesResource.getAll(restaurantID).then(function (payload) {
+                                $scope.listSizes = payload.data.data.sizes;
+                                loadAddonDetails();
+                            });
+
+                            var loadAddonDetails = function () {
+                                $scope.itemToProcess.id ?
+                                    adminAddonResource.getByID($scope.itemToProcess).success(function (payload) {
+                                        $scope.itemToProcess = payload.data.addon;
+                                        $scope.itemToProcess.addonSize.push({
+                                            price: 0,
+                                            availabilityStatus: "AVAILABLE",
+                                            size: {
+                                                id: undefined
+                                            }
                                         })
+                                    }) :
+                                    $scope.itemToProcess = {
+                                        addonSize: [{
+                                            price: 0,
+                                            availabilityStatus: "AVAILABLE",
+                                            size: {
+                                                id: undefined
+                                            }
+                                        }]
+                                    }
+                            }
+                        };
+
+                        init();
+                        $scope.save = function () {
+                            var splice = $scope.itemToProcess.addonSize.length > 1 &&
+                            ($scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size === undefined ||
+                            $scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size.id === null ||
+                            $scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size.id === undefined);
+
+                            if(splice) {
+                                $scope.itemToProcess.addonSize.splice(-1, 1);
+                            }
+                            if($scope.itemToProcess.addonSize.length > 0 && ($scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""))) {
+                                adminAddonResource.addOrUpdate($scope.itemToProcess).success(function () {
+                                        $modalInstance.close($scope.itemToProcess)
+                                    }).error(function () {
+                                        alertify.error("Oops! Please try again")
                                     })
-                                }, 100) : $scope.itemToProcess = {
-                                    availabilityStatus: "AVAILABLE",
-                                    sizePrices: [{
-                                        size: "",
-                                        price: 0
-                                    }]
-                                }
-                        },
-                            $scope.init(),
-                            $scope.addSizePrice = function() {
-                                $scope.itemToProcess.sizePrices.push({
-                                    size: "",
-                                    price: 0
-                                })
-                            }, $scope.deleteSizePrice = function(index) {
-                            $scope.itemToProcess.sizePrices.splice(index, 1)
-                        }, $scope.save = function() {
-                            $scope.itemToProcess.sizePrices.length > 1 ? ($scope.itemToProcess.sizePrices.splice(-1, 1), $scope.itemToProcess.sizePrices.length > 0 && ($scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""), adminAddonResource.addOrUpdate($scope.itemToProcess).success(function() {
-                                $modalInstance.close($scope.itemToProcess)
-                            }).error(function() {
-                                alertify.error("Oops! Please try again")
-                            }))) : alertify.error("Please add size and price")
-                        }, $scope.cancel = function() {
+                            }
+                            else {
+                             alertify.error("Please add size and price")
+                            }
+                        };
+
+                        $scope.addAddonSize = function () {
+                            $scope.itemToProcess.addonSize.push({
+                                name: "",
+                                price: 0
+                            })
+                        };
+
+                        $scope.deleteAddonSize = function (index) {
+                            $scope.itemToProcess.addonSize.splice(index, 1)
+                        };
+
+                        $scope.cancel = function () {
                             $modalInstance.dismiss("cancel")
-                        }
+                        };
                     }
                 });
-                modalInstance.result.then(function(data) {
+                modalInstance.result.then(function (data) {
                     var isMatchId = !1;
                     if (data) {
                         for (var i = 0; i < $scope.addons.length; i++)
@@ -86,21 +110,22 @@ angular.module("app.admin.restaurant.manage.menu.addon", [])
                         }))
                     }
                 })
-            }
+            };
 
-            var deleteaddon = function(item) {
-                alertify.confirm("Are you sure you want to delete?", function(e) {
-                    e && adminAddonResource["delete"](item).success(function() {
+            var deleteAddon = function (item) {
+                alertify.confirm("Are you sure you want to delete?", function (e) {
+                    e && adminAddonResource["delete"](item).success(function () {
                         $state.go($state.current, {}, {
                             reload: !0
-                        }), alertify.success("Delete Successfully")
-                    }).error(function() {
+                        });
+                        alertify.success("Delete Successfully")
+                    }).error(function () {
                         alertify.error("Oop! Please try again")
                     })
                 })
-            }
+            };
 
-            $scope.initList = initList, $scope.initList(),
-                $scope.open = open,
-                $scope["delete"] = deleteaddon
+            initAddons();
+            $scope.open = open;
+            $scope.deleteAddon = deleteAddon;
         }]);

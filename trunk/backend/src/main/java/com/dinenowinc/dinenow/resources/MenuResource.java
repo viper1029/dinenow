@@ -1,5 +1,7 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.CategoryItem;
+import com.dinenowinc.dinenow.model.ItemPrice;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
@@ -8,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.RollbackException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,13 +26,10 @@ import com.dinenowinc.dinenow.dao.CategoryDao;
 import com.dinenowinc.dinenow.dao.ItemDao;
 import com.dinenowinc.dinenow.dao.MenuDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
-import com.dinenowinc.dinenow.dao.SubMenuDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Category;
-import com.dinenowinc.dinenow.model.CategoryInfo;
 import com.dinenowinc.dinenow.model.Hour;
 import com.dinenowinc.dinenow.model.Item;
-import com.dinenowinc.dinenow.model.ItemInfo;
 import com.dinenowinc.dinenow.model.Menu;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.UserRole;
@@ -54,8 +52,6 @@ public class MenuResource extends AbstractResource<Menu> {
 
 	@Inject
 	private MenuDao menuDao;
-	@Inject
-	private SubMenuDao subMenuDao;
 
 	@Inject
 	private CategoryDao categoryDao;
@@ -73,16 +69,16 @@ public class MenuResource extends AbstractResource<Menu> {
 		rdto.put("name", entity.getMenuName());
 		rdto.put("description", entity.getMenuDescription());
 		List<HashMap<String, Object>> categories = new ArrayList<HashMap<String, Object>>();
-		for (CategoryInfo category : entity.getCategories()) {
+		for (CategoryItem category : entity.getCategories()) {
 			LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
 			temp.put("id", category.getCategory().getId());
 			temp.put("name", category.getCategory().getCategoryName());
 
 			List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
-			for (ItemInfo item : category.getItems()) {
+			for (ItemPrice item : category.getItems()) {
 				LinkedHashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
 				itemDto.put("id", item.getItem().getId());
-				itemDto.put("name", item.getItem().getItemName());
+				itemDto.put("name", item.getItem().getName());
 				items.add(itemDto);
 			}
 			temp.put("items", items);
@@ -100,24 +96,24 @@ public class MenuResource extends AbstractResource<Menu> {
 		entity.setMenuName(inputMap.get("name").toString());
 		entity.setMenuDescription(inputMap.get("description").toString());
 		if (inputMap.containsKey("categories")) {
-			ArrayList<CategoryInfo> listcInfo = new ArrayList<CategoryInfo>();
+			ArrayList<CategoryItem> listcInfo = new ArrayList<CategoryItem>();
 			ArrayList<HashMap<String, Object>> listKeyCategories = (ArrayList<HashMap<String, Object>>) inputMap.get("categories");
 			for (int i = 0; i < listKeyCategories.size(); i++) {
 				//{"menuSubName":"Sub Name 1 sub menu","subMenuDescription":"sub menu des", "categories":[{"id":"b467544f-f78f-4141-83b1-3ed9c902dbb0","items":["2823f44a-e225-4584-9f96-60b4857ca2b1"]}]}
 				Category c = categoryDao.get(listKeyCategories.get(i).get("id").toString());
-				CategoryInfo cInfo = new CategoryInfo();
-				ArrayList<ItemInfo> listItemInfo = new ArrayList<ItemInfo>();
+				CategoryItem cInfo = new CategoryItem();
+				ArrayList<ItemPrice> listItemPrice = new ArrayList<ItemPrice>();
 				ArrayList<HashMap<String, Object>> listItems = (ArrayList<HashMap<String, Object>>)listKeyCategories.get(i).get("items");
 
 				for (HashMap<String, Object> id_item : listItems) {
 					Item tmp = itemDao.get(id_item.get("id").toString());
-					ItemInfo ItemInfotmp = new ItemInfo();
-					ItemInfotmp.setItem(tmp);
-					//		ItemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
-					listItemInfo.add(ItemInfotmp);
-					cInfo.addItem(ItemInfotmp);
+					ItemPrice itemInfotmp = new ItemPrice();
+					itemInfotmp.setItem(tmp);
+					//		itemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
+					listItemPrice.add(itemInfotmp);
+					cInfo.addItem(itemInfotmp);
 				}
-				cInfo.addAllItem(listItemInfo);
+				cInfo.addAllItem(listItemPrice);
 				cInfo.setCategory(c);
 				listcInfo.add(cInfo);
 				entity.addCategory(cInfo);
@@ -135,27 +131,27 @@ public class MenuResource extends AbstractResource<Menu> {
 		menu.setMenuName(inputMap.get("name").toString());
 		menu.setMenuDescription(inputMap.get("description").toString());
 		if (inputMap.containsKey("categories")) {
-			ArrayList<CategoryInfo> listcInfo = new ArrayList<CategoryInfo>();
+			ArrayList<CategoryItem> listcInfo = new ArrayList<CategoryItem>();
 			ArrayList<HashMap<String, Object>> listKeyCategories = (ArrayList<HashMap<String, Object>>) inputMap.get("categories");
 			for (int i = 0; i < listKeyCategories.size(); i++) {
 				//{"menuSubName":"Sub Name 1 sub menu","subMenuDescription":"sub menu des", "categories":[{"id":"b467544f-f78f-4141-83b1-3ed9c902dbb0","items":["2823f44a-e225-4584-9f96-60b4857ca2b1"]}]}
 				Category c = categoryDao.get(listKeyCategories.get(i).get("id").toString());
-				CategoryInfo cInfo = new CategoryInfo();
-				ArrayList<ItemInfo> listItemInfo = new ArrayList<ItemInfo>();
+				CategoryItem cInfo = new CategoryItem();
+				ArrayList<ItemPrice> listItemPrice = new ArrayList<ItemPrice>();
 				ArrayList<HashMap<String, Object>> listItems = (ArrayList<HashMap<String, Object>>)listKeyCategories.get(i).get("items");
 
 				for (HashMap<String, Object> id_item : listItems) {
 					Item tmp = itemDao.get(id_item.get("id").toString());
-					ItemInfo ItemInfotmp = new ItemInfo();
-					/*					ItemInfotmp.setCreatedBy("SUBMENU");
-					ItemInfotmp.setCreatedDate(new Date())*/;
-					ItemInfotmp.setItem(tmp);
-					//		ItemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
-					listItemInfo.add(ItemInfotmp);
-					cInfo.addItem(ItemInfotmp);
+					ItemPrice itemInfotmp = new ItemPrice();
+					/*					itemInfotmp.setCreatedBy("SUBMENU");
+					itemInfotmp.setCreatedDate(new Date())*/;
+					itemInfotmp.setItem(tmp);
+					//		itemInfotmp.setPrice(Double.parseDouble(id_item.get("price").toString()));
+					listItemPrice.add(itemInfotmp);
+					cInfo.addItem(itemInfotmp);
 				}
 
-				cInfo.addAllItem(listItemInfo);
+				cInfo.addAllItem(listItemPrice);
 				cInfo.setCategory(c);
 				listcInfo.add(cInfo);
 				menu.addCategory(cInfo);
@@ -184,8 +180,7 @@ public class MenuResource extends AbstractResource<Menu> {
 			List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
 			errorMessages.add(new ServiceErrorMessage("Restaurant not found"));
 			return ResourceUtils.asFailedResponse(Status.NOT_FOUND, errorMessages);
-		} 
-		entity.setCompositeId(restaurant.getId());
+		}
 		restaurant.addMenu(entity);
 			dao.save(entity);
 		return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(entity));

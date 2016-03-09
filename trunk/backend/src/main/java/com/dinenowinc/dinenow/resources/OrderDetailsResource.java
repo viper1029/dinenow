@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.model.ItemSize;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
@@ -32,7 +33,6 @@ import com.dinenowinc.dinenow.model.OrderDetail;
 import com.dinenowinc.dinenow.model.OrderStatus;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Size;
-import com.dinenowinc.dinenow.model.SizeInfo;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -286,22 +286,19 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 			for (Item item : listItem) {
 				HashMap<String, Object> itemtemp = new HashMap<String, Object>();
 				itemtemp.put("id",item.getId());
-				itemtemp.put("availabilityStatus",item.getAvailabilityStatus());
-				itemtemp.put("itemName",item.getItemName());
-				itemtemp.put("itemDescription",item.getItemDescription());
+				itemtemp.put("itemName",item.getName());
+				itemtemp.put("itemDescription",item.getDescription());
 				itemtemp.put("notes",item.getNotes());
-				itemtemp.put("spiceLevel",item.getSpiceLevel());
-				itemtemp.put("linkImage",item.getLinkImage());
-				itemtemp.put("isVegeterian",item.isVegeterian());
+				itemtemp.put("linkImage",item.getImage());
 				
 				Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
-				for (SizeInfo sizeInfo : item.getSizes()) {
-					Size size = sizeInfo.getSize();
+				for (ItemSize itemSize : item.getItemSizes()) {
+					Size size = itemSize.getSize();
 					HashMap<String, Object> sizeDto = new HashMap<String, Object>();
 					sizeDto.put("id", size.getId());
 					sizeDto.put("sizeName", size.getSizeName());
 					sizeDto.put("sizeDescription", size.getSizeDescription());
-					sizeDto.put("price", sizeInfo.getPrice());
+					sizeDto.put("price", itemSize.getPrice());
 					sizeDtos.add(sizeDto);
 				}
 				itemtemp.put("sizes", sizeDtos);

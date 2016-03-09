@@ -16,20 +16,14 @@ public class Hour implements Serializable{
 	private static final long serialVersionUID = -3053017512634583644L;
 
 	private WeekDayType weekDayType;
+
 	@Temporal(TemporalType.TIME)
 	private Date fromTime;
+
 	@Temporal(TemporalType.TIME)
 	private Date toTime;
 	
-	public Hour() {
-	}
-	
-	public Hour(WeekDayType weekDayType, Date from, Date to) {
-		this.weekDayType = weekDayType;
-		this.fromTime = from;
-		this.toTime = to;
-	}
-	
+
 	public WeekDayType getWeekDayType() {
 		return weekDayType;
 	}

@@ -689,20 +689,19 @@ angular.module("app.owner.orders.services", [])
 }]);
 
 angular.module("app.admin.restaurant.manage.menu.service", [])
-
 .factory("adminCategoriesResource", ["$http", "ROOT", function($http, ROOT) {
     return {
         addOrUpdate: function(params) {
-            var action = "post";
-            return params.id ? (action = "put", $http[action](ROOT + "categories/" + params.id, params)) : $http[action](ROOT + "categories", params)
+            return params.id ? ($http["put"](ROOT + "categories/" + params.id, params)) :
+                $http["post"](ROOT + "categories", params)
         },
-        get: function(params) {
+        getAll: function(params) {
             return $http.get(ROOT + "restaurants/" + params + "/categories")
         },
         getByID: function(params) {
             return $http.get(ROOT + "categories/" + params.id)
         },
-        "delete": function(params) {
+        delete: function(params) {
             return $http["delete"](ROOT + "categories/" + params.id)
         }
     }
@@ -762,7 +761,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             var action = "post";
             return params.id ? (action = "put", $http[action](ROOT + "sizes/" + params.id, params)) : $http[action](ROOT + "sizes", params)
         },
-        get: function(params) {
+        getAll: function(params) {
             return $http.get(ROOT + "restaurants/" + params + "/sizes")
         },
         getByID: function(params) {
@@ -778,7 +777,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             var action = "post";
             return params.id ? (action = "put", $http[action](ROOT + "addons/" + params.id, params)) : $http[action](ROOT + "addons", params)
         },
-        get: function(params) {
+        getAll: function(params) {
             return $http.get(ROOT + "restaurants/" + params + "/addons")
         },
         getByID: function(params) {

@@ -1,10 +1,16 @@
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.model.Addon;
+import com.dinenowinc.dinenow.model.AddonSize;
+import com.dinenowinc.dinenow.model.AvailabilityStatus;
+import com.dinenowinc.dinenow.model.ModelHelpers;
+import com.dinenowinc.dinenow.model.ModifierAddon;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.persistence.RollbackException;
@@ -27,8 +33,6 @@ import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.User;
-import com.dinenowinc.dinenow.model.ModifierAddOn;
-import com.dinenowinc.dinenow.model.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Modifier;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.UserRole;
@@ -65,157 +69,6 @@ public class ModifierResource extends AbstractResource<Modifier> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractResource.class);
 
-
-  @Override
-  protected HashMap<String, Object> getMapFromEntity(Modifier entity) {
-    HashMap<String, Object> dto = new HashMap<String, Object>();
-/*		dto.put("id", entity.getId());
-    dto.put("modifierName", entity.getModifierName());
-		dto.put("modifierDescription", entity.getModifierDescription());
-		dto.put("isSelectMultiple", entity.isSelectMultiple());
-		dto.put("minSelection", entity.getMinSelection());
-		dto.put("maxSelection", entity.getMaxSelection());*/
-    dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
-    return dto;
-  }
-
-  @Override
-  protected Modifier getEntityForInsertion(HashMap<String, Object> inputMap) {
-    Modifier entity = super.getEntityForInsertion(inputMap);
-
-    entity.setModifierName(inputMap.get("name").toString());
-    entity.setModifierDescription(inputMap.get("description").toString());
-    entity.setSelectMultiple(Boolean.parseBoolean(inputMap.get("isSelectMultiple").toString()));
-    entity.setMinSelection(Integer.parseInt(inputMap.get("minSelection").toString()));
-    entity.setMaxSelection(inputMap.containsKey("maxSelection") ? Integer.parseInt(inputMap.get("maxSelection").toString()) : entity.getMinSelection());
-
-    System.out.println("::::::::::::::::::::::::::::::::::");
-    if (inputMap.containsKey("addOns")) {
-      ArrayList<ModifierAddOn> listInfo = new ArrayList<ModifierAddOn>();
-
-      List<HashMap<String, Object>> listAddOns = (List<HashMap<String, Object>>) inputMap.get("addOns");
-      for (HashMap<String, Object> hashMap : listAddOns) {
-        Addon addon = addonDao.get(hashMap.get("addOn").toString());
-        double price = Double.parseDouble(hashMap.get("price").toString());
-        boolean isDefault = Boolean.parseBoolean(hashMap.get("isDefault").toString());
-        AvailabilityStatus availabilityStatus = AvailabilityStatus.valueOf(hashMap.get("availabilityStatus").toString());
-        ModifierAddOn info = new ModifierAddOn();
-        info.setAddOn(addon);
-        info.setPrice(price);
-        info.setDefault(isDefault);
-        info.setAvailStatus(availabilityStatus);
-        listInfo.add(info);
-      }
-      entity.addAllAddOns(listInfo);
-    }
-		
-		/*if (dto.containsKey("itemSizes")) {
-			ArrayList<ItemSizeInfo> listInfo = new ArrayList<ItemSizeInfo>();
-			
-			List<HashMap<String, Object>> listItemSize = (List<HashMap<String, Object>>) dto.get("itemSizes");
-			for (HashMap<String, Object> hashMap : listItemSize) {
-				Item item = itemDao.get(hashMap.get("item").toString());
-				Size size = sizeDao.get(hashMap.get("size").toString());
-				ItemSizeInfo info = new ItemSizeInfo();
-				info.setItem(item);
-				info.setSize(size);
-				listInfo.create(info);
-			}
-			entity.addAllItems(listInfo);
-		}*/
-    return entity;
-  }
-
-  @Override
-  protected Modifier getEntityForUpdate(Modifier modifier, HashMap<String, Object> inputMap) {
-    System.out.println(":::::::::::::::::::::::::::::::" + inputMap);
-    modifier.setModifierName(inputMap.get("name").toString());
-    modifier.setModifierDescription(inputMap.get("description").toString());
-    modifier.setSelectMultiple(Boolean.parseBoolean(inputMap.get("isSelectMultiple").toString()));
-    modifier.setMinSelection(Integer.parseInt(inputMap.get("minSelection").toString()));
-    modifier.setMaxSelection(inputMap.containsKey("maxSelection") ? Integer.parseInt(inputMap.get("maxSelection").toString()) : modifier.getMinSelection());
-    if (inputMap.containsKey("addOns")) {
-      ArrayList<ModifierAddOn> listInfo = new ArrayList<ModifierAddOn>();
-
-      List<HashMap<String, Object>> listAddOns = (List<HashMap<String, Object>>) inputMap.get("addOns");
-      for (HashMap<String, Object> hashMap : listAddOns) {
-        Addon addon = addonDao.get(hashMap.get("addOn").toString());
-        double price = Double.parseDouble(hashMap.get("price").toString());
-        boolean isDefault = Boolean.parseBoolean(hashMap.get("isDefault").toString());
-        AvailabilityStatus availabilityStatus = AvailabilityStatus.valueOf(hashMap.get("availabilityStatus").toString());
-
-        ModifierAddOn info = new ModifierAddOn();
-        info.setAddOn(addon);
-        info.setPrice(price);
-        info.setDefault(isDefault);
-        info.setAvailStatus(availabilityStatus);
-        listInfo.add(info);
-        System.out.println(":::::::::::::::::::::::::::::::" + availabilityStatus);
-      }
-      modifier.addAllAddOns(listInfo);
-    }
-		
-		/*if (dto.containsKey("itemSizes")) {
-			ArrayList<ItemSizeInfo> listInfo = new ArrayList<ItemSizeInfo>();
-			
-			List<HashMap<String, Object>> listItemSize = (List<HashMap<String, Object>>) dto.get("itemSizes");
-			for (HashMap<String, Object> hashMap : listItemSize) {
-				Item item = itemDao.get(hashMap.get("item").toString());
-				Size size = sizeDao.get(hashMap.get("size").toString());
-				ItemSizeInfo info = new ItemSizeInfo();
-				info.setItem(item);
-				info.setSize(size);
-				listInfo.create(info);
-			}
-			entity.addAllItems(listInfo);
-		}*/
-    return modifier;
-  }
-
-
-  //============================ACTION===================================//
-
-  @Override
-  protected HashMap<String, Object> onGet(Modifier entity, User access) {
-
-    HashMap<String, Object> dto = new HashMap<String, Object>();
-
-    ArrayList<HashMap<String, Object>> listAddOn = new ArrayList<HashMap<String, Object>>();
-    for (ModifierAddOn addonInfo : entity.getAddOns()) {
-      HashMap<String, Object> en = new HashMap<String, Object>();
-      en.put("addOn", addonInfo.getAddOn().getId());
-      en.put("price", addonInfo.getPrice());
-//			en.put("isDefault", addonInfo.isDefault());
-      en.put("availabilityStatus", addonInfo.getAvailStatus());
-      listAddOn.add(en);
-    }
-    dto.put("addOns", listAddOn);
-		
-		/*ArrayList<HashMap<String, Object>> listItemSizes = new ArrayList<HashMap<String, Object>>();
-		for (ItemSizeInfo itemInfo : entity.getItems()) {
-			HashMap<String, Object> en = new HashMap<String, Object>();
-			en.put("item", itemInfo.getItem().getId());
-			en.put("size", itemInfo.getSize().getId());
-			listItemSizes.create(en);
-		}
-		dto.put("itemSizes", listItemSizes);*/
-    return dto;
-  }
-
-  @Override
-  protected Response onCreate(User access, Modifier entity, Restaurant restaurant) {
-    if (restaurant == null) {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
-    }
-    restaurant.addModifier(entity);
-    dao.save(entity);
-    return ResourceUtils.asSuccessResponse(Status.OK, onGet(entity, access));
-  }
-
-
-  //==============================METHOD=================================//
-
-
   @GET
   @ApiOperation("api get all Modifier of restaurant for ADMIN and OWNER")
   @ApiResponses(value = {
@@ -227,7 +80,7 @@ public class ModifierResource extends AbstractResource<Modifier> {
     if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
       return super.getAll(access);
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
   @GET
@@ -243,40 +96,11 @@ public class ModifierResource extends AbstractResource<Modifier> {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       return super.get(access, id);
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
-
   @POST
-  @ApiOperation(value = "add new modifier", notes = "<pre><code>{"
-      + "<br/>  \"restaurantId\": \"2a91b0ba-eae6-4442-b94d-410e6a382a75\","
-      + "<br/>  \"modifierName\": \"modifier edited 2 item\","
-      + "<br/>  \"modifierDescription\": \"modifier description edited item\","
-      + "<br/>  \"isSelectMultiple\":true,"
-      + "<br/>  \"minSelection\":2,"
-      + "<br/>  \"maxSelection\":5,"
-      + "<br/>  \"addOns\":[],"
-      + "<br/>  \"itemSizes\":[]"
-      + "<br/>}</code></pre>"
-      + "<br/>"
-      + "<br/>"
-      + "<br/>"
-      + "<pre><code>{"
-      + "<br/>  \"restaurantId\": \"2a91b0ba-eae6-4442-b94d-410e6a382a75\","
-      + "<br/>  \"modifierName\": \"modifier New Test\","
-      + "<br/>  \"modifierDescription\": \"modifier New Test Decription\","
-      + "<br/>  \"isSelectMultiple\": true,"
-      + "<br/>  \"minSelection\": 5,"
-      + "<br/>  \"maxSelection\": 20,"
-      + "<br/>  \"addOns\": ["
-      + "<br/>    {"
-      + "<br/>      \"addOn\": \"7063824d-5da8-44cf-affe-0645bb529cf6\","
-      + "<br/>      \"price\": 15,"
-      + "<br/>      \"isDefault\": true,"
-      + "<br/>      \"availabilityStatus\": \"AVAILABLE\""
-      + "<br/>    }"
-      + "<br/>  ]"
-      + "<br/>}</code></pre>")
+  @ApiOperation(value = "add new modifier")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "data"),
       @ApiResponse(code = 401, message = "access denied for user"),
@@ -287,9 +111,51 @@ public class ModifierResource extends AbstractResource<Modifier> {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       return super.create(access, inputMap);
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
+  @Override
+  protected Response onCreate(User access, Modifier entity, Restaurant restaurant) {
+    if (restaurant == null) {
+      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found"));
+    }
+    restaurant.addModifier(entity);
+    dao.save(entity);
+    return ResourceUtils.asSuccessResponse(Status.OK, entity);
+  }
+
+  @Override
+  protected Modifier getEntityForInsertion(HashMap<String, Object> inputMap) {
+    Modifier entity = super.getEntityForInsertion(inputMap);
+    entity.setName(inputMap.get("name").toString());
+    entity.setDescription(inputMap.get("description").toString());
+    entity.setMultipleSelection(Boolean.parseBoolean(inputMap.get("isMultipleSelection").toString()));
+    entity.setMinSelection(Integer.parseInt(inputMap.get("minSelection").toString()));
+    entity.setMaxSelection(inputMap.containsKey("maxSelection") ? Integer.parseInt(inputMap.get("maxSelection").toString()) : entity.getMinSelection());
+
+    if (inputMap.containsKey("modifierAddon")) {
+      ArrayList<ModifierAddon> modifierAddons = new ArrayList<>();
+      List<HashMap<String, Object>> modifierAddonList = (List<HashMap<String, Object>>) inputMap.get("modifierAddon");
+      for (HashMap<String, Object> modifierAddon : modifierAddonList) {
+        modifierAddons.add(createNewModifierAddon(modifierAddon, entity));
+      }
+      entity.addAllModifierAddon(modifierAddons);
+    }
+    return entity;
+  }
+
+  private ModifierAddon createNewModifierAddon(HashMap<String, Object> modifierAddon, Modifier entity) {
+    Addon addon = addonDao.get(((HashMap<String, Object>) modifierAddon.get("addon")).get("id").toString());
+    double price = Double.parseDouble(modifierAddon.get("price").toString());
+    ModifierAddon modifierAddonEntity = new ModifierAddon();
+    modifierAddonEntity.setModifier(entity);
+    modifierAddonEntity.setAddon(addon);
+    modifierAddonEntity.setPrice(price);
+    modifierAddonEntity.setDefault(modifierAddon.get("isDefault") == null ? false : Boolean.valueOf(modifierAddon.get("isDefault").toString()));
+    modifierAddonEntity.setCreatedBy("system");
+    modifierAddonEntity.setCreatedDate(new Date());
+    return modifierAddonEntity;
+  }
 
   @PUT
   @ApiOperation(value = "update Modifier")
@@ -304,30 +170,55 @@ public class ModifierResource extends AbstractResource<Modifier> {
   public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       Modifier modifier = dao.get(id);
-      Restaurant restaurant = restaurantDao.get((String) inputMap.get("restaurantId"));
-      modifier = getEntityForUpdate(modifier, inputMap);
-      try {
-        if (modifier != null) {
-          dao.update(modifier);
-          restaurant.addModifier(modifier);
-          return ResourceUtils.asSuccessResponse(Status.OK, getMapFromEntity(modifier));
+       if (modifier != null) {
+         return super.update(access, id, inputMap);
         }
-        else {
-          return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("modifier not found"));
-        }
+       else {
+         return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Add on not found"));
+       }
       }
-      catch (RollbackException e) {
-        LOGGER.debug("Error updating entity.", e);
-        return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot update entity. Error message: %s", e.getMessage())));
-      }
-      catch (Exception e) {
-        LOGGER.debug("Error updating entity.", e);
-        return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, new ServiceErrorMessage(String.format("Cannot update entity. Error message: %s", e.getMessage())));
-      }
-    }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
+  @Override
+  protected Modifier getEntityForUpdate(Modifier modifier, HashMap<String, Object> inputMap) {
+    modifier.setName(inputMap.get("name").toString());
+    modifier.setDescription(inputMap.get("description").toString());
+    modifier.setMultipleSelection(Boolean.parseBoolean(inputMap.get("isMultipleSelection").toString()));
+    modifier.setMinSelection(Integer.parseInt(inputMap.get("minSelection").toString()));
+    modifier.setMaxSelection(inputMap.containsKey("maxSelection") ? Integer.parseInt(inputMap.get("maxSelection").toString()) : modifier.getMinSelection());
+
+    if (inputMap.containsKey("modifierAddon")) {
+      ArrayList<ModifierAddon> newModifierAddons = new ArrayList<ModifierAddon>();
+      ArrayList<ModifierAddon> keepExistingModifierAddons = new ArrayList<ModifierAddon>();
+      List<HashMap<String, Object>> modifierAddonList = (List<HashMap<String, Object>>) inputMap.get("modifierAddon");
+      for (HashMap<String, Object> modifierAddon : modifierAddonList) {
+        boolean foundExisting = false;
+        if (modifierAddon.get("id") != null) {
+          for (ModifierAddon existingModifierAddon : modifier.getModifierAddons()) {
+            if (existingModifierAddon.getId().matches(modifierAddon.get("id").toString())) {
+              existingModifierAddon.setPrice(Double.parseDouble(modifierAddon.get("price").toString()));
+              existingModifierAddon.setDefault(Boolean.valueOf(modifierAddon.get("isDefault").toString()));
+              if (!existingModifierAddon.getAddon().getId().matches(
+                  ((HashMap<String, Object>) modifierAddon.get("addon")).get("id").toString())) {
+                existingModifierAddon.setAddon(addonDao.get(((HashMap<String, Object>) modifierAddon.get("addon")).get("id").toString()));
+                existingModifierAddon.setModifier(modifier);
+              }
+              foundExisting = true;
+              keepExistingModifierAddons.add(existingModifierAddon);
+              break;
+            }
+          }
+        }
+        if (!foundExisting) {
+          newModifierAddons.add(createNewModifierAddon(modifierAddon, modifier));
+        }
+      }
+      modifier.getModifierAddons().retainAll(keepExistingModifierAddons);
+      modifier.addAllModifierAddon(newModifierAddons);
+    }
+    return modifier;
+  }
 
   @DELETE
   @Path("/{id}")
@@ -342,15 +233,23 @@ public class ModifierResource extends AbstractResource<Modifier> {
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      Modifier modifier = dao.get(id);
-      if (modifier != null) {
-        return super.delete(access, id);
-      }
-      else {
-        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("modifier not found"));
-      }
+      return super.delete(access, id);
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
+  @Override
+  protected HashMap<String, Object> getMapFromEntity(Modifier entity) {
+    HashMap<String, Object> dto = new LinkedHashMap<>();
+		dto.put("id", entity.getId());
+    dto.put("name", entity.getName());
+		dto.put("description", entity.getDescription());
+		dto.put("isMultipleSelection", entity.isMultipleSelection());
+		dto.put("minSelection", entity.getMinSelection());
+		dto.put("maxSelection", entity.getMaxSelection());
+    dto.put("modifierAddon", ModelHelpers.fromEntities(entity.getModifierAddons()));
+    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    returnMap.put(getClassT().getSimpleName().toLowerCase(), dto);
+    return returnMap;
+  }
 }

@@ -1,11 +1,16 @@
 package com.dinenowinc.dinenow.model;
 
-import java.util.Date;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
@@ -13,49 +18,37 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 @Entity
 @Table(name="modifier_addon")
 @Audited
-@NamedQueries({@NamedQuery(name="ModifierAddOn.GetAll", query = "from ModifierAddOn a")})
+@NamedQueries({@NamedQuery(name="ModifierAddon.GetAll", query = "from ModifierAddon a")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-
-//InfoBase<Addon>
 @JsonAutoDetect
-public class ModifierAddOn extends InfoAddOn<Addon>{
+public class ModifierAddon extends BaseEntity {
 
-	@Column(nullable=false)
-	private AvailabilityStatus availStatus;
 	@Column(nullable=false,columnDefinition="Decimal(10,2)")
 	private double price;
-	@Column(nullable=false)
-	private boolean is_default;
-	
-	
-	
-	public ModifierAddOn() {
-		setCreatedBy("Auto");
-		setCreatedDate(new Date());
-	}
-	
-	public ModifierAddOn(Addon addon) {
-		setAddOn(addon);
-	}
-	
-	
-	public boolean isDefault() {
-		return is_default;
-	}
+
+	@Column(nullable=false, name="is_default")
+	private boolean isDefault;
+
+  @JsonIgnore
+  @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_addon", nullable = false, foreignKey = @ForeignKey(name = "Fk_modifieraddon_addon"))
+  private Addon addon = null;
+
+  @JsonIgnore
+  @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_modifier", nullable = false, foreignKey = @ForeignKey(name = "Fk_modifieraddon_modifier"))
+  private Modifier modifier = null;
 
 	public void setDefault(boolean isDefault) {
-		this.is_default = isDefault;
+		this.isDefault = isDefault;
 	}
-	
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch= FetchType.LAZY)
-//    @JoinColumn(name="id_size")	
-//	private final Set<Size> size = new HashSet<Size>();
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch= FetchType.LAZY)
-//    @JoinColumn(name="id_addon")	
-//	private final Set<Addon> addOns = new HashSet<Addon>();
+
 	public double getPrice() {
 		return price;
 	}
@@ -64,19 +57,29 @@ public class ModifierAddOn extends InfoAddOn<Addon>{
 		this.price = price;
 	}
 
-	public AvailabilityStatus getAvailStatus() {
-		return availStatus;
-	}
+  public Addon getAddon() {
+    return addon;
+  }
 
-	public void setAvailStatus(AvailabilityStatus availStatus) {
-		this.availStatus = availStatus;
-	}
+  public void setAddon(final Addon addon) {
+    this.addon = addon;
+  }
 
-	public boolean isIs_default() {
-		return is_default;
-	}
+  public Modifier getModifier() {
+    return modifier;
+  }
 
-	public void setIs_default(boolean is_default) {
-		this.is_default = is_default;
-	}
+  public void setModifier(final Modifier modifier) {
+    this.modifier = modifier;
+  }
+
+  @Override
+  public HashMap<String, Object> toDto() {
+    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    dto.put("id", this.getId());
+    dto.put("price", this.getPrice());
+    dto.put("isDefault", this.isDefault);
+    dto.put("addon", this.getAddon().toDto());
+    return dto;
+  }
 }

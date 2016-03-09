@@ -36,7 +36,7 @@ import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.OrderStatus;
 import com.dinenowinc.dinenow.model.OrderType;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.SizeInfo;
+import com.dinenowinc.dinenow.model.ItemSize;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -48,8 +48,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResources extends AbstractResource<Cart> {
-	
-	
+
 	@Inject
 	CustomerDao customerDao;
 	
@@ -61,13 +60,14 @@ public class CartResources extends AbstractResource<Cart> {
 	
 	@Inject
 	CartItemDao cartItemDao;
-	
-	
+
 	@Inject 
 	private OrderDetailsDao orderDetailsDao;
+
 	@Inject
 	private ItemDao itemDao;
-	@Inject 
+
+	@Inject
 	private OrderDao orderDao;
 
 	@Override
@@ -119,7 +119,7 @@ public class CartResources extends AbstractResource<Cart> {
 			//	cartItem.setPrice(Double.parseDouble(hashMap.get("price").toString()));
 				cartItem.setQuantity(Integer.parseInt(hashMap.get("quantity").toString()));
 				Item item = itemDao.findOne(hashMap.get("itemid").toString(),dto.get("restaurantId").toString());
-				for(SizeInfo size : item.getSizes()){
+				for(ItemSize size : item.getItemSizes()){
 					if(hashMap.get("sizeId").toString().equals(size.getId())){
 						subtotal  = subtotal + cartItem.getQuantity()*size.getPrice();
 						System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+subtotal);
@@ -127,7 +127,7 @@ public class CartResources extends AbstractResource<Cart> {
 					}
 				}
 				cartItem.setNote(item.getNotes());
-				item.addCartItems(cartItem);
+				//item.addCartItems(cartItem); // TODO: Commented temp
 				cartItem.setCart(co);
 				co.addCartItem(cartItem);
 				cartItem.setPrice(subtotal);

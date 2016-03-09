@@ -3,6 +3,7 @@ package com.dinenowinc.dinenow.model;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -118,7 +119,7 @@ public class Coupon extends BaseEntity{
 	
 	@Override
 	public HashMap<String, Object> toDto() {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", this.getId());
 		dto.put("couponCode", this.getCoupon_code());
 		dto.put("couponType", this.getCoupon_type());		

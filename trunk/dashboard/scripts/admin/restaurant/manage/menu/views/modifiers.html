@@ -22,30 +22,17 @@
     <div class="col-md-12">
       <div class="fix-row"></div>
       <table ng-table="tableParams" class="table table-condensed">
-        <!--<thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Multiple Selections</th>
-            <th>Min. Selections</th>
-            <th>Max. Selections</th>
-            <th>Items</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>-->
         <tbody>
           <tr ng-repeat="modifier in $data | filter:modifierSearch">
-            <td ng-bind="modifier.name" data-title="'Name'" sortable="'name'">
+            <td class="text-center" ng-bind="modifier.name" data-title="'Name'" sortable="'name'">
             </td>
-            <td ng-bind="modifier.description" data-title="'Description'" sortable="'description'">    
+            <td class="text-center" ng-bind="modifier.description" data-title="'Description'" sortable="'description'">
             </td>
-            <td ng-bind="modifier.isSelectMultiple ? 'Yes' : 'No'" data-title="'Multiple Selections'" sortable="'isSelectMultiple'">    
+            <td class="text-center" ng-bind="modifier.isSelectMultiple ? 'Yes' : 'No'" data-title="'Multiple Selections'" sortable="'isSelectMultiple'">
             </td>
-            <td ng-bind="modifier.minSelection" data-title="'Min. Selections'" sortable="'minSelection'">    
+            <td class="text-center" ng-bind="modifier.minSelection" data-title="'Min. Selections'" sortable="'minSelection'">
             </td>
-            <td ng-bind="modifier.maxSelection" data-title="'Max. Selections'" sortable="'maxSelection'">    
-            </td>
-            <td ng-bind="modifier.items" data-title="'Items'" sortable="'items'">    
+            <td class="text-center" ng-bind="modifier.maxSelection" data-title="'Max. Selections'" sortable="'maxSelection'">
             </td>
             <td class="text-center" style="white-space: nowrap">
               <div class="buttons">

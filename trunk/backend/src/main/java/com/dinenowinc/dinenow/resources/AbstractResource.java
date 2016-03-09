@@ -111,7 +111,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
     }
     catch (RollbackException e) {
       LOGGER.debug("Error creating entity.", e);
-      response = ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(String.format("This entity is already exists.")));
+      response = ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(String.format("Error creating entity: %s", e.getMessage())));
     }
     catch (Exception e) {
       LOGGER.debug("Error creating entity.", e);

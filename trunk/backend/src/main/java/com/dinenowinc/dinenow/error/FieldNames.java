@@ -10,7 +10,7 @@ public interface FieldNames {
 
     public static final String validateForCreation = "validateForCreation";
     public static final String validateForUpdate = "validateForUpdate";
-    public static final String validateForAdd = "validateForAdd";
+    public static final String validateForAdd = "validateForCreation";
     public static final String validateForCreationSocial = "validateForCreationSocial";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";

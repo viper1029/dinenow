@@ -17,9 +17,9 @@ import org.hibernate.annotations.NamedQuery;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@NamedQueries({@NamedQuery(name="Keyword.GetAll", query = "from Keyword k")})
+@NamedQueries({@NamedQuery(name="ItemKeyword.GetAll", query = "from ItemKeyword k")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Keyword extends BaseEntity {
+public class ItemKeyword extends BaseEntity {
 
 	private String name;
 	

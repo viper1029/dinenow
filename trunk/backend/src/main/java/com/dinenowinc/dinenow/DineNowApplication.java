@@ -24,7 +24,6 @@ import com.dinenowinc.dinenow.resources.RoleResource;
 import com.dinenowinc.dinenow.resources.SecuredResource;
 import com.dinenowinc.dinenow.resources.SizeResource;
 import com.dinenowinc.dinenow.resources.StripeResource;
-import com.dinenowinc.dinenow.resources.SubMenuResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JWTAuthFilter;
 import com.github.toastshaman.dropwizard.auth.jwt.JsonWebTokenParser;
 import com.github.toastshaman.dropwizard.auth.jwt.hmac.HmacSHA512Verifier;
@@ -155,7 +154,6 @@ public class DineNowApplication extends Application<ApplicationConfiguration> {
     environment.jersey().register(guiceBundle.getInjector().getInstance(ItemResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(MenuResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(CategoryResource.class));
-    environment.jersey().register(guiceBundle.getInjector().getInstance(SubMenuResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(SecuredResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(AddressBookResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(StripeResource.class));

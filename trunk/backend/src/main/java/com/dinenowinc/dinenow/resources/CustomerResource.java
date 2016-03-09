@@ -4,7 +4,6 @@ import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -432,13 +431,10 @@ public class CustomerResource extends AbstractResource<Customer>{
 			for (Item item : listItem) {
 				HashMap<String, Object> itemtemp = new HashMap<String, Object>();
 				itemtemp.put("id",item.getId());
-				itemtemp.put("availabilityStatus",item.getAvailabilityStatus());
-				itemtemp.put("itemName",item.getItemName());
-				itemtemp.put("itemDescription",item.getItemDescription());
+				itemtemp.put("itemName",item.getName());
+				itemtemp.put("itemDescription",item.getDescription());
 				itemtemp.put("notes",item.getNotes());
-				itemtemp.put("spiceLevel",item.getSpiceLevel());
-				itemtemp.put("linkImage",item.getLinkImage());
-				itemtemp.put("isVegeterian",item.isVegeterian());
+				itemtemp.put("linkImage",item.getImage());
 				items.add(itemtemp);
 //				if (restaurantInfo == null) {
 //					restaurantInfo = restaurantDao.findByItemId(item.getId());

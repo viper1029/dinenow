@@ -255,17 +255,17 @@ public class DatabaseFiller {
 			Item item3 = new Item("item 3", "item test 3", "notes test 3", true, 3, AvailabilityStatus.PAUSED, "http://media.lamsao.com//Resources/Data/News/Auto/huongptp/201301/huongptp20131151413686_1.jpg","trong",date);
 
 			
-			CategoryInfo cInfo = new CategoryInfo();
-			Set<ItemInfo> itemsinfo1 = new HashSet<ItemInfo>();
-			itemsinfo1.create(new ItemInfo(item1,"trong",date));
-			itemsinfo1.create(new ItemInfo(item2,"trong",date));
-			itemsinfo1.create(new ItemInfo(item3,"trong",date));
+			CategoryItem cInfo = new CategoryItem();
+			Set<ItemPrice> itemsinfo1 = new HashSet<ItemPrice>();
+			itemsinfo1.create(new ItemPrice(item1,"trong",date));
+			itemsinfo1.create(new ItemPrice(item2,"trong",date));
+			itemsinfo1.create(new ItemPrice(item3,"trong",date));
 			cInfo.setCategory(cate1);
 			cInfo.setItems(itemsinfo1);
 			cInfo.setCreatedBy("trong");
 			cInfo.setCreatedDate(date);
 			
-			Set<CategoryInfo> categoryinfo = new HashSet<CategoryInfo>();
+			Set<CategoryItem> categoryinfo = new HashSet<CategoryItem>();
 			categoryinfo.create(cInfo);
 			
 			SubMenu sub1 = new SubMenu();

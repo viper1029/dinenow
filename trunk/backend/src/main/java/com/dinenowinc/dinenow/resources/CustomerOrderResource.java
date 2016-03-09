@@ -40,7 +40,7 @@ import com.dinenowinc.dinenow.model.OrderDetail;
 import com.dinenowinc.dinenow.model.OrderStatus;
 import com.dinenowinc.dinenow.model.OrderType;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.SizeInfo;
+import com.dinenowinc.dinenow.model.ItemSize;
 import com.dinenowinc.dinenow.model.UserRole;
 import com.dinenowinc.dinenow.utils.Utils;
 import com.google.inject.Inject;
@@ -219,13 +219,10 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			for (Item item : listItem) {
 				HashMap<String, Object> itemtemp = new LinkedHashMap<String, Object>();
 				itemtemp.put("id",item.getId());
-				itemtemp.put("availabilityStatus",item.getAvailabilityStatus());
-				itemtemp.put("itemName",item.getItemName());
-				itemtemp.put("itemDescription",item.getItemDescription());
+				itemtemp.put("itemName",item.getName());
+				itemtemp.put("itemDescription",item.getDescription());
 				itemtemp.put("notes",item.getNotes());
-				itemtemp.put("spiceLevel",item.getSpiceLevel());
-				itemtemp.put("linkImage",item.getLinkImage());
-				itemtemp.put("isVegeterian",item.isVegeterian());
+				itemtemp.put("linkImage",item.getImage());
 				items.add(itemtemp);
 			}
 			order.put("items", items);
@@ -432,13 +429,14 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 					od.setCreatedBy(cus.getLastName());
 					od.setCreatedDate(new Date());
 					Item item = itemDao.findOne(hashMap.get("itemId").toString(),dto.get("restaurantId").toString());
-					for(SizeInfo size : item.getSizes()){
+					for(ItemSize size : item.getItemSizes()){
 						if(hashMap.get("sizeId").toString().equals(size.getSize().getId())){
 							subtotal  = subtotal + od.getQuantity()*size.getPrice();
 							break;
 						}
 					}
-					item.addOrderDetails(od);
+					//item.addOrderDetails(od); //TODO: temp comment
+
 					co.addOrderDetail(od);
 					//	 tip = (subtotal*tip)/100;
 					//	  tax = (subtotal*tax)/100;

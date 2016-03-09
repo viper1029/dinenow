@@ -2,6 +2,7 @@ package com.dinenowinc.dinenow.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -37,7 +38,7 @@ private String name;
 	
 	@Override
 	public HashMap<String, Object> toDto() {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", this.getId());
 		dto.put("name", this.getName());	
 		return dto;

@@ -24,23 +24,21 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="notes" class="col-sm-6 control-label align-left">Customer can select multiple items</label>
-							<div class="col-sm-6">
-								<div class="btn-group">
+							<label class="col-sm-6 control-label align-left">Customer can select multiple items</label>
+								<div class="btn-group col-sm-3">
 									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==true]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=true">Yes</button>
 									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==false]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=false;itemToProcess.maxSelection=itemToProcess.minSelection">No</button>
-								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label align-left">Min. Selections</label>
-							<div class="col-sm-3">
+							<label class="col-sm-6 control-label align-left">Min. Selections</label>
+							<div class="col-sm-2">
 								<input name="name" type="number" class="form-control" ng-model="itemToProcess.minSelection" min="0" required>
 							</div>
 						</div>
 						<div class="form-group" ng-if="itemToProcess.isSelectMultiple">
-							<label class="col-sm-3 control-label align-left">Max. Selections</label>
-							<div class="col-sm-3">
+							<label class="col-sm-6 control-label align-left">Max. Selections</label>
+							<div class="col-sm-2">
 								<input name="name" type="number" class="form-control" ng-model="itemToProcess.maxSelection" min="0">
 							</div>
 						</div>
@@ -48,52 +46,32 @@
 					</div>
 
 					<div class="select-item">
-						<label>Items</label>
-						<div ng-repeat="item in itemToProcess.addOns">			
+						<label>Addons</label>
+						<div ng-repeat="item in itemToProcess.modifierAddon">
 				    		<div class="form-inline">
 				    			<div class="form-group pad-bot fix-inline">
-				    				<select name="addons"  class="form-control" ng-model="item.addOn" ng-options="addon.id as addon.name for addon in addons" style="width: 100%">			    			
+				    				<select name="addons"  class="form-control" ng-model="item.addon.id" ng-options="addon.id as addon.name for addon in addons" style="width: 100%">
 				    				</select>
 				    			</div>
 				    			<div class="form-group pad-bot fix-inline">
 				    				<label for="prices" class="control-label">Price: </label>
 				    				<input name="prices" type="number" class="form-control" ng-model="item.price" style="width: 80px" min="0" required>
-				    			</div>		    			
-				    			<div class="form-group pad-bot fix-inline" ng-if="!itemToProcess.isSelectMultiple">
-				    				<div class="checkbox block">
-				    					<label for="default" class="checkbox-inline"><input icheck type="checkbox" name="default" ng-model="item.isDefault" ></label><span style="vertical-align: middle"> Default</span>
-				    				</div>  	
 				    			</div>
+				    				<div class="radio block">
+				    					<label class="radio-inline">
+											<input icheck type="radio" name="default" ng-model="item.isDefault" ng-value="true" ng-change="console.log('ss');">
+                                        </label>
+										<span style="vertical-align: middle"> Default</span>
+				    				</div>
 				    			<div class="form-group pad-bot fix-inline">
-				    				<button type="button" class="btn btn-primary" ng-click="addItems()" ng-show="$last" ng-disabled="!item.addOn"><i class="fa fa-check"></i> Add</button>
+				    				<button type="button" class="btn btn-primary" ng-click="addModifierAddon()" ng-show="$last" ng-disabled="item.addon.id === undefined || item.addon.id === null"><i class="fa fa-plus"></i> Add</button>
 				    				<div ng-show="!$last">
-					    				<button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span class=""> Pause</span></button>
-					    				<button type="button" class="btn btn-primary" ng-click="deleteItem($index)"><i class="fa fa-times"></i><span class=""> Remove</span></button>
+					    				<button type="button" class="btn btn-primary" ng-click="deleteModifierAddon($index)"><i class="fa fa-times"></i><span class=""> Remove</span></button>
 				    				</div>
 				    			</div>	
 				    		</div>
 						</div>
 			    	</div>
-
-			    	<!-- <div class="apply-item">
-			    		<label class="pad-top">Applies to</label>
-						<div ng-repeat="apply in itemToProcess.itemSizes">
-				    		<div class="form-inline">
-				    			<div class="form-group fix-inline pad-bot">
-				    				<select name="items" class="form-control" ng-model="apply.item" ng-options="item.id as item.name for item in items" style="width: 100%">		    				
-				    				</select>
-				    			</div>
-				    			<div class="form-group fix-inline pad-bot">
-					    			<select name="sizes" id="input" class="form-control" ng-model="apply.size" ng-options="size.id as size.name for size in sizes" style="width:100%" ng-if="apply.item">
-					    			</select>
-				    			</div> 
-				    			<div class="form-group fix-inline pad-bot">
-				    				<button type="button" class="btn btn-primary" ng-click="deleteAppliesTo($index)" ng-show="!$last"><i class="fa fa-times"></i> Remove</button>
-				    				<button type="button" class="btn btn-primary" ng-click="addAppliesTo()" ng-show="$last" ng-disabled="!apply.item || !apply.size"><i class="fa fa-check"></i> Add</button>
-				    			</div>					    				
-				    		</div>
-						</div>
-			    	</div> -->
 				</form>
 			</div>
 		</div>
