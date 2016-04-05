@@ -8,10 +8,11 @@ var {
   } = React;
 
 import Swiper from 'react-native-swiper2';
+import {Actions} from 'react-native-router-flux'
 var Modal = require('react-native-modalbox');
-var Button = require('../components/common/button');
-var SignUp = require('./authentication/signup');
-var SignIn = require('./authentication/signin');
+var Button = require('../components/Button');
+var SignUp = require('./Signup');
+var SignIn = require('./Signin');
 
 var height = Dimensions.get('window').height;
 var dot = <View style={{

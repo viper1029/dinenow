@@ -1,13 +1,5 @@
-var React = require('react-native');
-var {
-  View,
-  Text,
-  StyleSheet,
-  TextInput
-} = React;
-
-var Button = require('../components/common/button')
-var fetchAsJson = require('../utils/fetchAsJson');
+import React, { View, Text, StyleSheet,  TextInput} from 'react-native';
+import Button from '../components/Button';
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -18,7 +10,6 @@ module.exports = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
-        <Text>Sign Up</Text>
         <Text style={styles.label}>Enter Address:</Text>
         <TextInput
           style={styles.input}
