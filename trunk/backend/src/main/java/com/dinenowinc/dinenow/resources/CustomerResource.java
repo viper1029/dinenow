@@ -51,10 +51,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource extends AbstractResource<Customer>{
-	
-	//@Auth
-	//User access;
-	
+
 	@Inject
 	private AddressBookDao addressBookDao;
 	

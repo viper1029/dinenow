@@ -16,7 +16,6 @@
     <class>com.dinenowinc.dinenow.model.DeliveryZone</class>
     <class>com.dinenowinc.dinenow.model.Item</class>
     <class>com.dinenowinc.dinenow.model.ItemPrice</class>
-    <class>com.dinenowinc.dinenow.model.ItemSizePrice</class>
     <class>com.dinenowinc.dinenow.model.ItemKeyword</class>
     <class>com.dinenowinc.dinenow.model.Menu</class>
     <class>com.dinenowinc.dinenow.model.Modifier</class>

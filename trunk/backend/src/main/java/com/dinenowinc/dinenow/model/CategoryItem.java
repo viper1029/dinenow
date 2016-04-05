@@ -16,7 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 @Entity
@@ -26,8 +28,8 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CategoryItem extends BaseEntity {
 
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  private final Set<ItemPrice> items = new HashSet<>();
+  @OneToMany(mappedBy = "categoryItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  private final Set<ItemPrice> itemPrices = new HashSet<>();
 
   @JsonIgnore
   @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
@@ -39,8 +41,8 @@ public class CategoryItem extends BaseEntity {
   @JoinColumn(name = "id_menu", nullable = false, foreignKey = @ForeignKey(name = "Fk_menu_categoryitem"))
   private Menu menu = null;
 
-  public Set<ItemPrice> getItems() {
-    return items;
+  public Set<ItemPrice> getItemPrices() {
+    return itemPrices;
   }
 
   public Category getCategory() {
@@ -51,11 +53,11 @@ public class CategoryItem extends BaseEntity {
     this.category = category;
   }
 
-  public void addItem(ItemPrice item) {
-    items.add(item);
+  public void addItemPrice(ItemPrice item) {
+    itemPrices.add(item);
   }
 
-  public void addAllItem(ArrayList<ItemPrice> items) {
+  public void addAllItemPrice(ArrayList<ItemPrice> items) {
     items.addAll(items);
   }
 
@@ -66,4 +68,5 @@ public class CategoryItem extends BaseEntity {
   public void setMenu(final Menu menu) {
     this.menu = menu;
   }
+
 }

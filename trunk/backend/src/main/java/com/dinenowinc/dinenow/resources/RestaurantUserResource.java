@@ -48,12 +48,12 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 	
 	@Inject
     RoleDao  roleDao;
+
 	@Inject
 	RestaurantUserDao restaurantUserDao;
 	
 	public RestaurantUserResource() {
 	}
-
 
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(RestaurantUser entity) {

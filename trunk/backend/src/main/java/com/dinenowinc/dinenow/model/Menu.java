@@ -5,16 +5,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -61,33 +57,33 @@ public class Menu extends BaseEntity {
     return false;
   }
 
-  public String getMenuName() {
+  public String getName() {
     return name;
   }
 
-  public void setMenuName(String menuName) {
+  public void setName(String menuName) {
     this.name = menuName;
   }
 
-  public String getMenuDescription() {
+  public String getDescription() {
     return description;
   }
 
-  public void setMenuDescription(String menuDescription) {
+  public void setDescription(String menuDescription) {
     this.description = menuDescription;
   }
 
-  public Set<CategoryItem> getCategories() {
+  public Set<CategoryItem> getCategoryItem() {
     return categories;
   }
 
-  public void addCategory(CategoryItem category) {
-    getCategories().add(category);
+  public void addCategoryItem(CategoryItem category) {
+    getCategoryItem().add(category);
   }
 
-  public void addAllCategory(ArrayList<CategoryItem> categorys) {
-    getCategories().clear();
-    getCategories().addAll(categorys);
+  public void addAllCategoryItem(ArrayList<CategoryItem> categorys) {
+    getCategoryItem().clear();
+    getCategoryItem().addAll(categorys);
   }
 
   public List<Hour> getHours() {
@@ -133,9 +129,17 @@ public class Menu extends BaseEntity {
   public HashMap<String, Object> toDto() {
     LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
     dto.put("id", this.getId());
-    dto.put("name", this.getMenuName());
-    dto.put("description", this.getMenuDescription());
+    dto.put("name", this.getName());
+    dto.put("description", this.getDescription());
     dto.put("hours", this.getHours());
     return dto;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public void setNotes(final String notes) {
+    this.notes = notes;
   }
 }

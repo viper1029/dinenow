@@ -10,7 +10,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -33,6 +35,11 @@ public class ItemPrice extends BaseEntity {
   @Column(nullable = false, columnDefinition = "Decimal(10,2)")
   private double price;
 
+  @JsonIgnore
+  @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_category_item", nullable = false, foreignKey = @ForeignKey(name = "fk_categoryItem_itemPrice"))
+  private CategoryItem categoryItem = null;
+
   public Item getItem() {
     return this.item;
   }
@@ -54,7 +61,15 @@ public class ItemPrice extends BaseEntity {
     HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
     dto.put("id", this.getId());
     dto.put("price", this.getPrice());
-    dto.put("size", this.item.getId());
+    dto.put("item", this.item.toDto());
     return dto;
+  }
+
+  public CategoryItem getCategoryItem() {
+    return categoryItem;
+  }
+
+  public void setCategoryItem(final CategoryItem categoryItem) {
+    this.categoryItem = categoryItem;
   }
 }

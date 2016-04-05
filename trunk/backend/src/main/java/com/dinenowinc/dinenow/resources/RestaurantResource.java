@@ -246,7 +246,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
           cus.addCustomerOrder(co);
 
 
-          //	double defaultTax = restaurant.getTax() == null ? 0.0 : restaurant.getTax().getTaxValue();
+          //	double defaultTax = restaurant.getTax() == null ? 0.0 : restaurant.getTax().getValue();
 
           //	double amount = calculatorAmount((ArrayList<HashMap<String, Object>>)dto.get("items"), Double.parseDouble(dto.get("tip").toString()), defaultTax, 0);
 
@@ -753,7 +753,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         dtos.get(i).put("addOns", addons);
 
         List<HashMap<String, Object>> itemSizes = new ArrayList<HashMap<String, Object>>();
-//        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItems()) { //TODO: Temp comment
+//        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItemPrices()) { //TODO: Temp comment
 //          HashMap<String, Object> temp = new HashMap<String, Object>();
 //          temp.put("item", itemSizeInfo.getItem().getId());
 //          temp.put("size", itemSizeInfo.getSize().getId());
@@ -1139,8 +1139,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     for (Menu menu : entity.getMenus()) {
       HashMap<String, Object> menuDto = new LinkedHashMap<String, Object>();
       menuDto.put("id", menu.getId());
-      menuDto.put("name", menu.getMenuName());
-      menuDto.put("description", menu.getMenuDescription());
+      menuDto.put("name", menu.getName());
+      menuDto.put("description", menu.getDescription());
       // Submenu
       ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<HashMap<String, Object>>();
 /*			for (SubMenu submenu : menu.getSubMenus()) {
@@ -1150,7 +1150,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 				submenuDto.put("description",submenu.getSubMenuDescription());
 
 				ArrayList<HashMap<String, Object>> categoryDtos = new ArrayList<HashMap<String, Object>>();
-				for (CategoryItem categoryInfo : submenu.getCategories()) {
+				for (CategoryItem categoryInfo : submenu.getCategoryItem()) {
 					HashMap<String, Object> categoryDto = new LinkedHashMap<String, Object>();
 
 					Category category = categoryInfo.getCategory();
@@ -1162,7 +1162,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 					// items
 									ArrayList<HashMap<String, Object>> itemDtos = new ArrayList<HashMap<String, Object>>();
-					for (ItemPrice itemInfo : categoryInfo.getItems()) {
+					for (ItemPrice itemInfo : categoryInfo.getItemPrices()) {
 						HashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
 						Item item = itemInfo.getItem();
 
@@ -1256,8 +1256,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
         HashMap<String, Object> menuDto = new HashMap<String, Object>();
         menuDto.put("id", menu.getId());
-        menuDto.put("menuName", menu.getMenuName());
-        menuDto.put("menuDescription", menu.getMenuDescription());
+        menuDto.put("menuName", menu.getName());
+        menuDto.put("menuDescription", menu.getDescription());
         // Submenu
         ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<HashMap<String, Object>>();
 /*				for (SubMenu submenu : menu.getSubMenus()) {
@@ -1267,7 +1267,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 					submenuDto.put("subMenuDescription",submenu.getSubMenuDescription());
 
 					ArrayList<HashMap<String, Object>> categoryDtos = new ArrayList<HashMap<String, Object>>();
-					for (CategoryItem categoryInfo : submenu.getCategories()) {
+					for (CategoryItem categoryInfo : submenu.getCategoryItem()) {
 						HashMap<String, Object> categoryDto = new HashMap<String, Object>();
 
 						Category category = categoryInfo.getCategory();
@@ -1279,7 +1279,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 						// items
 						Set<HashMap<String, Object>> itemDtos = new HashSet<HashMap<String, Object>>();//new ArrayList<HashMap<String, Object>>();
-						for (ItemPrice itemInfo : categoryInfo.getItems()) {
+						for (ItemPrice itemInfo : categoryInfo.getItemPrices()) {
 							HashMap<String, Object> itemDto = new HashMap<String, Object>();
 							Item item = itemInfo.getItem();
 
@@ -1314,7 +1314,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 							Set<HashMap<String, Object>> addOnDtos = new HashSet<HashMap<String, Object>>();
 							for (ItemModifier modifierInfo : item.getModifiers()) {
 								Modifier modifier = modifierInfo.getModifier();
-								for (ItemSizeInfo hashMap : modifier.getItems()) {
+								for (ItemSizeInfo hashMap : modifier.getItemPrices()) {
 									if (hashMap.getItem().getId().equals(item.getId())) {
 										for (ModifierAddon hashMap2 : modifier.getModifierAddons()) {
 											Addon addon = hashMap2.getAddOn();

@@ -9,7 +9,7 @@
           <factory-entry name="dataMysql" value="fdbddd6e-949f-4aed-94f0-e5bb6d843593" />
           <factory-entry name="postgres" value="fdbddd6e-949f-4aed-94f0-e5bb6d843593" />
         </datasource-mapping>
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/target/classes/META-INF/persistence.xml" />
       </configuration>
     </facet>
   </component>

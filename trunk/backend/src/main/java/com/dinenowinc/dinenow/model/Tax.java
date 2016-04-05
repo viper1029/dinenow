@@ -1,23 +1,21 @@
 package com.dinenowinc.dinenow.model;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.NamedQueries;
-import org.hibernate.annotations.NamedQuery;
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Entity
 @Audited
-@JsonIgnoreProperties(ignoreUnknown = true)
 @NamedQueries({ @NamedQuery(name = "Tax.GetAll", query = "from Tax t") })
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(
     uniqueConstraints = @UniqueConstraint(columnNames = { "name", "id_restaurant" }, name = "tax_uk")
 )
@@ -31,11 +29,11 @@ public class Tax extends BaseEntity {
   @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "value")
   private double value;
 
-  public String getTaxName() {
+  public String getName() {
     return name;
   }
 
-  public void setTaxName(String taxName) {
+  public void setName(String taxName) {
     this.name = taxName;
   }
 
@@ -47,11 +45,11 @@ public class Tax extends BaseEntity {
     this.description = description;
   }
 
-  public double getTaxValue() {
+  public double getValue() {
     return value;
   }
 
-  public void setTaxValue(double taxValue) {
+  public void setValue(double taxValue) {
     this.value = taxValue;
   }
 
@@ -59,9 +57,9 @@ public class Tax extends BaseEntity {
   public HashMap<String, Object> toDto() {
     HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
     dto.put("id", this.getId());
-    dto.put("name", this.getTaxName());
+    dto.put("name", this.getName());
     dto.put("description", this.getDescription());
-    dto.put("value", this.getTaxValue());
+    dto.put("value", this.getValue());
     return dto;
   }
 }

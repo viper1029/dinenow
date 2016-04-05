@@ -277,11 +277,11 @@ public class DatabaseFiller {
 			sub1.setSubMenuNotes("N/A");
 			u1.addSubMenu(sub1);
 			
-			r1.addItem(item1);
-			r1.addItem(item2);
-			r1.addItem(item3);
+			r1.addItemPrice(item1);
+			r1.addItemPrice(item2);
+			r1.addItemPrice(item3);
 			
-			r1.addCategory(cate1);
+			r1.addCategoryItem(cate1);
 			
 			r1.addSubMenu(sub1);
 			

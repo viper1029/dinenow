@@ -36,8 +36,7 @@ public class RoleResource extends AbstractResource<Role>{
 
 	@Inject
     RoleDao  roleDao;
-	
-	
+
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(Role entity) {
 		return entity.toDto();
