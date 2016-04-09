@@ -46,17 +46,6 @@ public class Menu extends BaseEntity {
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private final Set<CategoryItem> categories = new HashSet<>();
 
-  public boolean isShowMenu() {
-    for (Hour hour : getHours()) {
-      Date date_now = new Date();
-      if (hour.getFromTime().compareTo(date_now) < 0
-          && hour.getToTime().compareTo(date_now) > 0) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public String getName() {
     return name;
   }
@@ -119,6 +108,17 @@ public class Menu extends BaseEntity {
       this.hours = "";
       e.printStackTrace();
     }
+  }
+
+  public boolean isShowMenu() {
+    for (Hour hour : getHours()) {
+      Date date_now = new Date();
+      if (hour.getFromTime().compareTo(date_now) < 0
+          && hour.getToTime().compareTo(date_now) > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void addHour(Hour hour) {

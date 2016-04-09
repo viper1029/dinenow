@@ -18,9 +18,11 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name="payment_type")
+@Audited
 @NamedQueries({@NamedQuery(name="PaymentType.GetAll", query = "from PaymentType p")})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentType extends BaseEntity {
