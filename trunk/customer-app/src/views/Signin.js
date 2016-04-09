@@ -1,25 +1,21 @@
-var React = require('react-native');
-var {
-  View,
-  Text,
-  StyleSheet,
-  TextInput
-} = React;
+/*
+import React, {Component, View, Text, StyleSheet, TextInput} from 'react-native';
+import Button from '../components/Button';
+import {Actions} from 'react-native-router-flux'
 
-var Button = require('../../components/common/button');
-var fetchAsJson = require('../../utils/fetchAsJson');
-
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+export default class SignIn extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       userId: '',
       userName: '',
       firstName: '',
       lastName: '',
       password: ''
-    };
-  },
-  render: function() {
+    }
+  }
+
+  render() {
     return (
       <View style={styles.container}>
         <Text>Sign In</Text>
@@ -42,35 +38,16 @@ module.exports = React.createClass({
         <Button text={'Sign Up'} onPress={this.onSignUpPress} />
       </View>
     );
-  },
-  onSignInPress: function(){
+  }
+
+  onSignInPress(){
     this.logIn();
-  },
+  }
+
   onSignUpPress(){
     this.props.navigator.push({name: 'signup'});
-  },
-  logIn: function() {
-  var params =  {
-  method: 'POST',
-  headers: {
-    'Authentication': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OTA=',
-    'Content-Type': 'application/json',
   }
 };
-    var json = fetchAsJson('http://192.168.1.120:30505/api/v1/auth/login', params)
-      .then(function(json) {
-        this.setState({
-          userId : json.user.id,
-          firstName : json.user.firstName,
-          lastName : json.user.lastName
-        });
-        this.props.navigator.immediatelyResetRouteStack([{ name: 'search'}]);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  }
-});
 
 var styles = StyleSheet.create({
   container : {
@@ -92,3 +69,4 @@ var styles = StyleSheet.create({
     fontSize: 18
   }
 });
+*/
