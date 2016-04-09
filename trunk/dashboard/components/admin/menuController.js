@@ -73,23 +73,13 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                 return item.id == $scope.menuTree.id ? "item-active" : void 0
             };
 
-            $scope["delete"] = function (node, value) {
-                node.remove();
-                for (var isMatchId = !1, i = 0; i < $scope.submenuTree.length; i++)
-                    if ($scope.submenuTree[i].id == value.id) {
-                        isMatchId = !0;
-                        break
-                    }
-                isMatchId || $scope.submenuTree.push(value)
-            };
-
-            $scope.resetForm = function () {
+                      $scope.resetForm = function () {
                 $scope.menuTree = {
                     menuName: "",
                     menuDescription: "",
-                    submenus: []
+
                 };
-                $scope.submenuTree = angular.copy($scope.tempSubmenuTree)
+
             };
 
             $scope.refreshView = function (data) {
@@ -103,6 +93,11 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                     isMatchId || ($scope.menuList = [], $scope.resetForm(), alertify.success("Created Successfully")), getMenuList()
                 }
             };
+
+            $scope.$watch('models', function(model) {
+                $scope.modelAsJson = JSON.stringify(menu, null, "   ");
+            }, true);
+
 
             $scope.syncObject = function (obj) {
                 var temp = {
@@ -174,11 +169,11 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                             for (var j = 0; j < $scope.categoriesTree.length; j++) {
                                 $scope.categoriesTree[j].id == $scope.menu.categoryItem[i].category.id && $scope.categoriesTree.splice(j, 1);
                             }
-                            for (var j = 0; j < $scope.menu.categoryItem[i].itemPrice.length; j++) {
-                                for (var k = 0; k < $scope.itemsTree.length; k++) {
-                                    $scope.menu.categoryItem[i].itemPrice[j].item.id == $scope.itemsTree[k].id && $scope.itemsTree.splice(k, 1)
-                                }
-                            }
+                            //for (var j = 0; j < $scope.menu.categoryItem[i].itemPrice.length; j++) {
+                            //    for (var k = 0; k < $scope.itemsTree.length; k++) {
+                            //        $scope.menu.categoryItem[i].itemPrice[j].item.id == $scope.itemsTree[k].id && $scope.itemsTree.splice(k, 1)
+                            //    }
+                            //}
                         }
                         item.editLoading = !1
                     }).error(function () {
@@ -188,7 +183,7 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
             };
 
             $scope.dragoverCallback = function (event, index, external, type) {
-                $scope.logListEvent('dragged over', event, index, external, type)
+                //$scope.logListEvent('dragged over', event, index, external, type)
                 // Disallow dropping in the third row. Could also be done with dnd-disable-if.
                 return index < 10
             };
@@ -204,10 +199,78 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                 return item
             };
 
+            $scope.addCategory = function (event, index, item, external, type, allowedType) {
+                if(type === allowedType ) {
+                    var newCategory = {
+                        category: angular.copy(item),
+                        itemPrice: []
+                    };
+                    $scope.menu.categoryItem.splice(index, 0, newCategory);
+                    $scope.categoriesTree.splice(index, 1)
+                }
+                return false;
+
+            };
+
+            $scope.addItem = function (event, index, item, external, type, allowedType, categoryItem) {
+                var newItemPrice = {
+                    item: angular.copy(item)
+                    price: item.price
+                };
+                var categoryItemIndex = $scope.menu.categoryItem.indexOf(categoryItem);
+                if(categoryItemIndex!==(-1)) {
+                    $scope.menu.categoryItem[categoryItemIndex].itemPrice.splice(index, 0, newItemPrice);
+                }
+
+                return false;
+            };
+
+            $scope.removeCategory = function(index, categoryItem) {
+                var categoryItemIndex = $scope.menu.categoryItem.indexOf(categoryItem);
+                if(categoryItemIndex!==(-1)) {
+                    var numOfItemPrice = $scope.menu.categoryItem[categoryItemIndex].itemPrice.length
+                    if(numOfItemPrice === 0) {
+                        $scope.menu.categoryItem.splice(categoryItemIndex, 1);
+                        $scope.categoriesTree.push(categoryItem.category)
+                    }
+                    else {
+                        alertify.confirm("Are you sure you want to delete this category?<br/><br />" +
+                            "<b>Warning:</b> All items in the category will be removed.", function (e) {
+                            $scope.categoriesTree.push(categoryItem.category)
+                            $scope.menu.categoryItem.splice(index, 1);
+                        })
+                    }
+                }
+
+                //var temp = $scope.menu.categoryItem[categoryIndex].item[itemIndex];
+
+            };
+
+            $scope.removeItemFromCategory = function(categoryItem, itemPrice) {
+                var categoryItemIndex = $scope.menu.categoryItem.indexOf(categoryItem);
+                if(categoryItemIndex!==(-1)) {
+                    var itemPriceIndex = $scope.menu.categoryItem[categoryItemIndex].itemPrice.indexOf(itemPrice);
+                    if(itemPriceIndex!==(-1)) {
+                        $scope.menu.categoryItem[categoryItemIndex].itemPrice.splice(itemPriceIndex, 1);
+                        //$scope.itemsTree.push(itemPrice.item);
+                    }
+                }
+
+                //var temp = $scope.menu.categoryItem[categoryIndex].item[itemIndex];
+
+            };
+
+            $scope.dragoverCategoryItemCallback = function (event, index, external, type) {
+                $scope.draggingAtIndex = index;
+                return index < 10
+            };
+
             $scope.logEvent = function (message, event) {
                 console.log(message, '(triggered by the following', event.type, 'event)')
                 console.log(event)
             };
+
+
 
             $scope.logListEvent = function (action, event, index, external, type) {
                 var message = external ? 'External ' : ''

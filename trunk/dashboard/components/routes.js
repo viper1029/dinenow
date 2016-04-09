@@ -10,7 +10,6 @@ angular.module('app.controllers',["app.security.service", "app.security.login", 
    "app.admin.restaurant.manage.menu.categories", 
    "app.admin.restaurant.manage.menu.items",
  "app.admin.restaurant.manage.menu.menus",
-  "app.admin.restaurant.manage.menu.submenu", 
  "app.admin.restaurant.manage.menu.sizes", 
  "app.admin.restaurant.manage.menu.addon", 
  "app.admin.restaurant.manage.menu.modifiers","app.admin.orders.services"]);
@@ -172,19 +171,6 @@ delete $httpProvider.defaults.headers.common['X-Requested-With'];
         url: "/categories",
         templateUrl: "scripts/admin/restaurant/manage/menu/views/categories.html",
         controller: "AdminCategoriesController"
-    }).state("app.admin.restaurant.manage.menu.submenu", {
-        url: "/submenu",
-        templateUrl: "scripts/admin/restaurant/manage/menu/views/submenu.html",
-        controller: "AdminSubmenuController"
-    }).state("app.admin.restaurant.manage.menu.submenu.list", {
-        url: "/",
-        templateUrl: "scripts/admin/restaurant/manage/menu/views/submenu-list.html"
-    }).state("app.admin.restaurant.manage.menu.submenu.create", {
-        url: "/add",
-        templateUrl: "scripts/admin/restaurant/manage/menu/views/submenu-create.html"
-    }).state("app.admin.restaurant.manage.menu.submenu.edit", {
-        url: "/edit",
-        templateUrl: "scripts/admin/restaurant/manage/menu/views/submenu-create.html"
     }).state("app.admin.restaurant.manage.menu.menus", {
         url: "/menus",
         templateUrl: "scripts/admin/restaurant/manage/menu/views/menus.html",
@@ -284,19 +270,6 @@ delete $httpProvider.defaults.headers.common['X-Requested-With'];
         url: "/categories",
         templateUrl: "scripts/owner/menu/views/categories.html",
         controller: "CategoriesController"
-    }).state("app.owner.menu.submenu", {
-        url: "/submenu",
-        templateUrl: "scripts/owner/menu/views/submenu.html",
-        controller: "SubmenuController"
-    }).state("app.owner.menu.submenu.list", {
-        url: "/",
-        templateUrl: "scripts/owner/menu/views/submenu-list.html"
-    }).state("app.owner.menu.submenu.create", {
-        url: "/add",
-        templateUrl: "scripts/owner/menu/views/submenu-create.html"
-    }).state("app.owner.menu.submenu.edit", {
-        url: "/edit",
-        templateUrl: "scripts/owner/menu/views/submenu-create.html"
     }).state("app.owner.menu.menus", {
         url: "/menus",
         templateUrl: "scripts/owner/menu/views/menus.html",
@@ -356,7 +329,7 @@ delete $httpProvider.defaults.headers.common['X-Requested-With'];
 angular.module("app.admin.orders", ["app.admin.orders.services"])
 
 
-angular.module("app.owner.menu", ["app.owner.menu.service", "app.owner.menu.categories", "app.owner.menu.items", "app.owner.menu.menus", "app.owner.menu.submenu", "app.owner.menu.modifiers", "app.owner.menu.sizes", "app.owner.menu.addon"]).config(function($stateProvider) {
+angular.module("app.owner.menu", ["app.owner.menu.service", "app.owner.menu.categories", "app.owner.menu.items", "app.owner.menu.menus", "app.owner.menu.modifiers", "app.owner.menu.sizes", "app.owner.menu.addon"]).config(function($stateProvider) {
     $stateProvider.state("app.owner.menu", {
         abtract: !0,
         url: "/menu",
@@ -370,19 +343,6 @@ angular.module("app.owner.menu", ["app.owner.menu.service", "app.owner.menu.cate
         url: "/categories",
         templateUrl: "scripts/owner/menu/views/categories.html",
         controller: "CategoriesController"
-    }).state("app.owner.menu.submenu", {
-        url: "/submenu",
-        templateUrl: "scripts/owner/menu/views/submenu.html",
-        controller: "SubmenuController"
-    }).state("app.owner.menu.submenu.list", {
-        url: "/",
-        templateUrl: "scripts/owner/menu/views/submenu-list.html"
-    }).state("app.owner.menu.submenu.create", {
-        url: "/add",
-        templateUrl: "scripts/owner/menu/views/submenu-create.html"
-    }).state("app.owner.menu.submenu.edit", {
-        url: "/edit",
-        templateUrl: "scripts/owner/menu/views/submenu-create.html"
     }).state("app.owner.menu.menus", {
         url: "/menus",
         templateUrl: "scripts/owner/menu/views/menus.html",
@@ -462,7 +422,7 @@ angular.module("app.owner", ["app.owner.menu", "app.owner.restaurant", "app.owne
 });
 
 angular.module("app.admin.restaurant.manage.menu", ["app.admin.restaurant.manage.menu.service", "app.admin.restaurant.manage.menu.categories", "app.admin.restaurant.manage.menu.items",
- "app.admin.restaurant.manage.menu.menus", "app.admin.restaurant.manage.menu.submenu", 
+ "app.admin.restaurant.manage.menu.menus",
  "app.admin.restaurant.manage.menu.sizes", "app.admin.restaurant.manage.menu.addon", 
  "app.admin.restaurant.manage.menu.modifiers"]);
 

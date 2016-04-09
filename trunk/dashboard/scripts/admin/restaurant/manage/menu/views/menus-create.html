@@ -78,7 +78,7 @@
                   </div>
 
                 </div>
-                <div class="advancedDemo  wrap-drop-item">
+                <div class="advancedDemo  wrap-drop-item menu-item-drag-box">
                   <div class="dropzone box box-yellow drop-item" ng-include="'advanced3.html'"></div>
                 </div>
                 <!-- drop items -->
@@ -111,36 +111,35 @@
 
 <script type="text/ng-template" id="advanced1.html">
 
-  <ul class="wrap-drop-item submenu-left-drag" dnd-list="MenuTree"
+  <ul class="wrap-drop-item menu-drag-box" dnd-list="MenuTree"
       dnd-allowed-types="['categoryType']"
       dnd-external-sources="true"
       dnd-dragover="dragoverCallback(event, index, external, type)"
-      dnd-drop="dropCallback(event, index, item, external, type, 'containerType')">
-    <li ng-repeat="categoryItem in menu.categoryItem"
-        dnd-draggable="categoryItem"
+      dnd-drop="addCategory(event, index, item, external, type, 'categoryType')">
+    <li ng-repeat="catItem in menu.categoryItem"
         dnd-type="'categoryItemType'"
-        dnd-effect-allowed="copyMove"
-        dnd-moved="menu.categoryItem.splice($index, 1)">
+        dnd-effect-allowed="copyMove">
       <div class="container-element box box-blue">
-        <h3 class="main-cat-heading"><i class="fa fa-arrows">&nbsp;</i>{{categoryItem.category.name}}</h3>
+        <h3 class="main-cat-heading"><i class="fa fa-arrows">&nbsp;</i>{{catItem.category.name}}
+          <span><button class="btn btn-sm btn-primary align-right" ng-click="removeCategory($index, catItem)"><i class="fa fa-times"></i> Remove</button></span>
+        </h3>
         <ul dnd-list="categoryItem.itemPrice"
             dnd-allowed-types="['itemType']"
             dnd-horizontal-list="true"
-            dnd-external-sources="true"
-            dnd-dragover="dragoverCallback(event, index, external, type)"
-            dnd-drop="dropCallback(event, index, item, external, type, 'itemType')"
+            dnd-external-sources="false"
+            dnd-dragover="dragoverCategoryItemCallback(event, index, external, type)"
+            dnd-drop="addItem(event, index, item, external, type, 'itemType', catItem)"
             dnd-inserted="logEvent('Element was inserted at position ' + index, event)"
             class="itemlist">
-          <li ng-repeat="itemPrice in categoryItem.itemPrice"
-              dnd-draggable="itemPrice"
+          <li ng-repeat="itemPrice in catItem.itemPrice"
               dnd-type="'itemType'"
               dnd-effect-allowed="copyMove"
               dnd-dragstart="logEvent('Started to drag an item', event)"
-              dnd-moved="itemPrice.splice($index, 1); logEvent('Item moved', event)"
               dnd-copied="logEvent('Item copied', event)"
               dnd-canceled="logEvent('Drag operation canceled', event)"
               dnd-dragend="logEvent('Drag operation ended', event)">
-            <i class="fa fa-arrows"></i>  {{itemPrice.item.name}}
+            <i class="fa fa-arrows"></i> {{itemPrice.item.name}}
+              <button class="btn btn-sm btn-primary align-right" ng-click="removeItemFromCategory(catItem, itemPrice)"><i class="fa fa-times"></i> Remove</button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -152,7 +151,7 @@
 <script type="text/ng-template" id="advanced2.html">
   <ul dnd-list="categoriesTree"
       dnd-allowed-types="['categoryType']"
-      dnd-external-sources="true"
+      dnd-external-sources="false"
       dnd-dragover="dragoverCallback(event, index, external, type)"
       dnd-drop="dropCallback(event, index, item, external, type, 'containerType')">
     <li ng-repeat="category in categoriesTree| filter:categorySearch"
@@ -173,11 +172,11 @@
   <ul dnd-list="itemsTree"
       dnd-allowed-types="['itemType']"
       dnd-horizontal-list="true"
-      dnd-external-sources="true"
+      dnd-external-sources="false"
       dnd-dragover="dragoverCallback(event, index, external, type)"
       dnd-drop="dropCallback(event, index, item, external, type, 'itemType')"
       dnd-inserted="logEvent('Element was inserted at position ' + index, event)"
-      class="itemlist">
+      class="itemlist menu-item-drag-box">
     <li ng-repeat="item in itemsTree| filter:itemSearch"
         dnd-draggable="item"
         dnd-type="'itemType'"

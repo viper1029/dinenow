@@ -16212,13 +16212,18 @@ li.L9 {
   padding: 5px !important;
   cursor: move;
 }
-.submenu-left-drag {
+.menu-drag-box {
   margin-top: 8px;
   margin-bottom: 8px;
-  min-height: 315px;
+  min-height: 500px;
+  max-height: 500px;
 }
 .submenu-left-drag .angular-ui-tree-empty {
   min-height: 290px !important;
+}
+.menu-item-drag-box{
+    min-height: 350px !important;
+    max-height: 350px !important;
 }
 .child-item {
   list-style: none;
@@ -16266,10 +16271,10 @@ li.L9 {
   background-color: #ddd;
   border: medium none;
   border-radius: 0.25em;
-  float: left;
-  font-size: 15px;
+  /*float: left;*/
+  font-size: 14px;
   margin: 5px;
-  padding: 10px;
+  padding: 7px;
   text-align: left;
   width: 100%;
   cursor: pointer;
@@ -16277,6 +16282,5 @@ li.L9 {
   font-weight: 400;
 }
 .advancedDemo .dropzone ul[dnd-list] {
-  min-height: 200px;
   padding-left: 20px;
 }

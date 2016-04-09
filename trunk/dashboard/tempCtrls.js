@@ -3,7 +3,6 @@ angular.module("app.owner.menu", [
     "app.owner.menu.categories",
     "app.owner.menu.items",
     "app.owner.menu.menus",
-    "app.owner.menu.submenu",
     "app.owner.menu.modifiers",
     "app.owner.menu.sizes",
     "app.owner.menu.addon"])

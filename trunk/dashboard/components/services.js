@@ -494,22 +494,6 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return $http["delete"](ROOT + "items/" + params.id)
         }
     }
-}]).factory("submenusResource", ["$http", "$rootScope", "ROOT", function($http, $rootScope, ROOT) {
-    return {
-        addOrUpdate: function(params) {
-            var action = "post";
-            return params.id ? (action = "put", $http[action](ROOT + "submenus/" + params.id, params)) : $http[action](ROOT + "submenus", params)
-        },
-        get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/submenus")
-        },
-        getByID: function(params) {
-            return $http.get(ROOT + "submenus/" + params.id)
-        },
-        "delete": function(params) {
-            return $http["delete"](ROOT + "submenus/" + params.id)
-        }
-    }
 }]).factory("menusResource", ["$http", "$rootScope", "ROOT", function($http, $rootScope, ROOT) {
     return {
         addOrUpdate: function(params) {
@@ -719,22 +703,6 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
         },
         "delete": function(params) {
             return $http["delete"](ROOT + "items/" + params.id)
-        }
-    }
-}]).factory("adminSubmenusResource", ["$http", "ROOT", function($http, ROOT) {
-    return {
-        addOrUpdate: function(params) {
-            var action = "post";
-            return params.id ? (action = "put", $http[action](ROOT + "submenus/" + params.id, params)) : $http[action](ROOT + "submenus", params)
-        },
-        get: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/submenus")
-        },
-        getByID: function(params) {
-            return $http.get(ROOT + "submenus/" + params.id)
-        },
-        "delete": function(params) {
-            return $http["delete"](ROOT + "submenus/" + params.id)
         }
     }
 }]).factory("adminMenusResource", ["$http", "ROOT", function($http, ROOT) {
