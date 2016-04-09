@@ -18,8 +18,9 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.envers.Audited;
 
-
+@Audited
 @Entity
 @NamedQueries({@NamedQuery(name="Role.GetAll", query = "from Role r")})
 @JsonIgnoreProperties(ignoreUnknown = true)

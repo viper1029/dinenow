@@ -33,10 +33,10 @@ import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vividsolutions.jts.geom.Point;
-
+import org.hibernate.envers.Audited;
 
 @Entity
-//@Audited
+@Audited
 @NamedQueries({ @NamedQuery(name = "Restaurant.GetAll", query = "from Restaurant r where status=0") })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Restaurant extends BaseEntity {
@@ -59,7 +59,7 @@ public class Restaurant extends BaseEntity {
   @Column(name = "contact_person")
   private String contactPerson;
 
-  @Column(columnDefinition = "Decimal(10,1) default '0.0'")
+  @Column(columnDefinition = "Decimal(10,1)'")
   private double rating;
 
   @Column(name = "network_status", nullable = false)
@@ -70,7 +70,7 @@ public class Restaurant extends BaseEntity {
   @Column(length = 10000000)
   @Lob
   @Type(type = "org.hibernate.type.TextType")
-  private String cuisine = "[]";
+  private String cuisine = "[]"; // TODO: add new table
 
   private String timezoneId;
 
@@ -102,11 +102,6 @@ public class Restaurant extends BaseEntity {
   //@Type(type = "org.hibernate.spatial.GeometryType")
   private Point location;
 
-//	@Column(name="image_link")
-//	private String image;
-
-//	private PaymentType delivery_payment_type;
-
   @Column(nullable = false)
   private String address_1;
 
@@ -126,9 +121,10 @@ public class Restaurant extends BaseEntity {
   private String country;
 
   @Column(nullable = false, unique = true)
-  private String keyword;
+  private String keyword; //TODO: add table
 
-  private String logo = "";
+  @Column
+  private String logo;
 
   @Transient
   private double distance;

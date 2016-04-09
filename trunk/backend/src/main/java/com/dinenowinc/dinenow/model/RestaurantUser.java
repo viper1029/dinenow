@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="restaurant_user")
-//@Audited
+@Audited
 @NamedQueries({@NamedQuery(name="RestaurantUser.GetAll", query = "from RestaurantUser u where status=0")})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RestaurantUser extends BaseEntity{

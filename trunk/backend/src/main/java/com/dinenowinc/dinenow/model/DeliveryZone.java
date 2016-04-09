@@ -21,7 +21,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 @Entity
-//@Audited
+@Audited
 @NamedQueries({@NamedQuery(name="DeliveryZone.GetAll", query = "from DeliveryZone c")})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeliveryZone extends BaseEntity{
