@@ -24,6 +24,7 @@ import com.dinenowinc.dinenow.resources.RoleResource;
 import com.dinenowinc.dinenow.resources.SecuredResource;
 import com.dinenowinc.dinenow.resources.SizeResource;
 import com.dinenowinc.dinenow.resources.StripeResource;
+import com.dinenowinc.dinenow.resources.TaxResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JWTAuthFilter;
 import com.github.toastshaman.dropwizard.auth.jwt.JsonWebTokenParser;
 import com.github.toastshaman.dropwizard.auth.jwt.hmac.HmacSHA512Verifier;
@@ -146,6 +147,7 @@ public class DineNowApplication extends Application<ApplicationConfiguration> {
     environment.jersey().register(guiceBundle.getInjector().getInstance(CartResources.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(ModifierResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(SizeResource.class));
+    environment.jersey().register(guiceBundle.getInjector().getInstance(TaxResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(AddonResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(DeliveryZoneResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(RestaurantUserResource.class));

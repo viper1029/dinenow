@@ -222,8 +222,8 @@ public class DatabaseFiller {
 			Taxe taxe1 = new Taxe("Taxe", 5,"trong",date);
 			Taxe taxe2 = new Taxe("Taxe2", 10,"trong",date);
 			
-			r2.addTaxe(taxe1);
-			r2.addTaxe(taxe2);
+			r2.addTaxes(taxe1);
+			r2.addTaxes(taxe2);
 			
 			ru1.addRestaurant(r2);
 			//r2.addUser(ru1);
@@ -277,9 +277,9 @@ public class DatabaseFiller {
 			sub1.setSubMenuNotes("N/A");
 			u1.addSubMenu(sub1);
 			
-			r1.addItemPrice(item1);
-			r1.addItemPrice(item2);
-			r1.addItemPrice(item3);
+			r1.addItem(item1);
+			r1.addItem(item2);
+			r1.addItem(item3);
 			
 			r1.addCategoryItem(cate1);
 			

@@ -227,7 +227,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
               od.setQuantity(Integer.parseInt(hashMap.get("quantity").toString()));
 
               Item item = itemDao.get(hashMap.get("id").toString());
-              ItemPrice itemPrice = itemInfoDao.get(hashMap.get("info").toString());
+              //ItemPrice itemPrice = itemInfoDao.get(hashMap.get("info").toString());
 
 
               HashMap<String, Object> sizes = (HashMap<String, Object>) hashMap.get("sizes");
@@ -235,7 +235,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
               /////Must Price is Sizes.........
 
 
-              od.setPrice(itemPrice.getPrice());
+              //od.setPrice(itemPrice.getPrice());
               od.setNote(hashMap.get("spacialNotes").toString());
 
               //item.addOrderDetails(od); //TODO}: temp comment
@@ -246,7 +246,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
           cus.addCustomerOrder(co);
 
 
-          //	double defaultTax = restaurant.getTax() == null ? 0.0 : restaurant.getTax().getValue();
+          //	double defaultTax = restaurant.getTaxes() == null ? 0.0 : restaurant.getTaxes().getValue();
 
           //	double amount = calculatorAmount((ArrayList<HashMap<String, Object>>)dto.get("items"), Double.parseDouble(dto.get("tip").toString()), defaultTax, 0);
 
@@ -753,7 +753,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         dtos.get(i).put("addOns", addons);
 
         List<HashMap<String, Object>> itemSizes = new ArrayList<HashMap<String, Object>>();
-//        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItemPrices()) { //TODO: Temp comment
+//        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItems()) { //TODO: Temp comment
 //          HashMap<String, Object> temp = new HashMap<String, Object>();
 //          temp.put("item", itemSizeInfo.getItem().getId());
 //          temp.put("size", itemSizeInfo.getSize().getId());
@@ -1162,7 +1162,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 					// items
 									ArrayList<HashMap<String, Object>> itemDtos = new ArrayList<HashMap<String, Object>>();
-					for (ItemPrice itemInfo : categoryInfo.getItemPrices()) {
+					for (ItemPrice itemInfo : categoryInfo.getItems()) {
 						HashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
 						Item item = itemInfo.getItem();
 
@@ -1279,7 +1279,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 						// items
 						Set<HashMap<String, Object>> itemDtos = new HashSet<HashMap<String, Object>>();//new ArrayList<HashMap<String, Object>>();
-						for (ItemPrice itemInfo : categoryInfo.getItemPrices()) {
+						for (ItemPrice itemInfo : categoryInfo.getItems()) {
 							HashMap<String, Object> itemDto = new HashMap<String, Object>();
 							Item item = itemInfo.getItem();
 
@@ -1314,7 +1314,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 							Set<HashMap<String, Object>> addOnDtos = new HashSet<HashMap<String, Object>>();
 							for (ItemModifier modifierInfo : item.getModifiers()) {
 								Modifier modifier = modifierInfo.getModifier();
-								for (ItemSizeInfo hashMap : modifier.getItemPrices()) {
+								for (ItemSizeInfo hashMap : modifier.getItems()) {
 									if (hashMap.getItem().getId().equals(item.getId())) {
 										for (ModifierAddon hashMap2 : modifier.getModifierAddons()) {
 											Addon addon = hashMap2.getAddOn();

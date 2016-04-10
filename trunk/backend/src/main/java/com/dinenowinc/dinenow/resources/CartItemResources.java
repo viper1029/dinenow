@@ -54,7 +54,7 @@ public class CartItemResources extends AbstractResource<CartItem>{
 		dto.put("orderType", entity.getOrderType());
 		dto.put("status", entity.getAvailstatus());
 		dto.put("total", entity.getTotal());
-		dto.put("tax", entity.getTax());
+		dto.put("tax", entity.getTaxes());
 		dto.put("orderStatus", entity.getOrderStatus());
 		List<HashMap<String, Object>> items = new LinkedList<>();
 		System.out.println("::::::::::::::::::::::"+entity.getCartItems().size());

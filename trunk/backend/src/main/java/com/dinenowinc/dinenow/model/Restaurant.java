@@ -59,7 +59,7 @@ public class Restaurant extends BaseEntity {
   @Column(name = "contact_person")
   private String contactPerson;
 
-  @Column(columnDefinition = "Decimal(10,1)'")
+  @Column(columnDefinition = "Decimal(10,1)")
   private double rating;
 
   @Column(name = "network_status", nullable = false)
@@ -173,9 +173,8 @@ public class Restaurant extends BaseEntity {
   private final Set<Modifier> modifiers = new HashSet<Modifier>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_restaurant", nullable = false)
-  @ForeignKey(name = "Fk_restaurant_tax")
-  private final Set<Tax> tax = new HashSet<Tax>();
+  @JoinColumn(name = "id_restaurant", nullable = false, foreignKey = @javax.persistence.ForeignKey(name = "Fk_restaurant_tax"))
+  private final Set<Tax> taxes = new HashSet<Tax>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
@@ -276,12 +275,12 @@ public class Restaurant extends BaseEntity {
   }
 
 
-  public Set<Tax> getTax() {
-    return tax;
+  public Set<Tax> getTaxes() {
+    return taxes;
   }
 
-  public void addTaxe(Tax t) {
-    getTax().add(t);
+  public void addTaxes(Tax t) {
+    taxes.add(t);
   }
 
   public Set<Modifier> getModifiers() {

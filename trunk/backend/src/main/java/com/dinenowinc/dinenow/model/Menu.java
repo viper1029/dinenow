@@ -44,7 +44,7 @@ public class Menu extends BaseEntity {
   private String hours;
 
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  private final Set<CategoryItem> categories = new HashSet<>();
+  private final Set<CategoryItem> categoryItems = new HashSet<>();
 
   public String getName() {
     return name;
@@ -63,7 +63,7 @@ public class Menu extends BaseEntity {
   }
 
   public Set<CategoryItem> getCategoryItem() {
-    return categories;
+    return categoryItems;
   }
 
   public void addCategoryItem(CategoryItem category) {
@@ -71,7 +71,6 @@ public class Menu extends BaseEntity {
   }
 
   public void addAllCategoryItem(ArrayList<CategoryItem> categorys) {
-    getCategoryItem().clear();
     getCategoryItem().addAll(categorys);
   }
 

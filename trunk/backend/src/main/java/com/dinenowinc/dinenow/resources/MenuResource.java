@@ -144,17 +144,11 @@ public class MenuResource extends AbstractResource<Menu> {
     CategoryItem categoryItemEntity = new CategoryItem();
     HashMap<String, Object> categoryItemMap = (HashMap<String, Object>) categoryItem.get("category");
     Category category = categoryDao.get(categoryItemMap.get("id").toString());
-    if (categoryItem.containsKey("itemPrice")) {
-      List<HashMap<String, Object>> itemPriceList = (ArrayList<HashMap<String, Object>>) categoryItem.get("itemPrice");
-      for (HashMap<String, Object> itemPrice : itemPriceList) {
-        Item item = itemDao.get(((HashMap<String, Object>)itemPrice.get("item")).get("id").toString());
-        ItemPrice itemPriceEntity = new ItemPrice();
-        itemPriceEntity.setPrice(Double.valueOf((itemPrice.get("price").toString())));
-        itemPriceEntity.setItem(item);
-        itemPriceEntity.setCategoryItem(categoryItemEntity);
-        itemPriceEntity.setCreatedBy("system");
-        itemPriceEntity.setCreatedDate(new Date());
-        categoryItemEntity.addItemPrice(itemPriceEntity);
+    if (categoryItem.containsKey("items")) {
+      List<HashMap<String, Object>> itemList = (ArrayList<HashMap<String, Object>>) categoryItem.get("items");
+      for (HashMap<String, Object> existingItem : itemList) {
+        Item item = itemDao.get(existingItem.get("id").toString());
+        categoryItemEntity.addItem(item);
       }
     }
     categoryItemEntity.setCreatedBy("system");
@@ -201,24 +195,25 @@ public class MenuResource extends AbstractResource<Menu> {
       ArrayList<CategoryItem> newCategoryItems = new ArrayList<>();
       ArrayList<CategoryItem> keepExistingCategoryItems = new ArrayList<>();
       List<HashMap<String, Object>> categoryItemList = (List<HashMap<String, Object>>) inputMap.get("categoryItem");
-      for(HashMap<String, Object> categoryItem: categoryItemList) {
+      for (HashMap<String, Object> categoryItem : categoryItemList) {
         boolean foundExisting = false;
-        if(categoryItem.get("id") != null) {
-          for(CategoryItem existingCategoryItem : menu.getCategoryItem()) {
-            if(existingCategoryItem.getId().matches(categoryItem.get("id").toString())) {
-              if(existingCategoryItem.getCategory().getId().matches(((HashMap<String, Object>) categoryItem.get("category")).get("id").toString()))  {
+        if (categoryItem.get("id") != null) {
+          for (CategoryItem existingCategoryItem : menu.getCategoryItem()) {
+            if (existingCategoryItem.getId().matches(categoryItem.get("id").toString())) {
+              if (!existingCategoryItem.getCategory().getId().matches(((HashMap<String, Object>) categoryItem.get("category")).get("id").toString())) {
                 Category category = categoryDao.get(((HashMap<String, Object>) categoryItem.get("category")).get("id").toString());
                 existingCategoryItem.setCategory(category);
                 existingCategoryItem.setMenu(menu);
               }
-              updateItemPrice(existingCategoryItem, inputMap);
-              foundExisting = true;
+              updateItemList(existingCategoryItem, categoryItem);
               keepExistingCategoryItems.add(existingCategoryItem);
+              foundExisting = true;
               break;
             }
+
           }
         }
-        if(!foundExisting) {
+        if (!foundExisting) {
           newCategoryItems.add(createNewCategoryItem(categoryItem, menu));
         }
       }
@@ -228,42 +223,32 @@ public class MenuResource extends AbstractResource<Menu> {
     return menu;
   }
 
-  private CategoryItem updateItemPrice(CategoryItem categoryItem, HashMap<String, Object> inputMap) {
-
-    if (inputMap.containsKey("addonSize")) {
-      ArrayList<ItemPrice> newItemPrices = new ArrayList<>();
-      ArrayList<ItemPrice> keepExistingItemPrices = new ArrayList<>();
-      List<HashMap<String, Object>> itemPriceList = (List<HashMap<String, Object>>) inputMap.get("itemPrice");
-      for (HashMap<String, Object> itemPrice : itemPriceList) {
+  private CategoryItem updateItemList(CategoryItem categoryItem, HashMap<String, Object> inputMap) {
+    if (inputMap.containsKey("items")) {
+      ArrayList<Item> newItems = new ArrayList<>();
+      ArrayList<Item> keepExistingItems = new ArrayList<>();
+      List<HashMap<String, Object>> itemList = (List<HashMap<String, Object>>) inputMap.get("items");
+      for (HashMap<String, Object> itemJson : itemList) {
         boolean foundExisting = false;
-        if (itemPrice.get("id") != null) {
-          for (ItemPrice existingItemPrice : categoryItem.getItemPrices()) {
-            if (existingItemPrice.getId().matches(itemPrice.get("id").toString())) {
-              existingItemPrice.setPrice(Double.valueOf(itemPrice.get("price").toString()));
-              if (!existingItemPrice.getItem().getId().matches(((HashMap<String, Object>) itemPrice.get("item")).get("id").toString())) {
-                Item item = itemDao.get(((HashMap<String, Object>) itemPrice.get("item")).get("id").toString());
-                existingItemPrice.setItem(item);
-                //existingItemPrice.et
+          if (itemJson.get("id") != null) {
+            for (Item existingItem : categoryItem.getItems()) {
+              if (existingItem.getId().matches(itemJson.get("id").toString())) {
+                Item item = itemDao.get(itemJson.get("id").toString());
+                keepExistingItems.add(item);
+                foundExisting = true;
+                break;
               }
-              foundExisting = true;
-              keepExistingItemPrices.add(existingItemPrice);
-              break;
-            }
           }
         }
         if (!foundExisting) {
-          Item item = itemDao.get(((HashMap<String, Object>) itemPrice.get("item")).get("id").toString());
-          ItemPrice newItemPrice = new ItemPrice();
-          newItemPrice.setItem(item);
-          newItemPrice.setPrice(Double.valueOf(itemPrice.get("price").toString()));
-          newItemPrice.setCreatedBy("system");
-          newItemPrice.setCreatedDate(new Date());
-          newItemPrices.add(newItemPrice);
+          Item item = itemDao.get(itemJson.get("id").toString());
+          newItems.add(item);
         }
       }
-      categoryItem.getItemPrices().retainAll(keepExistingItemPrices);
-      categoryItem.addAllItemPrice(newItemPrices);
+      categoryItem.getItems().retainAll(keepExistingItems);
+      categoryItem.addAllItems(newItems);
     }
+
     return categoryItem;
   }
 
@@ -282,18 +267,15 @@ public class MenuResource extends AbstractResource<Menu> {
       categoryDto.put("name", categoryItem.getCategory().getCategoryName());
 
       List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
-      for (ItemPrice itemPrice : categoryItem.getItemPrices()) {
-        LinkedHashMap<String, Object> itemPriceDto = new LinkedHashMap<String, Object>();
-        itemPriceDto.put("id", itemPrice.getId());
+      for (Item item : categoryItem.getItems()) {
         LinkedHashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
-        itemDto.put("id", itemPrice.getItem().getId());
-        itemDto.put("name", itemPrice.getItem().getName());
-        itemPriceDto.put("item", itemDto);
-        items.add(itemPriceDto);
+        itemDto.put("id", item.getId());
+        itemDto.put("name", item.getName());
+        items.add(itemDto);
       }
       categoryItemMap.put("id", categoryItem.getId());
       categoryItemMap.put("category", categoryDto);
-      categoryItemMap.put("itemPrice", items);
+      categoryItemMap.put("items", items);
       categoryItems.add(categoryItemMap);
     }
     rdto.put("categoryItem", categoryItems);
@@ -365,7 +347,6 @@ public class MenuResource extends AbstractResource<Menu> {
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
-
 
 
   @DELETE
