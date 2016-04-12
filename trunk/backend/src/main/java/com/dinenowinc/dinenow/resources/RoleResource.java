@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import com.dinenowinc.dinenow.dao.RoleDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Role;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

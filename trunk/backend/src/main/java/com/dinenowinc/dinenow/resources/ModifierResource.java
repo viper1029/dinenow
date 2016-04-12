@@ -1,9 +1,7 @@
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.model.Addon;
-import com.dinenowinc.dinenow.model.AddonSize;
-import com.dinenowinc.dinenow.model.AvailabilityStatus;
-import com.dinenowinc.dinenow.model.ModelHelpers;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.ModifierAddon;
 import io.dropwizard.auth.Auth;
 
@@ -13,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.RollbackException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,7 +32,7 @@ import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.Modifier;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

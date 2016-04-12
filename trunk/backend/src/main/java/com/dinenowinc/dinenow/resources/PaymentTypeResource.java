@@ -22,7 +22,7 @@ import com.dinenowinc.dinenow.dao.PaymentTypeDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.PaymentType;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.PaymentTypeValidator;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;

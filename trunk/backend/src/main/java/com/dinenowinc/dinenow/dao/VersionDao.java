@@ -8,28 +8,23 @@ import com.dinenowinc.dinenow.model.Version;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class VersionDao extends BaseEntityDAOImpl<Version, String>{
+import java.util.List;
 
-	@Inject
-	public VersionDao(Provider<EntityManager> emf) {
-		super(emf);
-		entityClass = Version.class;
-	}
+public class VersionDao extends BaseEntityDAOImpl<Version, String> {
 
-	public Version getVersion() {
+  @Inject
+  public VersionDao(Provider<EntityManager> emf) {
+    super(emf);
+    entityClass = Version.class;
+  }
 
-		try {
-			Version v = (Version) getEntityManager().createQuery("SELECT t FROM Version t order by t.created_by desc ",
-					Version.class).getSingleResult();	
-			return v;
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-	
-	
-	
-
-	
-	
+  public List<Version> getVersion() {
+    try {
+      List<Version> v = getEntityManager().createQuery("SELECT t FROM Version t", Version.class).getResultList();
+      return v;
+    }
+    catch (NoResultException e) {
+      return null;
+    }
+  }
 }

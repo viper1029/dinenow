@@ -1,4 +1,4 @@
-package com.dinenowinc.dinenow.model;
+package com.dinenowinc.dinenow.model.helpers;
 
 import java.io.Serializable;
 

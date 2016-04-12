@@ -1,11 +1,8 @@
 package com.dinenowinc.dinenow.error;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.ToString;
 
-import com.dinenowinc.dinenow.model.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 
 /**
  * 

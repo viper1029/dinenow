@@ -13,7 +13,7 @@ import com.dinenowinc.dinenow.model.Admin;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.service.AdminService;
 import com.dinenowinc.dinenow.service.CustomerService;
 import com.dinenowinc.dinenow.service.RestaurantUserService;

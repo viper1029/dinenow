@@ -5,7 +5,7 @@ import org.hibernate.jpa.HibernateEntityManager;
 
 import com.dinenowinc.dinenow.dao.BaseEntityDAOImpl;
 import com.dinenowinc.dinenow.dao.IBaseEntityDAO;
-import com.dinenowinc.dinenow.model.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 
 import javax.persistence.EntityManager;

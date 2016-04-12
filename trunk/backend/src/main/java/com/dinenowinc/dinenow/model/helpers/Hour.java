@@ -1,14 +1,10 @@
-package com.dinenowinc.dinenow.model;
+package com.dinenowinc.dinenow.model.helpers;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Hour implements Serializable{
 

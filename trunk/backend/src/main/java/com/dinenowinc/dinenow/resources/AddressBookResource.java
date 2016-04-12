@@ -24,7 +24,7 @@ import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.AddressBook;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.AddressBookValidator;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;

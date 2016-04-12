@@ -26,7 +26,7 @@ import com.dinenowinc.dinenow.error.ServiceResult;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.Role;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.service.RestaurantUserService;
 import com.dinenowinc.dinenow.utils.MD5Hash;
 import com.google.inject.Inject;

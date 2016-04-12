@@ -1,22 +1,19 @@
 package com.dinenowinc.dinenow.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -12,15 +12,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.LatLng;
+import com.dinenowinc.dinenow.model.helpers.OrderStatus;
+import com.dinenowinc.dinenow.model.helpers.OrderType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.ForeignKey;
@@ -29,7 +30,6 @@ import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity

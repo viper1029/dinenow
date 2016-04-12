@@ -1,6 +1,6 @@
 package com.dinenowinc.dinenow.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -10,9 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.HashMap;

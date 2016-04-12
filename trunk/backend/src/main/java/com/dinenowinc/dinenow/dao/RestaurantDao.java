@@ -10,9 +10,9 @@ import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Review;
-import com.dinenowinc.dinenow.model.SearchOrderBy;
-import com.dinenowinc.dinenow.model.SearchType;
-import com.dinenowinc.dinenow.model.SortedBY;
+import com.dinenowinc.dinenow.model.helpers.SearchOrderBy;
+import com.dinenowinc.dinenow.model.helpers.SearchType;
+import com.dinenowinc.dinenow.model.helpers.SortedBY;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.vividsolutions.jts.geom.Coordinate;

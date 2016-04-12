@@ -1,5 +1,7 @@
 package com.dinenowinc.dinenow.model;
 
+import com.dinenowinc.dinenow.model.helpers.UserRole;
+
 import java.security.Principal;
 import java.util.UUID;
 

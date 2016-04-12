@@ -1,6 +1,6 @@
 package com.dinenowinc.dinenow.utils;
 
-import com.dinenowinc.dinenow.model.Hour;
+import com.dinenowinc.dinenow.model.helpers.Hour;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;

@@ -1,12 +1,10 @@
 package com.dinenowinc.dinenow.model;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ForeignKey;
+import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.OrderStatus;
+import com.dinenowinc.dinenow.model.helpers.OrderType;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
@@ -28,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="Cart.GetAll", query = "from Cart c")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Cart extends BaseEntity{
+public class Cart extends BaseEntity {
 
 	@Column(name="order_status")
 	private OrderStatus orderStatus;

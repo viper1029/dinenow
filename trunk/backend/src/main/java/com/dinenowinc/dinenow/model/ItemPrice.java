@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.model;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NamedQueries;
@@ -15,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 

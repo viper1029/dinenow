@@ -24,6 +24,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.Hour;
+import com.dinenowinc.dinenow.model.helpers.LatLng;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.ForeignKey;
@@ -186,11 +190,6 @@ public class Restaurant extends BaseEntity {
   @ForeignKey(name = "Fk_restaurant_restaurantImages")
   private final Set<RestaurantImages> restaurantImages = new HashSet<RestaurantImages>();
 
-  @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_restaurant", nullable = false)
-  @ForeignKey(name = "Fk_restaurant_restaurantFacilities")
-  private final Set<RestaurantFacilities> restaurantFacilities = new HashSet<RestaurantFacilities>();
-
   @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_payment_type", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_payment_type"))
   @ForeignKey(name = "Fk_restaurant_paymentType")
@@ -243,10 +242,6 @@ public class Restaurant extends BaseEntity {
 
   public Set<RestaurantImages> getRestaurantImages() {
     return restaurantImages;
-  }
-
-  public Set<RestaurantFacilities> getRestaurantFacilities() {
-    return restaurantFacilities;
   }
 
   public Restaurant() {

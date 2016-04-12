@@ -6,7 +6,7 @@ import com.dinenowinc.dinenow.model.Admin;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.github.toastshaman.dropwizard.auth.jwt.hmac.HmacSHA512Signer;
 import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebToken;
 import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebTokenClaim;

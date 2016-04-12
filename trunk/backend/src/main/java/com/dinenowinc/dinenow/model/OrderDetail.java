@@ -1,22 +1,14 @@
 package com.dinenowinc.dinenow.model;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
@@ -30,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="OrderDetail.GetAll", query = "from OrderDetail o")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderDetail extends BaseEntity{
+public class OrderDetail extends BaseEntity {
 
 	private double price;
 	

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="PromoCode.GetAll", query = "from PromoCode pc")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PromoCode extends BaseEntity{
+public class PromoCode extends BaseEntity {
 
 	private String promo_name;
 	private Date expiry;

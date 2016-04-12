@@ -37,7 +37,7 @@ import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.OrderDetail;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.utils.MD5Hash;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;

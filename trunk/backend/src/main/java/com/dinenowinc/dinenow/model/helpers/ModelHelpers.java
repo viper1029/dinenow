@@ -1,4 +1,6 @@
-package com.dinenowinc.dinenow.model;
+package com.dinenowinc.dinenow.model.helpers;
+
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;

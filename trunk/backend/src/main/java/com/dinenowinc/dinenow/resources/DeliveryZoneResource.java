@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.RollbackException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,7 +27,7 @@ import com.dinenowinc.dinenow.error.ServiceErrorValidationMessage;
 import com.dinenowinc.dinenow.model.DeliveryZone;
 import com.dinenowinc.dinenow.model.DeliveryZoneType;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.DeliveryZoneValidator;
 import com.google.inject.Inject;
 import com.vividsolutions.jts.geom.Coordinate;

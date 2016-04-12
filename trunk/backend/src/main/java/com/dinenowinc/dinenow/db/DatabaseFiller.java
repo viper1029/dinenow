@@ -121,7 +121,7 @@ public class DatabaseFiller {
 		restaurantService.restaurantDao.saveAll(restaurants);
 		
 	}*/
-	
+	/*
 	  private void addVersion() {
 	    	Version v = new Version();
 	    	v.setVersionName("v1");
@@ -130,6 +130,7 @@ public class DatabaseFiller {
 	    	VersionDao versionDao = injector.getInstance(VersionDao.class);
 	    	versionDao.save(v);
 		}
+		*/
 	
 /*	private void addRestaurantUserMenu(){
 		RestaurantService restaurantService = injector.getInstance(RestaurantService.class);
@@ -407,9 +408,10 @@ public class DatabaseFiller {
 //        }
 //
 //    }
-	
+	/*
 	public Version getLatestVersion(){
 		VersionDao versionDao = injector.getInstance(VersionDao.class);
     	return versionDao.getVersion();
 	}
+	*/
 }

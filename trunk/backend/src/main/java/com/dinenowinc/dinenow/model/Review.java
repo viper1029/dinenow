@@ -1,9 +1,7 @@
 package com.dinenowinc.dinenow.model;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -23,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="Review.GetAll", query = "from Review r")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Review extends BaseEntity{
+public class Review extends BaseEntity {
 
 	private int rating;
 	

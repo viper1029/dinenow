@@ -1,6 +1,6 @@
 package com.dinenowinc.dinenow.dao;
 
-import com.dinenowinc.dinenow.model.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;

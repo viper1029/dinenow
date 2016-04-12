@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,10 +14,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @NamedQueries({@NamedQuery(name="Coupon.GetAll", query = "from Coupon c")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Coupon extends BaseEntity{
+public class Coupon extends BaseEntity {
 
 	private int minimum_value;
 	private int maximum_value;

@@ -1,6 +1,9 @@
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.dao.AddonDao;
+import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.ItemValidator;
 import io.dropwizard.auth.Auth;
 

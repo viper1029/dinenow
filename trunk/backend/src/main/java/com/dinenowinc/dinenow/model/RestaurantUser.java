@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +21,8 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.ForeignKey;
@@ -38,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="RestaurantUser.GetAll", query = "from RestaurantUser u where status=0")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RestaurantUser extends BaseEntity{
+public class RestaurantUser extends BaseEntity {
 
 	private static final long serialVersionUID = 2228118945733901398L;
 	

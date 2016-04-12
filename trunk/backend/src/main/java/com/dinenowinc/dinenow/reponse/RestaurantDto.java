@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.reponse;
 import com.dinenowinc.dinenow.model.*;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 
 
 public class RestaurantDto {

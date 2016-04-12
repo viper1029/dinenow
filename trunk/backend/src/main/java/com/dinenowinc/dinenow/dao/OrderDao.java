@@ -8,9 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import com.dinenowinc.dinenow.model.Order;
-import com.dinenowinc.dinenow.model.Item;
-import com.dinenowinc.dinenow.model.OrderStatus;
-import com.dinenowinc.dinenow.model.Restaurant;
+import com.dinenowinc.dinenow.model.helpers.OrderStatus;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

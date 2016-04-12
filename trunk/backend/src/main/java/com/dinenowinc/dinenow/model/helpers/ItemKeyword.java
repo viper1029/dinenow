@@ -1,4 +1,4 @@
-package com.dinenowinc.dinenow.model;
+package com.dinenowinc.dinenow.model.helpers;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.dinenowinc.dinenow.model.Item;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;

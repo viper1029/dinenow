@@ -1,6 +1,6 @@
 package com.dinenowinc.dinenow.dao;
 
-import com.dinenowinc.dinenow.model.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;

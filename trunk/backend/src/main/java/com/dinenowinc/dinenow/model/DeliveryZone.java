@@ -6,25 +6,24 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.LatLng;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 @Entity
 @Audited
 @NamedQueries({@NamedQuery(name="DeliveryZone.GetAll", query = "from DeliveryZone c")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeliveryZone extends BaseEntity{
+public class DeliveryZone extends BaseEntity {
 
 	private String name;
 	private String description;

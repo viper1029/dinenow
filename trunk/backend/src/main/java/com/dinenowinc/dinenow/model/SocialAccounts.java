@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Audited
 @NamedQueries({@NamedQuery(name="SocialAccounts.GetAll", query = "from SocialAccounts s")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SocialAccounts extends BaseEntity{
+public class SocialAccounts extends BaseEntity {
 
 	private static final long serialVersionUID = -1249581761414180188L;
 	@Column(name="username",nullable=false,unique=true)

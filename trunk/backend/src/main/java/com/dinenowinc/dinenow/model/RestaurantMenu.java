@@ -6,6 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="restaurant_menu")
 @NamedQueries({@NamedQuery(name="RestaurantMenu.GetAll", query = "from RestaurantMenu r")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RestaurantMenu extends BaseEntity{
+public class RestaurantMenu extends BaseEntity {
 	
 	private static final long serialVersionUID = 691091407346434736L;
 	

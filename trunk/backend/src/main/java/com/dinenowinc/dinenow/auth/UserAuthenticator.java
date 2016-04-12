@@ -1,7 +1,7 @@
 package com.dinenowinc.dinenow.auth;
 
 import com.dinenowinc.dinenow.model.User;
-import com.dinenowinc.dinenow.model.UserRole;
+import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.github.toastshaman.dropwizard.auth.jwt.JsonWebTokenValidator;
 import com.github.toastshaman.dropwizard.auth.jwt.model.JsonWebToken;
 import com.github.toastshaman.dropwizard.auth.jwt.validator.ExpiryValidator;
