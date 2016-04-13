@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.model;
+/*
+package com.dinenowinc.dinenow.model.unused;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,3 +21,4 @@ public class PromoCodeRestaurant extends BaseEntity {
 
 	
 }
+*/

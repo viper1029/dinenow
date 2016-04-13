@@ -76,7 +76,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 		int startRow = (page-1)*size;
 		try {
 			//List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND co.receivedAt BETWEEN :value3 and :value4 GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value3", from).setParameter("value4", to).setFirstResult(startRow).setMaxResults(maxRecords).getResultList();
-			List<Order> listItem = getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.receivedAt BETWEEN :from AND :to")
+			List<Order> listItem = getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.receivedTime BETWEEN :from AND :to")
 					.setParameter("value", restaurant_id)
 					.setParameter("from", from)
 					.setParameter("to", to)
@@ -93,7 +93,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 		int startRow = (page-1)*size;
 		try {
 			//List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND co.orderStatus = :value2 GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value2", status.ordinal()).setFirstResult(startRow).setMaxResults(maxRecords).getResultList();
-			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.orderStatus = :value2 GROUP BY co.id ORDER BY co.receivedAt ASC")
+			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.orderStatus = :value2 GROUP BY co.id ORDER BY co.receivedTime ASC")
 					.setParameter("value", restaurant_id)
 					.setParameter("value2", status)
 					.setFirstResult(startRow).setMaxResults(maxRecords)
@@ -113,7 +113,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 		int startRow = (page-1)*size;
 		try {
 		//	List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND co.orderStatus = :value2 AND co.receivedAt BETWEEN :value3 and :value4 GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value2", status.ordinal()).setParameter("value3", from).setParameter("value4", to).setFirstResult(startRow).setMaxResults(maxRecords).getResultList();
-			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.orderStatus = :value2 AND co.receivedAt BETWEEN :from AND :to GROUP BY co.id ORDER BY co.receivedAt ASC")
+			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT distinct co FROM Restaurant r left join r.orders co WHERE r.id = :value AND co.orderStatus = :value2 AND co.receivedTime BETWEEN :from AND :to GROUP BY co.id ORDER BY co.receivedTime ASC")
 					.setParameter("value", restaurant_id)
 					.setParameter("value2", status)
 					.setParameter("from", from)
@@ -133,7 +133,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 	public List<Order> searchByOrder(String restaurant_id, String name){ //SELECT r.tax FROM Restaurant r inner join r.tax WHERE r.id = :value
 		try {
 			//List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co, customer c WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND (co.orderNumber LIKE :value2 OR c.firstName LIKE :value2  OR c.lastName LIKE :value2 OR c.address LIKE :value2 OR c.phoneNumber LIKE :value2) GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value2", "%" + query + "%").getResultList();
-			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r,Customer c inner join r.orders ro inner join c.orders co WHERE co.id=ro.id And r.id= :value  AND (c.first_name LIKE :value2  OR c.last_name LIKE :value2 OR str(ro.orderNumber) LIKE :value2 OR c.phone_number LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedAt ASC")
+			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r,Customer c inner join r.orders ro inner join c.orders co WHERE co.id=ro.id And r.id= :value  AND (c.first_name LIKE :value2  OR c.last_name LIKE :value2 OR str(ro.orderNumber) LIKE :value2 OR c.phone_number LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedTime ASC")
 					.setParameter("value", restaurant_id)
 					.setParameter("value2","%"+name+"%")
 					.getResultList();
@@ -148,7 +148,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 	public List<Order> searchByOrderAndCustomerPhone(String restaurant_id, String phone){ //SELECT r.tax FROM Restaurant r inner join r.tax WHERE r.id = :value
 		try {
 			//List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co, customer c WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND (co.orderNumber LIKE :value2 OR c.firstName LIKE :value2  OR c.lastName LIKE :value2 OR c.address LIKE :value2 OR c.phoneNumber LIKE :value2) GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value2", "%" + query + "%").getResultList();
-			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r,Customer c inner join r.orders ro inner join c.orders co WHERE co.id=ro.id And r.id= :value  AND (str(ro.orderNumber) LIKE :value2 OR c.phone_number LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedAt ASC")
+			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r,Customer c inner join r.orders ro inner join c.orders co WHERE co.id=ro.id And r.id= :value  AND (str(ro.orderNumber) LIKE :value2 OR c.phone_number LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedTime ASC")
 					.setParameter("value", restaurant_id)
 					.setParameter("value2","%"+phone+"%")
 					.getResultList();
@@ -172,7 +172,7 @@ public class OrderDao extends BaseEntityDAOImpl<Order, String>{
 	public List<Order> searchByOrderNo(String restaurant_id, long o_no) {
 		try {
 			//List<Order> listItem = (ArrayList<Order>)getEntityManager().createNativeQuery("SELECT co.* FROM restaurant r, item i, orderdetail od, order co, customer c WHERE r.id = i.id_restaurant AND od.id_item = i.id AND od.id_order = co.id AND r.id= :value AND (co.orderNumber LIKE :value2 OR c.firstName LIKE :value2  OR c.lastName LIKE :value2 OR c.address LIKE :value2 OR c.phoneNumber LIKE :value2) GROUP BY co.id ORDER BY co.receivedAt ASC", Order.class).setParameter("value", restaurant_id).setParameter("value2", "%" + query + "%").getResultList();
-			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r inner join r.orders ro  WHERE r.id= :value  AND (ro.orderNumber LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedAt ASC")
+			List<Order> listItem = (ArrayList<Order>)getEntityManager().createQuery("SELECT ro FROM Restaurant r inner join r.orders ro  WHERE r.id= :value  AND (ro.orderNumber LIKE :value2) GROUP BY ro.id ORDER BY ro.receivedTime ASC")
 					.setParameter("value", restaurant_id)
 					.setParameter("value2", o_no)
 					.getResultList();

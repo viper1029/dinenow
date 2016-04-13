@@ -158,18 +158,17 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 	@Override
 	protected Order getEntityForUpdate(Order order, HashMap<String, Object> inputMap) {
 		if (!inputMap.containsKey("id")) {
-			order.setReceivedAt(new Date());
+			order.setReceivedTime(new Date());
 		}
 		order.setOrderStatus(inputMap.containsKey("orderStatus") ? OrderStatus.valueOf(inputMap.get("orderStatus").toString()) : order.getOrderStatus());
 		order.setOrderType(inputMap.containsKey("orderType") ? OrderType.valueOf(inputMap.get("orderType").toString()) : order.getOrderType());
-		order.setAvailstatus(inputMap.containsKey("orderAvailStatus") ? AvailabilityStatus.valueOf(inputMap.get("orderAvailStatus").toString()) : order.getAvailstatus());
 		order.setTip(inputMap.containsKey("tip") ? Double.parseDouble(inputMap.get("tip").toString()) : order.getTip());
 		order.setTotal(inputMap.containsKey("total") ? Double.parseDouble(inputMap.get("total").toString()): order.getTotal());
 		if (inputMap.containsKey("expectedCompletionAt") && inputMap.get("expectedCompletionAt") != null) {
-			order.setExpectedCompletionAt(new Date(Long.parseLong(inputMap.get("expectedCompletionAt").toString())));
+			order.setExpectedCompletionTime(new Date(Long.parseLong(inputMap.get("expectedCompletionAt").toString())));
 		}
 		if (inputMap.containsKey("completionAt") && inputMap.get("completionAt") != null) {
-			order.setCompletionAt(new Date(Long.parseLong(inputMap.get("completionAt").toString())));
+			order.setCompletionTime(new Date(Long.parseLong(inputMap.get("completionAt").toString())));
 		}
 		if (inputMap.containsKey("location")) {
 			HashMap<String, Double> loca = (HashMap<String, Double>) inputMap.get("location");
@@ -202,11 +201,11 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 		dto.put("city", entity.getCity());
 		dto.put("country", entity.getCountry());
 		dto.put("province", entity.getProvince());
-		dto.put("postalCode", entity.getPostal_code());
+		dto.put("postalCode", entity.getPostalCode());
 		dto.put("orderType", entity.getOrderType());
-		dto.put("receivedAt", entity.getReceivedAt());
-		dto.put("expectedCompletionAt", entity.getExpectedCompletionAt());
-		dto.put("completionAt", entity.getCompletionAt());
+		dto.put("receivedAt", entity.getReceivedTime());
+		dto.put("expectedCompletionAt", entity.getExpectedCompletionTime());
+		dto.put("completionAt", entity.getCompletionTime());
 		dto.put("location", entity.getLocation() != null ? entity.getLocation() : "");
 		List<HashMap<String, Object>> orderdetails = new ArrayList<HashMap<String,Object>>();
 		for (OrderDetail orderDetail : entity.getOrderDetails()) {
@@ -315,7 +314,6 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			}
 			Customer cus = customerDao.get(access.getId().toString());
 			Order co = new Order();
-			co.setAvailstatus(AvailabilityStatus.AVAILABLE);
 			co.setOrderStatus(OrderStatus.OPEN);
 
 			OrderType type = OrderType.valueOf(dto.get("orderType").toString());
@@ -346,12 +344,12 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 					if (restfromDate.getTime() <= serverDate.getTime() 
 							&& resttoDate.getTime() >= (serverDate.getTime()+Utils.TENMINUTE)) 
 					{ 
-						co.setReceivedAt(serverDate);
+						co.setReceivedTime(serverDate);
 						//co.setReceivedAt(Utils.GetUTCdatetimeAsDate());//for storing utc
 						break;
 					}
 				}
-				if(co.getReceivedAt()==null){
+				if(co.getReceivedTime()==null){
 					return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("delivery is not available at this hour"));
 				}
 			} else 	if(type.name().equals("OUT")){
@@ -365,12 +363,12 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 					if (restfromDate.getTime() <= serverDate.getTime() 
 							&& resttoDate.getTime() >= (serverDate.getTime()+Utils.TENMINUTE)) 
 					{ 
-						co.setReceivedAt(serverDate);
+						co.setReceivedTime(serverDate);
 						//co.setReceivedAt(Utils.GetUTCdatetimeAsDate());//for storing utc
 						break;
 					}
 				}
-				if(co.getReceivedAt()==null){
+				if(co.getReceivedTime()==null){
 					return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("takeout is not available at this hour"));
 				}
 			} else 	{
@@ -401,12 +399,12 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 					if (restfromDate.getTime() <= serverDate.getTime() 
 							&& resttoDate.getTime() >= (serverDate.getTime()+Utils.TENMINUTE)) 
 					{ 
-						co.setReceivedAt(serverDate);
+						co.setReceivedTime(serverDate);
 						//co.setReceivedAt(Utils.GetUTCdatetimeAsDate());//for storing utc
 						break;
 					}
 				}
-				if(co.getReceivedAt()==null){
+				if(co.getReceivedTime()==null){
 					return ResourceUtils.asFailedResponse(Status.GONE, new ServiceErrorMessage("dinein is not available at this hour"));
 				}
 			}
@@ -416,7 +414,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			co.setCity(dto.get("city").toString());
 			co.setProvince(dto.get("province").toString());
 			co.setCountry(dto.get("country").toString());
-			co.setPostal_code(dto.get("postal_code").toString());
+			co.setPostalCode(dto.get("postal_code").toString());
 			co.setTax(dto.containsKey("tax") ? Double.parseDouble( dto.get("tax").toString()):co.getTax());
 			co.setCreatedBy(cus.getLastName());
 

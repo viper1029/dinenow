@@ -409,11 +409,11 @@ public class CustomerResource extends AbstractResource<Customer>{
 		dto.put("city", entity.getCity());
 		dto.put("country", entity.getCountry());
 		dto.put("province", entity.getProvince());
-		dto.put("postalCode", entity.getPostal_code());
+		dto.put("postalCode", entity.getPostalCode());
 		dto.put("orderType", entity.getOrderType());
-		dto.put("receivedAt", entity.getReceivedAt());
-		dto.put("expectedCompletionAt", entity.getExpectedCompletionAt());
-		dto.put("completionAt", entity.getCompletionAt());
+		dto.put("receivedAt", entity.getReceivedTime());
+		dto.put("expectedCompletionAt", entity.getExpectedCompletionTime());
+		dto.put("completionAt", entity.getCompletionTime());
 		dto.put("location", entity.getLocation() != null ? entity.getLocation() : "");
 	//	dto.put("status", entity.getAvailstatus());
 	//	Restaurant restaurantInfo = null;

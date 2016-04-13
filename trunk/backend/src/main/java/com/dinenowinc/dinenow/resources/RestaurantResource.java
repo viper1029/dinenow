@@ -197,12 +197,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         if (restaurant != null) {
 
           Order co = new Order();
-          co.setAvailstatus(AvailabilityStatus.AVAILABLE);
           //	co.setOrderStatus(OrderStatus.OPEN);
           co.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
           //co.setOrderNumber(new Date().getTime());
           co.setTip(Double.parseDouble(dto.get("tip").toString()));
-          co.setReceivedAt(new Date());
+          co.setReceivedTime(new Date());
 
           if (dto.containsKey("location")) {
             HashMap<String, Double> location = (HashMap<String, Double>) dto.get("location");

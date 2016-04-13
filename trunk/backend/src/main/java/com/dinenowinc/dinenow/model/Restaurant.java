@@ -138,12 +138,7 @@ public class Restaurant extends BaseEntity {
   @ForeignKey(name = "Fk_restaurant_deliveryZone")
   private final Set<DeliveryZone> deliveryZone = new HashSet<DeliveryZone>();
 
-  @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_restaurant", nullable = false)
-  @ForeignKey(name = "Fk_restaurant_promoCodeRestaurant")
-  private final Set<PromoCodeRestaurant> promoCodeRestaurant = new HashSet<PromoCodeRestaurant>();
-
-  @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_items")
   private final Set<Item> items = new HashSet<Item>();
@@ -378,14 +373,6 @@ public class Restaurant extends BaseEntity {
 
   public void addgetReviews(Review review) {
     getReviews().add(review);
-  }
-
-  public Set<PromoCodeRestaurant> getPromoCodeRestaurant() {
-    return promoCodeRestaurant;
-  }
-
-  public void getPromoCodeRestaurant(PromoCodeRestaurant code) {
-    getPromoCodeRestaurant().add(code);
   }
 
   public NetworkStatus getNetworkStatus() {

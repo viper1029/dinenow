@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.dinenowinc.dinenow.model.PromoCodeRestaurant;
+import com.dinenowinc.dinenow.model.unused.PromoCodeRestaurant;
 import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.dinenowinc.dinenow.model.helpers.CodeType;
 import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
