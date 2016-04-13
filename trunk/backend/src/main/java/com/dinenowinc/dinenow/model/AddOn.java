@@ -37,7 +37,6 @@ public class Addon extends BaseEntity {
   private String description;
 
   @OneToMany(mappedBy = "addon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  //@JoinColumn(foreignKey = @ForeignKey(name = "id_addon_addOn_size_info_Fk_2"))
   private final Set<AddonSize> addonSizes = new HashSet<AddonSize>();
 
   public Set<AddonSize> getAddonSize() {

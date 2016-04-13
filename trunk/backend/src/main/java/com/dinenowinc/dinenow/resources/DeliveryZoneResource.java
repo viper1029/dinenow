@@ -25,7 +25,7 @@ import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.error.ServiceErrorValidationMessage;
 import com.dinenowinc.dinenow.model.DeliveryZone;
-import com.dinenowinc.dinenow.model.DeliveryZoneType;
+import com.dinenowinc.dinenow.model.helpers.DeliveryZoneType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.DeliveryZoneValidator;

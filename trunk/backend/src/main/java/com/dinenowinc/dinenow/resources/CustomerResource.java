@@ -463,7 +463,6 @@ public class CustomerResource extends AbstractResource<Customer>{
 		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
 		dto.put("id", entity.getId());
 		dto.put("orderType", entity.getOrderType());
-		dto.put("status", entity.getAvailstatus());
 		dto.put("total", entity.getTotal());
 		dto.put("tax", entity.getTax());
 		dto.put("orderStatus", entity.getOrderStatus());

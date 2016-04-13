@@ -3,6 +3,7 @@ package com.dinenowinc.dinenow.resources;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -75,7 +76,6 @@ public class CartResources extends AbstractResource<Cart> {
     LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
     dto.put("id", entity.getId());
     dto.put("orderType", entity.getOrderType());
-    dto.put("status", entity.getAvailstatus());
     dto.put("total", entity.getTotal());
     dto.put("tax", entity.getTax());
     dto.put("orderStatus", entity.getOrderStatus());
@@ -98,17 +98,16 @@ public class CartResources extends AbstractResource<Cart> {
 
   protected Cart fromFullDto(User access, HashMap<String, Object> dto) {
 
-    double subtotal = 0;
-    double tip = 0;
-    double tax = 0;
-    double discount = 0;
+    BigDecimal subtotal = new BigDecimal(0);
+    BigDecimal tip = new BigDecimal(0);
+    BigDecimal tax = new BigDecimal(0);
+    BigDecimal discount = new BigDecimal(0);
     try {
       Customer cus = customerDao.get(access.getId().toString());
       System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMM" + cus.getCart());
       Cart co = (cus.getCart() != null) ? cus.getCart() : new Cart();
-      double total = co.getTotal();
+      BigDecimal total = co.getTotal();
       co.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
-      co.setAvailstatus(AvailabilityStatus.AVAILABLE);
       //	co.setTotal(Double.parseDouble(dto.get("total").toString()));
 
       List<HashMap<String, Object>> listItemSize = (List<HashMap<String, Object>>) dto.get("items");
@@ -121,7 +120,7 @@ public class CartResources extends AbstractResource<Cart> {
         Item item = itemDao.findOne(hashMap.get("itemid").toString(), dto.get("restaurantId").toString());
         for (ItemSize size : item.getItemSizes()) {
           if (hashMap.get("sizeId").toString().equals(size.getId())) {
-            subtotal = subtotal + cartItem.getQuantity() * size.getPrice();
+            subtotal = new BigDecimal(subtotal.floatValue() + cartItem.getQuantity() * size.getPrice());
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + subtotal);
             break;
           }
@@ -136,7 +135,7 @@ public class CartResources extends AbstractResource<Cart> {
         //	discount = (subtotal*discount)/100;
       }
       System.out.println(":::::::::::::::::::::::::::::::::" + total);
-      total = total + subtotal + tip + tax + discount;
+      total.add(subtotal).add(tip).add(tax).add(discount);
       co.setTotal(total);
       Restaurant restaurant = restaurantDao.get(dto.get("restaurantId").toString());
       restaurant.addCarts(co);
@@ -152,7 +151,7 @@ public class CartResources extends AbstractResource<Cart> {
     try {
       CartItem item = cartItemDao.get(id);
       Cart cart = item.getCart();
-      cart.setTotal(cart.getTotal() - item.getPrice());
+      cart.setTotal(cart.getTotal().subtract(new BigDecimal(String.valueOf(item.getPrice()))));
       cart.getCartItems().remove(item);
       //	System.out.println(item);
       //	cartItemDao.delete(item);

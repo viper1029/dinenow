@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.model;
+/*
+package com.dinenowinc.dinenow.model.unused;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -51,3 +52,4 @@ public class RestaurantImages implements Serializable{
 	}
 	
 }
+*/

@@ -29,8 +29,6 @@ public class ClosedDay extends BaseEntity {
 	@Column(name="holiday_description" , nullable=false)
 	private String description;
 
-	
-	
 	public ClosedDay() {
 		super();
 		super.setCreatedBy("auto");

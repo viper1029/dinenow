@@ -1,7 +1,7 @@
 package com.dinenowinc.dinenow.model.helpers;
 
 public enum OrderType {
-	OUT,
+	TAKE_OUT,
 	DELIVERY,
-	DINEIN
+	DINE_IN
 }

@@ -1,5 +1,6 @@
 package com.dinenowinc.dinenow.model;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -25,126 +26,99 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="\"Cart\"")
 @Audited
-@NamedQueries({@NamedQuery(name="Cart.GetAll", query = "from Cart c")})
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NamedQueries({ @NamedQuery(name = "Cart.GetAll", query = "from Cart c") })
+
 public class Cart extends BaseEntity {
 
-	@Column(name="order_status")
-	private OrderStatus orderStatus;
-	
-	@Column(name="type")
-	private OrderType orderType;
+  private static final long serialVersionUID = 5478738900596245767L;
 
-	
-	private AvailabilityStatus availstatus;
-	private double discount;
-	private double tax;
-	private double total;
-	
-	@OneToOne
-	@JoinColumn (name="id_customer",unique=true)
-	private Customer customer;
-	
-	
-	public Customer getCustomer() {
-		return customer;
-	}
+  @Column(name = "order_status")
+  private OrderStatus orderStatus;
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+  @Column(name = "type")
+  private OrderType orderType;
 
-	@OneToMany(cascade = {CascadeType.PERSIST}, fetch= FetchType.LAZY ,mappedBy="cart" ,orphanRemoval=true)
-    private final Set<CartItem> cartItems = new HashSet<CartItem>();
-	
-	public Cart() {
-	}
+  @OneToOne
+  @JoinColumn(name = "id_customer", unique = true)
+  private Customer customer;
 
-	
-	
-	public Cart(OrderStatus orderStatus, OrderType orderType,
-			AvailabilityStatus availstatus, double discount, double tax,
-			double total) {
-		this.orderStatus = orderStatus;
-		this.orderType = orderType;
-		this.availstatus = availstatus;
-		this.discount = discount;
-		this.tax = tax;
-		this.total = total;
-	}
+  @OneToMany(mappedBy = "cart", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
+  private final Set<CartItem> cartItems = new HashSet<>();
 
+  private BigDecimal discount;
 
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
-	}
+  private BigDecimal tax;
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	
-	public double getDiscount() {
-		return discount;
-	}
+  private BigDecimal total;
 
-	public void setDiscount(double discount) {
-		this.discount = discount;
-	}
+  public Customer getCustomer() {
+    return customer;
+  }
 
+  public void setCustomer(Customer customer) {
+    this.customer = customer;
+  }
 
-	public double getTax() {
-		return tax;
-	}
+  public OrderStatus getOrderStatus() {
+    return orderStatus;
+  }
 
-	public void setTax(double tax) {
-		this.tax = tax;
-	}
+  public void setOrderStatus(OrderStatus orderStatus) {
+    this.orderStatus = orderStatus;
+  }
 
-	public double getTotal() {
-		return total;
-	}
+  public BigDecimal getDiscount() {
+    return discount;
+  }
 
-	public void setTotal(double total) {
-		this.total = total;
-	}
+  public void setDiscount(BigDecimal discount) {
+    this.discount = discount;
+  }
 
-	public OrderType getOrderType() {
-		return orderType;
-	}
+  public BigDecimal getTax() {
+    return tax;
+  }
 
-	public void setOrderType(OrderType orderType) {
-		this.orderType = orderType;
-	}
-	
-	public AvailabilityStatus getAvailstatus() {
-		return availstatus;
-	}
+  public void setTax(BigDecimal tax) {
+    this.tax = tax;
+  }
 
-	public void setAvailstatus(AvailabilityStatus availstatus) {
-		this.availstatus = availstatus;
-	}
-	
-	public Set<CartItem> getCartItems() {
-		return cartItems;
-	}
-	
-	public void addCartItem(CartItem item){
-		getCartItems().add(item);
-	}
+  public BigDecimal getTotal() {
+    return total;
+  }
 
+  public void setTotal(BigDecimal total) {
+    this.total = total;
+  }
 
-	@Override
-	public HashMap<String, Object> toDto() {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-		dto.put("id", this.getId());
-		dto.put("orderType", this.getOrderType());
-		dto.put("orderType", this.getOrderType());
-		dto.put("status", this.getAvailstatus());
-		dto.put("total", this.getTotal());
-		dto.put("tax", this.getTax());
-		dto.put("orderStatus", this.getOrderStatus());
-		return dto;
-	}
+  public OrderType getOrderType() {
+    return orderType;
+  }
+
+  public void setOrderType(OrderType orderType) {
+    this.orderType = orderType;
+  }
+
+  public Set<CartItem> getCartItems() {
+    return cartItems;
+  }
+
+  public void addCartItem(CartItem item) {
+    getCartItems().add(item);
+  }
+
+  @Override
+  public HashMap<String, Object> toDto() {
+    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    dto.put("id", this.getId());
+    dto.put("orderType", this.getOrderType());
+    dto.put("orderStatus", this.getOrderStatus());
+    dto.put("discount", this.getDiscount());
+    dto.put("tax", this.getTax());
+    dto.put("total", this.getTotal());
+    return dto;
+  }
 
 }

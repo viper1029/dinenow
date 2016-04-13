@@ -84,23 +84,12 @@ public class Customer extends BaseEntity {
   private final Set<AddressBook> addressBooks = new HashSet<AddressBook>();
 
   @JsonIgnore
-  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_customer", foreignKey = @ForeignKey(name = "Fk_customer_socialAccounts"))
-  private final Set<SocialAccounts> socialAccounts = new HashSet<SocialAccounts>();
-
-
-  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "id_customer", foreignKey = @ForeignKey(name = "Fk_customer_orders"))
   private final Set<Order> orders = new HashSet<Order>();
 
   @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
   private Cart cart;
-
-  @JsonIgnore
-  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_customer", foreignKey = @ForeignKey(name = "Fk_customer_promoCode"))
-  private final Set<PromoCode> promoCode = new HashSet<PromoCode>();
 
   @Column(columnDefinition = "Decimal(10,2)")
   private double points;
@@ -174,17 +163,6 @@ public class Customer extends BaseEntity {
 
   public void setCustomerStripe(String customer_stripe) {
     this.customerStripe = customer_stripe;
-  }
-
-
-  public Set<SocialAccounts> getSocialAccounts() {
-    return socialAccounts;
-  }
-
-  public void addSocialAccounts(String social) {
-    SocialAccounts acc = new SocialAccounts(social);
-    acc.setCreatedBy("acaccsd");
-    getSocialAccounts().add(acc);
   }
 
 

@@ -1,31 +1,22 @@
 package com.dinenowinc.dinenow;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.SocialAccounts;
-import com.google.gson.Gson;
 import com.stripe.Stripe;
 import com.stripe.exception.APIConnectionException;
 import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Card;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
-import com.stripe.model.DeletedCard;
 import com.stripe.model.DeletedPlan;
 //import com.stripe.model.PaymentSource;
 import com.stripe.model.Plan;
-import com.stripe.model.PlanCollection;
 import com.stripe.model.Subscription;
-import com.stripe.model.Token;
 
 public class StripeApplication {
 	
@@ -216,11 +207,7 @@ public class StripeApplication {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		try {
 			Map<String, Object> customerParams = new HashMap<String, Object>();
-			String info_customer = "";
-			for (SocialAccounts account : user.getSocialAccounts()) {
-				info_customer += account.getUserName() + "/";
-			}
-			customerParams.put("description", String.format("Customer user for %s", user.getEmail() != null ? user.getEmail() : info_customer));
+			customerParams.put("description", String.format("Customer user for %s", user.getEmail() != null ? user.getEmail() : ""));
 			customerParams.put("email", user.getEmail());
 			//customerParams.put("source", "tok_15r25qFvJtkXeNBHhA3Fzdif"); // obtained with Stripe.js
 			HashMap<String, Object> metadata = new HashMap<String, Object>();

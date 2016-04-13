@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.model;
+/*
+package com.dinenowinc.dinenow.model.unused;
 
 import java.util.Date;
 
@@ -31,11 +32,13 @@ public class SocialAccounts extends BaseEntity {
 	public SocialAccounts(String social) {
 		this.userName = social;
 		this.accountType = "google";
+*/
 /*		if(social.substring(0, 6).equalsIgnoreCase("google")){
 			this.accountType = "google";
 		} else {
 			this.accountType = "facebook";
-		}*/
+		}*//*
+
 		System.out.println(this.accountType+":::::::::::::::::::::");
 	//	this.accountType = social.substring(0, 6).equalsIgnoreCase("google")?"google":"facebook";
 		this.setCreatedDate(new Date());
@@ -59,3 +62,4 @@ public class SocialAccounts extends BaseEntity {
 
 	
 }
+*/

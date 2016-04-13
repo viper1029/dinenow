@@ -23,7 +23,7 @@ import com.dinenowinc.dinenow.dao.CouponDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Coupon;
-import com.dinenowinc.dinenow.model.CouponType;
+import com.dinenowinc.dinenow.model.helpers.CouponType;
 import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
@@ -50,14 +50,12 @@ public class CouponResource extends AbstractResource<Coupon> {
 	protected HashMap<String, Object> getMapFromEntity(Coupon entity) {
 		HashMap<String, Object> dto = new HashMap<String, Object>();
 		dto.put("id", entity.getId());
-		dto.put("couponCode", entity.getCoupon_code());
-		dto.put("couponType", entity.getCoupon_type());		
-		dto.put("discountValue", entity.getDiscount_value());
-		dto.put("startDate", entity.getStart_date());
-		dto.put("endDate", entity.getEnd_date());
-		dto.put("maximumValue", entity.getMaximum_value());
-		dto.put("manimumValue", entity.getMinimum_value());
-		dto.put("networkStatus", entity.getNetworkStatus());
+		dto.put("couponType", entity.getCouponType());
+		dto.put("discountValue", entity.getDiscountValue());
+		dto.put("startDate", entity.getStartDate());
+		dto.put("endDate", entity.getEndDate());
+		dto.put("maximumValue", entity.getMaximumValue());
+		dto.put("manimumValue", entity.getMinimumValue());
 		return dto;
 	}
 
@@ -66,19 +64,16 @@ public class CouponResource extends AbstractResource<Coupon> {
 	protected Coupon getEntityForInsertion(HashMap<String, Object> inputMap) {
 		Coupon entity = super.getEntityForInsertion(inputMap);
 
-		entity.setCoupon_code(Long.parseLong(inputMap.get("couponCode").toString()));
-		entity.setCoupon_type(CouponType.valueOf(inputMap.get("couponType").toString()));
-		entity.setNetworkStatus(NetworkStatus.valueOf(inputMap.get("networkStatus").toString()));
-		entity.setDiscount_value(Integer.parseInt(inputMap.get("discountValue").toString()));
-		entity.setMaximum_value(Integer.parseInt(inputMap.get("maximumValue").toString()));
-		entity.setMinimum_value(Integer.parseInt(inputMap.get("manimumValue").toString()));
-		entity.setStart_date(new Date(Long.parseLong(inputMap.get("startDate").toString())));
-		entity.setEnd_date(new Date(Long.parseLong(inputMap.get("endDate").toString())));
+		entity.setCouponType(CouponType.valueOf(inputMap.get("couponType").toString()));
+		entity.setDiscountValue(Integer.parseInt(inputMap.get("discountValue").toString()));
+		entity.setMaximumValue(Integer.parseInt(inputMap.get("maximumValue").toString()));
+		entity.setMinimumValue(Integer.parseInt(inputMap.get("manimumValue").toString()));
+		entity.setStartDate(new Date(Long.parseLong(inputMap.get("startDate").toString())));
+		entity.setEndDate(new Date(Long.parseLong(inputMap.get("endDate").toString())));
 		if (inputMap.containsKey("restaurants")) {
 			ArrayList<String> listKeyRestaurants = (ArrayList<String>) inputMap.get("restaurants");
 			for (String key : listKeyRestaurants) {
 				Restaurant restaurant = restaurantDao.get(key);
-				entity.addRestaurants(restaurant);
 			}
 		}
 		
@@ -90,19 +85,16 @@ public class CouponResource extends AbstractResource<Coupon> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Coupon getEntityForUpdate(Coupon coupon, HashMap<String, Object> inputMap) {
-		coupon.setCoupon_code(Long.parseLong(inputMap.get("couponCode").toString()));
-		coupon.setCoupon_type(CouponType.valueOf(inputMap.get("couponType").toString()));
-		coupon.setNetworkStatus(NetworkStatus.valueOf(inputMap.get("networkStatus").toString()));
-		coupon.setDiscount_value(Integer.parseInt(inputMap.get("discountValue").toString()));
-		coupon.setMaximum_value(Integer.parseInt(inputMap.get("maximumValue").toString()));
-		coupon.setMinimum_value(Integer.parseInt(inputMap.get("manimumValue").toString()));
-		coupon.setStart_date(new Date(Long.parseLong(inputMap.get("startDate").toString())));
-		coupon.setEnd_date(new Date(Long.parseLong(inputMap.get("endDate").toString())));
+		coupon.setCouponType(CouponType.valueOf(inputMap.get("couponType").toString()));
+		coupon.setDiscountValue(Integer.parseInt(inputMap.get("discountValue").toString()));
+		coupon.setMaximumValue(Integer.parseInt(inputMap.get("maximumValue").toString()));
+		coupon.setMinimumValue(Integer.parseInt(inputMap.get("manimumValue").toString()));
+		coupon.setStartDate(new Date(Long.parseLong(inputMap.get("startDate").toString())));
+		coupon.setEndDate(new Date(Long.parseLong(inputMap.get("endDate").toString())));
 		if (inputMap.containsKey("restaurants")) {
 			ArrayList<String> listKeyRestaurants = (ArrayList<String>) inputMap.get("restaurants");
 			for (String key : listKeyRestaurants) {
 				Restaurant restaurant = restaurantDao.get(key);
-				coupon.addRestaurants(restaurant);
 			}
 		}
 		return coupon;

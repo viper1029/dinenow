@@ -22,18 +22,13 @@
     <class>com.dinenowinc.dinenow.model.ModifierAddon</class>
     <class>com.dinenowinc.dinenow.model.Order</class>
     <class>com.dinenowinc.dinenow.model.OrderDetail</class>
-    <class>com.dinenowinc.dinenow.model.PromoCode</class>
     <class>com.dinenowinc.dinenow.model.PromoCodeRestaurant</class>
     <class>com.dinenowinc.dinenow.model.Restaurant</class>
-    <class>com.dinenowinc.dinenow.model.RestaurantImages</class>
 		<class>com.dinenowinc.dinenow.model.RestaurantUser</class>
     <class>com.dinenowinc.dinenow.model.Review</class>
-    <class>com.dinenowinc.dinenow.model.ReviewCriteria</class>
     <class>com.dinenowinc.dinenow.model.Role</class>
     <class>com.dinenowinc.dinenow.model.Size</class>
     <class>com.dinenowinc.dinenow.model.ItemSize</class>
-    <class>com.dinenowinc.dinenow.model.SocialAccounts</class>
-    <class>com.dinenowinc.dinenow.model.SubMenu</class>
     <class>com.dinenowinc.dinenow.model.Tax</class>
     <class>com.dinenowinc.dinenow.model.Version</class>
     <class>com.dinenowinc.dinenow.model.PaymentType</class>

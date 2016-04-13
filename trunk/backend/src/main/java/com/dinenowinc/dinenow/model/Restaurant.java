@@ -185,11 +185,6 @@ public class Restaurant extends BaseEntity {
   @ForeignKey(name = "Fk_restaurant_reviews")
   private final Set<Review> reviews = new HashSet<Review>();
 
-  @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_restaurant", nullable = false)
-  @ForeignKey(name = "Fk_restaurant_restaurantImages")
-  private final Set<RestaurantImages> restaurantImages = new HashSet<RestaurantImages>();
-
   @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_payment_type", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_payment_type"))
   @ForeignKey(name = "Fk_restaurant_paymentType")
@@ -240,11 +235,7 @@ public class Restaurant extends BaseEntity {
     this.cuisine = cuisine;
   }
 
-  public Set<RestaurantImages> getRestaurantImages() {
-    return restaurantImages;
-  }
-
-  public Restaurant() {
+    public Restaurant() {
   }
 
   public Restaurant(String resName, String des, NetworkStatus networkStatus, String phone, String web, String address1, String address2,

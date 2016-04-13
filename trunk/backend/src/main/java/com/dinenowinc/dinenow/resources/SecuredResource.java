@@ -478,69 +478,6 @@ public class SecuredResource {
     }
   }
 
-
-  @POST
-  @ApiOperation(value = "api connect social network", notes = "<pre><code>{"
-      + "<br/>  \"firstName\": \"hien\","
-      + "<br/>  \"lastName\": \"nguyen\","
-      + "<br/>  \"email\": \"amit@gmail.com\","
-      + "<br/>  \"socialAccount\": \"google:12345676\""
-      + "<br/>}</code></pre>"
-      + "<br/>"
-      + "<br/>"
-      + "<br/>"
-      + "<br/>"
-      + "social network startwith \"google:123\" or \"facebook:123\"")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 400, message = "list error"),
-      @ApiResponse(code = 400, message = "Exception: ###")
-  })
-  @Path("/connectsocial")
-  public Response registerSocial(HashMap<String, Object> social) {
-    try {
-      if (!social.containsKey("socialAccount")) {
-        System.out.println("cdscsdcscsd");
-        return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, "socialAccount needed");
-      }
-      if (!social.containsKey("email")) {
-        System.out.println("cdscsdcscsd");
-        return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, "email needed");
-      }
-      if (!social.containsKey("firstName")) {
-        System.out.println("cdscsdcscsd");
-        return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, "firstName needed");
-      }
-      String socialStartWith = social.get("socialAccount").toString();
-      String firstName = social.get("firstName").toString();
-      String email = social.get("email").toString();
-      Customer customerInput = new Customer();
-      customerInput.setFirstName(firstName);
-      customerInput.setLastName("_");
-      if (social.containsKey("lastName")) {
-        String lastName = social.get("lastName").toString();
-        customerInput.setLastName(lastName);
-      }
-      //customerInput.addSocialAccounts(socialStartWith);
-      customerInput.setCreatedBy(socialStartWith.substring(0, 6));
-      customerInput.setEmail(email); //email need to be present
-      customerInput.setPassword(MD5Hash.md5Spring(socialStartWith));
-      ServiceResult<Customer> serviceResult = customerService.createNewCustomerFOrSocical(customerInput, socialStartWith);
-      if (serviceResult != null && serviceResult.hasErrors()) {
-        return ResourceUtils.asFailedResponse(Response.Status.BAD_REQUEST, serviceResult.getErrors());
-      }
-      int expire_in_seconds = 60 * 1440;
-      Map<String, Object> data = TokenGenerator.generateToken(serviceResult.getResult().getId(), UserRole.CUSTOMER, serviceResult.getResult(), null);
-      return ResourceUtils.asSuccessResponse(Status.OK, data);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: " + e.getMessage()));
-    }
-
-  }
-
-
   @POST
   @ApiOperation(value = "api update number phone for customer", notes = "<pre><code>{"
       + "<br/>  \"id\": \"88d91bd5-a7bb-48a5-a368-6432ab9387f1\","

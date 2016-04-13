@@ -62,7 +62,6 @@ public class Order extends BaseEntity {
 	@Column(name="type")
 	private OrderType orderType;
 
-	
 	private AvailabilityStatus availstatus;
 	private LatLng location;
 	private double discount;

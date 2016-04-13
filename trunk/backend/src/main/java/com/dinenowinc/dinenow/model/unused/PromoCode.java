@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.model;
+/*
+package com.dinenowinc.dinenow.model.unused;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.dinenowinc.dinenow.model.PromoCodeRestaurant;
 import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.dinenowinc.dinenow.model.helpers.CodeType;
 import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NamedQueries;
@@ -79,3 +82,4 @@ public class PromoCode extends BaseEntity {
 	
 	
 }
+*/

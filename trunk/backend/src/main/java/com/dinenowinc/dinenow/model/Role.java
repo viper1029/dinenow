@@ -14,27 +14,26 @@ import org.hibernate.envers.Audited;
 
 @Audited
 @Entity
-@NamedQueries({@NamedQuery(name="Role.GetAll", query = "from Role r")})
+@NamedQueries({ @NamedQuery(name = "Role.GetAll", query = "from Role r") })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Role extends BaseEntity {
-	
 
-private String name;
-	
-	public String getName() {
-		return name;
-	}
+  private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@Override
-	public HashMap<String, Object> toDto() {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
-		dto.put("id", this.getId());
-		dto.put("name", this.getName());	
-		return dto;
-	}
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public HashMap<String, Object> toDto() {
+    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    dto.put("id", this.getId());
+    dto.put("name", this.getName());
+    return dto;
+  }
 
 }

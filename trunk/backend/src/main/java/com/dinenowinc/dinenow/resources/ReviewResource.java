@@ -52,7 +52,7 @@ public class ReviewResource extends AbstractResource<Review>{
 	protected Review getEntityForInsertion(HashMap<String, Object> inputMap) {
 		Review review = super.getEntityForInsertion(inputMap);
 		review.setRating(Integer.parseInt(inputMap.get("rating").toString()));
-		review.setReviews(inputMap.get("reviews").toString());
+		review.setComment(inputMap.get("reviews").toString());
 		return review;
 	}
 
@@ -61,7 +61,7 @@ public class ReviewResource extends AbstractResource<Review>{
 	@Override
 	protected Review getEntityForUpdate(Review review, HashMap<String, Object> inputMap) {
 		review.setRating(Integer.parseInt(inputMap.get("rating").toString()));
-		review.setReviews(inputMap.get("reviews").toString());
+		review.setComment(inputMap.get("reviews").toString());
 		return review;
 	}	
 	
