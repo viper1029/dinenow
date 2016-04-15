@@ -20,7 +20,7 @@ public class PaymentTypeValidator {
 	}
 	
 	public List<ServiceErrorMessage> validateForAdd(){
-		List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+		List<ServiceErrorMessage> errorMessages = new ArrayList<>();
 		if (!dto.containsKey("name")){
 			errorMessages.add(new ServiceErrorMessage("Missing field 'name'"));
 		}else if(dto.get("name").toString().length()==0) {

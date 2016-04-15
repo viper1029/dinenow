@@ -166,7 +166,7 @@ public abstract class AbstractResource<T extends BaseEntity> implements IAbstrac
   }
 
   protected HashMap<String, Object> getMapFromEntity(T entity) {
-    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    HashMap<String, Object> returnMap = new HashMap<>();
     returnMap.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
     return returnMap;
   }

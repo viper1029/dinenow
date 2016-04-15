@@ -15,7 +15,7 @@ public class MenuValidator {
   }
 
   public List<ServiceErrorMessage> validateForCreation() {
-    List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+    List<ServiceErrorMessage> errorMessages = new ArrayList<>();
     if (!inputMap.containsKey("name")) {
       errorMessages.add(new ServiceErrorMessage("Missing field 'name'"));
     }

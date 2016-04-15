@@ -1,6 +1,8 @@
-package com.dinenowinc.dinenow.dao;
+/*
+package com.dinenowinc.dinenow.dao.unused;
 
-import com.dinenowinc.dinenow.model.Role;
+import com.dinenowinc.dinenow.dao.BaseEntityDAOImpl;
+import com.dinenowinc.dinenow.model.unused.Role;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -14,3 +16,4 @@ public class RoleDao extends BaseEntityDAOImpl<Role, String> {
     entityClass = Role.class;
   }
 }
+*/

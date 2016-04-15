@@ -186,8 +186,8 @@ public class ModifierResource extends AbstractResource<Modifier> {
     modifier.setMaxSelection(inputMap.containsKey("maxSelection") ? Integer.parseInt(inputMap.get("maxSelection").toString()) : modifier.getMinSelection());
 
     if (inputMap.containsKey("modifierAddon")) {
-      ArrayList<ModifierAddon> newModifierAddons = new ArrayList<ModifierAddon>();
-      ArrayList<ModifierAddon> keepExistingModifierAddons = new ArrayList<ModifierAddon>();
+      ArrayList<ModifierAddon> newModifierAddons = new ArrayList<>();
+      ArrayList<ModifierAddon> keepExistingModifierAddons = new ArrayList<>();
       List<HashMap<String, Object>> modifierAddonList = (List<HashMap<String, Object>>) inputMap.get("modifierAddon");
       for (HashMap<String, Object> modifierAddon : modifierAddonList) {
         boolean foundExisting = false;
@@ -245,7 +245,7 @@ public class ModifierResource extends AbstractResource<Modifier> {
 		dto.put("minSelection", entity.getMinSelection());
 		dto.put("maxSelection", entity.getMaxSelection());
     dto.put("modifierAddon", ModelHelpers.fromEntities(entity.getModifierAddons()));
-    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    HashMap<String, Object> returnMap = new HashMap<>();
     returnMap.put(getClassT().getSimpleName().toLowerCase(), dto);
     return returnMap;
   }

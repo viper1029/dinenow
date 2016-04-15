@@ -58,7 +58,7 @@ public class DeliveryZoneValidator {
 	
 	@SuppressWarnings("unchecked")
 	public List<ServiceErrorMessage> validateForAdd(){
-		List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+		List<ServiceErrorMessage> errorMessages = new ArrayList<>();
         
 		if (!dto.containsKey("name")){
 			errorMessages.add(new ServiceErrorMessage("Miss field 'name'"));

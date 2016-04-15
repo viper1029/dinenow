@@ -55,7 +55,7 @@ public class RestaurantUserValidator {
 
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public List<ServiceErrorMessage> validateRequiredFields() {
-    	List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+    	List<ServiceErrorMessage> errorMessages = new ArrayList<>();
         if (StringUtils.isEmpty(user.getEmail())) {
         	 errorMessages.add(new ServiceErrorMessage("Email is empty"));
         }

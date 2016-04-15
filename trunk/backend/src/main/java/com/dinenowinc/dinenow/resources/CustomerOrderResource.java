@@ -148,7 +148,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(Order entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
@@ -186,7 +186,7 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 
 	@Override
 	protected HashMap<String, Object> onGet(Order entity, User access) {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+		HashMap<String, Object> dto = new LinkedHashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("orderNumber", entity.getOrderNumber());
 		//	dto.put("paymentAt", this.getPaymentAt());
@@ -207,16 +207,16 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 		dto.put("expectedCompletionAt", entity.getExpectedCompletionTime());
 		dto.put("completionAt", entity.getCompletionTime());
 		dto.put("location", entity.getLocation() != null ? entity.getLocation() : "");
-		List<HashMap<String, Object>> orderdetails = new ArrayList<HashMap<String,Object>>();
+		List<HashMap<String, Object>> orderdetails = new ArrayList<>();
 		for (OrderDetail orderDetail : entity.getOrderDetails()) {
-			HashMap<String, Object> order = new HashMap<String, Object>();
+			HashMap<String, Object> order = new HashMap<>();
 			List<Item> listItem = itemDao.getListItemByOrderDetails(orderDetail.getId());
 			order.put("id", orderDetail.getId());
 			order.put("unitPrice", orderDetail.getPrice());
 			order.put("quantity", orderDetail.getQuantity());
-			List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+			List<HashMap<String, Object>> items = new ArrayList<>();
 			for (Item item : listItem) {
-				HashMap<String, Object> itemtemp = new LinkedHashMap<String, Object>();
+				HashMap<String, Object> itemtemp = new LinkedHashMap<>();
 				itemtemp.put("id",item.getId());
 				itemtemp.put("itemName",item.getName());
 				itemtemp.put("itemDescription",item.getDescription());

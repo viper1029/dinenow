@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.resources;
+/*
+package com.dinenowinc.dinenow.resources.unused;
 
 import static java.util.Collections.singletonMap;
 
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.dinenowinc.dinenow.resources.ResourceUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
 //import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -60,7 +62,8 @@ public class ImageResource {
 	
 	
 	
-	/*
+	*/
+/*
 	@POST
 	@Path("/upload")
 	@ApiOperation(value="api upload image item",notes="POST file=XXXXXXXXXXXXXXXXX")
@@ -90,7 +93,8 @@ public class ImageResource {
 			return ResourceUtils.asFailedResponse(Status.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
- */
+ *//*
+
 	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
  
 		try {
@@ -112,3 +116,4 @@ public class ImageResource {
 	
 	
 }
+*/

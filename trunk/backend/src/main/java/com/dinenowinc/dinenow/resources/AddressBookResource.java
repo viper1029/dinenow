@@ -47,7 +47,7 @@ public class AddressBookResource extends AbstractResource<AddressBook> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(AddressBook entity) {
-    HashMap<String, Object> dto = new HashMap<String, Object>();
+    HashMap<String, Object> dto = new HashMap<>();
     dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
     System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::");
     return dto;

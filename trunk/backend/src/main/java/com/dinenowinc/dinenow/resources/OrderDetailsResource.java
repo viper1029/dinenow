@@ -58,17 +58,13 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(OrderDetail entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("price", entity.getPrice());
 		dto.put("quantity", entity.getQuantity());
 		return dto;
 	}
 
-	
-	
-
-	
 	@Override
 	protected Response onCreate(User access, OrderDetail entity, Restaurant restaurant) {
 		return super.onCreate(access, entity, restaurant);
@@ -195,7 +191,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 							new ServiceErrorMessage("size not format number"));
 				}
 			}
-			List<Order> entities = new ArrayList<Order>();
+			List<Order> entities = new ArrayList<>();
 			if (status != null && !status.equals("")) {
 				// have Status
 				OrderStatus orderstatus = OrderStatus.OPEN;
@@ -231,7 +227,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 					
 				}
 			}
-			List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+			List<HashMap<String, Object>> dtos = new ArrayList<>();
 			for (Order dto : entities) {
 				dtos.add(onGet(dto));
 			}
@@ -253,9 +249,9 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 	public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("query") String query){
 		if (restaurantDao.get(restaurant_id) != null) {
 			if (query != null) {
-				List<Order> entities = new ArrayList<Order>();
+				List<Order> entities = new ArrayList<>();
 				entities = orderDao.searchByOrder(restaurant_id, query);
-				List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+				List<HashMap<String, Object>> dtos = new ArrayList<>();
 				for (Order dto : entities) {
 					dtos.add(onGet(dto));
 				}
@@ -273,28 +269,28 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 		HashMap<String, Object> uti = entity.toDto();
 		
 
-		List<HashMap<String, Object>> orderdetails = new ArrayList<HashMap<String,Object>>();
+		List<HashMap<String, Object>> orderdetails = new ArrayList<>();
 		for (OrderDetail orderDetail : entity.getOrderDetails()) {
-			HashMap<String, Object> order = new HashMap<String, Object>();
+			HashMap<String, Object> order = new HashMap<>();
 			List<Item> listItem = itemDao.getListItemByOrderDetails(orderDetail.getId());
 			
 			order.put("id", orderDetail.getId());
 			order.put("unitPrice", orderDetail.getPrice());
 			order.put("quantity", orderDetail.getQuantity());
 			
-			List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+			List<HashMap<String, Object>> items = new ArrayList<>();
 			for (Item item : listItem) {
-				HashMap<String, Object> itemtemp = new HashMap<String, Object>();
+				HashMap<String, Object> itemtemp = new HashMap<>();
 				itemtemp.put("id",item.getId());
 				itemtemp.put("itemName",item.getName());
 				itemtemp.put("itemDescription",item.getDescription());
 				itemtemp.put("notes",item.getNotes());
 				itemtemp.put("linkImage",item.getImage());
 				
-				Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
+				Set<HashMap<String, Object>> sizeDtos = new HashSet<>();
 				for (ItemSize itemSize : item.getItemSizes()) {
 					Size size = itemSize.getSize();
-					HashMap<String, Object> sizeDto = new HashMap<String, Object>();
+					HashMap<String, Object> sizeDto = new HashMap<>();
 					sizeDto.put("id", size.getId());
 					sizeDto.put("sizeName", size.getSizeName());
 					sizeDto.put("sizeDescription", size.getSizeDescription());
@@ -314,7 +310,7 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 		uti.put("orderDetails", orderdetails);
 		
 		Customer cus = customerDao.findByOrder(entity.getId().toString());
-		HashMap<String, Object> customer = new HashMap<String, Object>();
+		HashMap<String, Object> customer = new HashMap<>();
 		customer.put("id",cus.getId());
 		customer.put("firstName",cus.getFirstName());
 		customer.put("lastName",cus.getLastName());

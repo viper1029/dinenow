@@ -28,7 +28,7 @@ public class ItemKeyword extends BaseEntity {
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinTable(name = "item_keyword", joinColumns = @JoinColumn(name = "id_item"), inverseJoinColumns = @JoinColumn(name = "id_keyword"))
 	@ForeignKey(name = "Fk_item_keyword")
-	private Set<Item> item = new HashSet<Item>();
+	private Set<Item> item = new HashSet<>();
 
 	public String getName() {
 		return name;

@@ -93,7 +93,7 @@ public class Menu extends BaseEntity {
     catch (IOException e) {
       e.printStackTrace();
     }
-    return new ArrayList<Hour>();
+    return new ArrayList<>();
   }
 
   public void setHours(List<Hour> hours) {
@@ -128,7 +128,7 @@ public class Menu extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getName());
     dto.put("description", this.getDescription());

@@ -73,7 +73,7 @@ public class CartResources extends AbstractResource<Cart> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(Cart entity) {
-    LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", entity.getId());
     dto.put("orderType", entity.getOrderType());
     dto.put("total", entity.getTotal());
@@ -91,7 +91,7 @@ public class CartResources extends AbstractResource<Cart> {
       items.add(itemdto);
     }
     dto.put("cartItems", items);
-    HashMap<String, Object> cartdto = new HashMap<String, Object>();
+    HashMap<String, Object> cartdto = new HashMap<>();
     cartdto.put(getClassT().getSimpleName().toLowerCase(), dto);
     return cartdto;
   }

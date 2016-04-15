@@ -253,21 +253,21 @@ public class MenuResource extends AbstractResource<Menu> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(Menu entity) {
-    HashMap<String, Object> dto = new HashMap<String, Object>();
-    LinkedHashMap<String, Object> rdto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new HashMap<>();
+    LinkedHashMap<String, Object> rdto = new LinkedHashMap<>();
     rdto.put("id", entity.getId());
     rdto.put("name", entity.getName());
     rdto.put("description", entity.getDescription());
-    List<HashMap<String, Object>> categoryItems = new ArrayList<HashMap<String, Object>>();
+    List<HashMap<String, Object>> categoryItems = new ArrayList<>();
     for (CategoryItem categoryItem : entity.getCategoryItem()) {
-      LinkedHashMap<String, Object> categoryItemMap = new LinkedHashMap<String, Object>();
-      LinkedHashMap<String, Object> categoryDto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> categoryItemMap = new LinkedHashMap<>();
+      LinkedHashMap<String, Object> categoryDto = new LinkedHashMap<>();
       categoryDto.put("id", categoryItem.getCategory().getId());
       categoryDto.put("name", categoryItem.getCategory().getCategoryName());
 
-      List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+      List<HashMap<String, Object>> items = new ArrayList<>();
       for (Item item : categoryItem.getItems()) {
-        LinkedHashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> itemDto = new LinkedHashMap<>();
         itemDto.put("id", item.getId());
         itemDto.put("name", item.getName());
         items.add(itemDto);
@@ -316,7 +316,7 @@ public class MenuResource extends AbstractResource<Menu> {
         String timezone = restaurant.getTimezoneId();
         if (dto.containsKey("hours")) {
           List<HashMap<String, Object>> menuHours = (List<HashMap<String, Object>>) dto.get("hours");
-          ArrayList<Hour> arrHour = new ArrayList<Hour>();
+          ArrayList<Hour> arrHour = new ArrayList<>();
           for (HashMap<String, Object> menuHour : menuHours) {
             Hour hour = new Hour();
             if (menuHour.containsKey("weekDayType")) {
@@ -333,7 +333,7 @@ public class MenuResource extends AbstractResource<Menu> {
           menu.setHours(arrHour);
         }
         if (!Utils.inRange(restaurant.getDineInHours(), restaurant.getTimezoneId(), menu.getHours())) {
-          List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+          List<ServiceErrorMessage> errorMessages = new ArrayList<>();
           errorMessages.add(new ServiceErrorMessage("these hours not available"));
           return ResourceUtils.asFailedResponse(Status.NOT_ACCEPTABLE, errorMessages);
         }

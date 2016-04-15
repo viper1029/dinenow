@@ -28,7 +28,7 @@ public class RestaurantValidator {
     }
 
     public List<ServiceErrorMessage> validateRequiredFields() {
-    	List<ServiceErrorMessage> errorMessages = new ArrayList<ServiceErrorMessage>();
+    	List<ServiceErrorMessage> errorMessages = new ArrayList<>();
         return errorMessages;
     }
 

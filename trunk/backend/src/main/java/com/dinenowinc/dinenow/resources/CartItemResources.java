@@ -49,7 +49,7 @@ public class CartItemResources extends AbstractResource<CartItem>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(CartItem entity) {
-		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
 /*		dto.put("id", entity.getId());
 		dto.put("orderType", entity.getOrderType());
 		dto.put("status", entity.getAvailstatus());

@@ -11,7 +11,6 @@ import com.dinenowinc.dinenow.resources.CouponResource;
 import com.dinenowinc.dinenow.resources.CustomerOrderResource;
 import com.dinenowinc.dinenow.resources.CustomerResource;
 import com.dinenowinc.dinenow.resources.DeliveryZoneResource;
-import com.dinenowinc.dinenow.resources.ImageResource;
 import com.dinenowinc.dinenow.resources.ItemResource;
 import com.dinenowinc.dinenow.resources.MenuResource;
 import com.dinenowinc.dinenow.resources.ModifierResource;
@@ -20,7 +19,6 @@ import com.dinenowinc.dinenow.resources.PaymentTypeResource;
 import com.dinenowinc.dinenow.resources.RestaurantResource;
 import com.dinenowinc.dinenow.resources.RestaurantUserResource;
 import com.dinenowinc.dinenow.resources.ReviewResource;
-import com.dinenowinc.dinenow.resources.RoleResource;
 import com.dinenowinc.dinenow.resources.SecuredResource;
 import com.dinenowinc.dinenow.resources.SizeResource;
 import com.dinenowinc.dinenow.resources.StripeResource;
@@ -160,10 +158,8 @@ public class DineNowApplication extends Application<ApplicationConfiguration> {
     environment.jersey().register(guiceBundle.getInjector().getInstance(AddressBookResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(StripeResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(CouponResource.class));
-    environment.jersey().register(guiceBundle.getInjector().getInstance(RoleResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(PaymentTypeResource.class));
     environment.jersey().register(guiceBundle.getInjector().getInstance(ReviewResource.class));
-    environment.jersey().register(guiceBundle.getInjector().getInstance(ImageResource.class));
   }
 
   public static JpaPersistModule getJpaPersistModule() {

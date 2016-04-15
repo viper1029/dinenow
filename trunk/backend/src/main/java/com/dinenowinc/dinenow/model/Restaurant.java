@@ -136,74 +136,74 @@ public class Restaurant extends BaseEntity {
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_deliveryZone")
-  private final Set<DeliveryZone> deliveryZone = new HashSet<DeliveryZone>();
+  private final Set<DeliveryZone> deliveryZone = new HashSet<>();
 
-   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+  @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_items")
-  private final Set<Item> items = new HashSet<Item>();
+  private final Set<Item> items = new HashSet<>();
 
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_categories")
-  private final Set<Category> categories = new HashSet<Category>();
+  private final Set<Category> categories = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @Basic(fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_menus")
-  private final Set<Menu> menus = new HashSet<Menu>();
+  private final Set<Menu> menus = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_addOns")
-  private final Set<Addon> addons = new HashSet<Addon>();
+  private final Set<Addon> addons = new HashSet<>();
 
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_sizes")
-  private final Set<Size> sizes = new HashSet<Size>();
+  private final Set<Size> sizes = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_modifiers")
-  private final Set<Modifier> modifiers = new HashSet<Modifier>();
+  private final Set<Modifier> modifiers = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false, foreignKey = @javax.persistence.ForeignKey(name = "Fk_restaurant_tax"))
-  private final Set<Tax> taxes = new HashSet<Tax>();
+  private final Set<Tax> taxes = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_reviews")
-  private final Set<Review> reviews = new HashSet<Review>();
+  private final Set<Review> reviews = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_payment_type", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_payment_type"))
   @ForeignKey(name = "Fk_restaurant_paymentType")
-  private Set<PaymentType> paymentTypes = new HashSet<PaymentType>();
+  private Set<PaymentType> paymentTypes = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_orders")
-  private final Set<Order> orders = new HashSet<Order>();
+  private final Set<Order> orders = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_carts")
-  private final Set<Cart> carts = new HashSet<Cart>();
+  private final Set<Cart> carts = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "id_restaurant", nullable = false)
   @ForeignKey(name = "Fk_restaurant_closed_days")
-  private Set<ClosedDay> closedDay = new HashSet<ClosedDay>();
+  private Set<ClosedDay> closedDay = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_restaurant_user", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_restaurant_user"))
   @ForeignKey(name = "Fk_restaurant_users")
-  private Set<RestaurantUser> users = new HashSet<RestaurantUser>();
+  private Set<RestaurantUser> users = new HashSet<>();
 
 
   public double getRating() {
@@ -230,7 +230,7 @@ public class Restaurant extends BaseEntity {
     this.cuisine = cuisine;
   }
 
-    public Restaurant() {
+  public Restaurant() {
   }
 
   public Restaurant(String resName, String des, NetworkStatus networkStatus, String phone, String web, String address1, String address2,
@@ -309,7 +309,7 @@ public class Restaurant extends BaseEntity {
 /*	public Set<SubMenu> getSubmenus() {
     return submenus;
 	}*/
-	
+
 /*	public void addSubMenu(SubMenu submenu){
 		getSubmenus().create(submenu);
 	}*/
@@ -429,7 +429,7 @@ public class Restaurant extends BaseEntity {
     catch (IOException e) {
       e.printStackTrace();
     }
-    return new ArrayList<Hour>();
+    return new ArrayList<>();
   }
 
   public void setDineInHours(List<Hour> dineInHours) {
@@ -476,7 +476,7 @@ public class Restaurant extends BaseEntity {
     catch (IOException e) {
       e.printStackTrace();
     }
-    return new ArrayList<Hour>();
+    return new ArrayList<>();
   }
 
   public void setAcceptDeliveryHours(List<Hour> acceptDeliveryHours) {
@@ -523,7 +523,7 @@ public class Restaurant extends BaseEntity {
     catch (IOException e) {
       e.printStackTrace();
     }
-    return new ArrayList<Hour>();
+    return new ArrayList<>();
   }
 
   public void setAcceptTakeOutHours(List<Hour> acceptDeliveryHours) {
@@ -694,7 +694,7 @@ public class Restaurant extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getName());
     dto.put("description", this.getDescription());

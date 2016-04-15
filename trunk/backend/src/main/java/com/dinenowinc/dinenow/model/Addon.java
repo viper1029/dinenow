@@ -37,7 +37,7 @@ public class Addon extends BaseEntity {
   private String description;
 
   @OneToMany(mappedBy = "addon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  private final Set<AddonSize> addonSizes = new HashSet<AddonSize>();
+  private final Set<AddonSize> addonSizes = new HashSet<>();
 
   public Set<AddonSize> getAddonSize() {
     return addonSizes;
@@ -65,7 +65,7 @@ public class Addon extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getAddonName());
     dto.put("description", this.getAddonDescription());

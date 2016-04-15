@@ -129,14 +129,14 @@ public class DeliveryZone extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getName());
     dto.put("description", this.getDescription());
     dto.put("minimum", this.getMinimum());
     dto.put("fee", this.getFee());
     dto.put("type", this.getType());
-    List<LatLng> coords = new ArrayList<LatLng>();
+    List<LatLng> coords = new ArrayList<>();
     for (int i = 0; i < this.getCoordinates().getCoordinates().length; i++) {
       Coordinate coord = this.getCoordinates().getCoordinates()[i];
       LatLng latlng = new LatLng(coord.x, coord.y);

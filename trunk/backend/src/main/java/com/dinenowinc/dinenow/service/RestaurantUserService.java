@@ -17,7 +17,7 @@ public class RestaurantUserService {
 	public ServiceResult<RestaurantUser> createNewUser(RestaurantUser userData) {
 		RestaurantUserValidator validator = buildTaskValidator(userData);
 		ServiceErrorValidationMessage errorMessages = validator.validateForCreation();
-		return new ServiceResult<RestaurantUser>(userData, errorMessages);
+		return new ServiceResult<>(userData, errorMessages);
 	}
 
 	public ServiceResult<RestaurantUser> updateUser(RestaurantUser userData) {
@@ -29,7 +29,7 @@ public class RestaurantUserService {
 			user = userData;
 			userDao.update(userData);
 		}
-		return new ServiceResult<RestaurantUser>(userData, errorMessages);
+		return new ServiceResult<>(userData, errorMessages);
 	}
 
 	private RestaurantUserValidator buildTaskValidator(RestaurantUser newUser) {

@@ -94,12 +94,12 @@ public class Order extends BaseEntity {
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
   @JoinColumn(name = "id_order")
   @ForeignKey(name = "Fk_order_orderDetails")
-  private final Set<OrderDetail> orderDetails = new HashSet<OrderDetail>();
+  private final Set<OrderDetail> orderDetails = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
   @JoinColumn(name = "id_order")
   @ForeignKey(name = "Fk_order_reviews")
-  private final Set<Review> reviews = new HashSet<Review>();
+  private final Set<Review> reviews = new HashSet<>();
 
   @Column(precision = 10, scale = 2)
   private double point;
@@ -311,7 +311,7 @@ public class Order extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("orderNumber", this.getOrderNumber());
     //	dto.put("paymentAt", this.getPaymentAt());

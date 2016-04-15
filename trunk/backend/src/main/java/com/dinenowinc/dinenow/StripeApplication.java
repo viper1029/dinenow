@@ -33,7 +33,7 @@ public class StripeApplication {
 	
 	
 	public Plan createPlan(String id, String interval, String name, String currency, int trial_period_days, int amount) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException{
-		Map<String, Object> planGold = new HashMap<String, Object>();
+		Map<String, Object> planGold = new HashMap<>();
 		planGold.put("amount", amount);
 		planGold.put("interval", interval);
 		planGold.put("name", name);
@@ -48,14 +48,14 @@ public class StripeApplication {
 	public Plan updatePlan(String id, String name) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException{
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		Plan plan = Plan.retrieve(id);
-		Map<String, Object> planGold = new HashMap<String, Object>();
+		Map<String, Object> planGold = new HashMap<>();
 		planGold.put("name", name);
 		return plan.update(planGold);
 	}
 	
 	public List<Plan> getListPlan() throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException{
 		Stripe.apiKey = SECREC_KEY_STRIPE;
-		Map<String, Object> planParams = new HashMap<String, Object>();
+		Map<String, Object> planParams = new HashMap<>();
 		planParams.put("limit", 50);
 		return Plan.all(planParams).getData();
 	}
@@ -66,7 +66,7 @@ public class StripeApplication {
 	
 	public void createPlan() {
 		
-		Map<String, Object> planGold = new HashMap<String, Object>();
+		Map<String, Object> planGold = new HashMap<>();
 		planGold.put("amount", 100);
 		planGold.put("interval", "month");
 		planGold.put("name", "Gold Plan 100$/month");
@@ -74,21 +74,21 @@ public class StripeApplication {
 		planGold.put("id", "gold");
 		planGold.put("trial_period_days", 90);
 		
-		Map<String, Object> planGoldDashboard = new HashMap<String, Object>();
+		Map<String, Object> planGoldDashboard = new HashMap<>();
 		planGoldDashboard.put("amount", 120);
 		planGoldDashboard.put("interval", "month");
 		planGoldDashboard.put("name", "Gold Dashboard Plan 120$/month (month for access to management dashboard)");
 		planGoldDashboard.put("currency", "usd");
 		planGoldDashboard.put("id", "gold_dashboard");
 		
-		Map<String, Object> planGoldAnalytics  = new HashMap<String, Object>();
+		Map<String, Object> planGoldAnalytics  = new HashMap<>();
 		planGoldAnalytics.put("amount", 120);
 		planGoldAnalytics.put("interval", "month");
 		planGoldAnalytics.put("name", "Gold Analytics Plan 120$/month (month for analytics functionality)");
 		planGoldAnalytics.put("currency", "usd");
 		planGoldAnalytics.put("id", "gold_analytics");
 		
-		Map<String, Object> planGoldDashboardAnalytics  = new HashMap<String, Object>();
+		Map<String, Object> planGoldDashboardAnalytics  = new HashMap<>();
 		planGoldDashboardAnalytics.put("amount", 140);
 		planGoldDashboardAnalytics.put("interval", "month");
 		planGoldDashboardAnalytics.put("name", "Gold Analytics Plan 140$/month (management dashboard/analytics functionality)");
@@ -122,7 +122,7 @@ public class StripeApplication {
 	public Subscription createSubScription(String customer_id, String plan_id, String token_cart) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 			Customer cu = Customer.retrieve(customer_id);
-			Map<String, Object> params = new HashMap<String, Object>();
+			Map<String, Object> params = new HashMap<>();
 			params.put("plan", plan_id);
 			params.put("source", token_cart);
 			return cu.createSubscription(params);
@@ -143,7 +143,7 @@ public class StripeApplication {
 			Stripe.apiKey = SECREC_KEY_STRIPE;
 			Customer cu = Customer.retrieve(customer_id);
 			Subscription subscription = cu.getSubscriptions().retrieve(subscription_id);
-			Map<String, Object> updateParams = new HashMap<String, Object>();
+			Map<String, Object> updateParams = new HashMap<>();
 			updateParams.put("plan", new_plan);
 			return subscription.update(updateParams);
 	}
@@ -152,7 +152,7 @@ public class StripeApplication {
 	public List<Subscription> getSubscription(String customer_id) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException{
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		Customer cu = Customer.retrieve(customer_id);
-		Map<String, Object> subscriptionParams = new HashMap<String, Object>();
+		Map<String, Object> subscriptionParams = new HashMap<>();
 		subscriptionParams.put("limit", 50);
 		List<Subscription> subscriptions = cu.getSubscriptions().all(subscriptionParams).getData();
 		return subscriptions;
@@ -186,11 +186,11 @@ public class StripeApplication {
 	public String createRestaurantUser(RestaurantUser user) {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		try {
-			Map<String, Object> customerParams = new HashMap<String, Object>();
+			Map<String, Object> customerParams = new HashMap<>();
 			customerParams.put("description", String.format("Restaurant user for %s", user.getEmail()));
 			customerParams.put("email", user.getEmail());
 			//customerParams.put("source", "tok_15r25qFvJtkXeNBHhA3Fzdif"); // obtained with Stripe.js
-			HashMap<String, Object> metadata = new HashMap<String, Object>();
+			HashMap<String, Object> metadata = new HashMap<>();
 			metadata.put("isRestaurantUser", true);
 			metadata.put("id", user.getId());
 			customerParams.put("metadata", metadata);
@@ -206,11 +206,11 @@ public class StripeApplication {
 	public String createCustomer(com.dinenowinc.dinenow.model.Customer user) {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		try {
-			Map<String, Object> customerParams = new HashMap<String, Object>();
+			Map<String, Object> customerParams = new HashMap<>();
 			customerParams.put("description", String.format("Customer user for %s", user.getEmail() != null ? user.getEmail() : ""));
 			customerParams.put("email", user.getEmail());
 			//customerParams.put("source", "tok_15r25qFvJtkXeNBHhA3Fzdif"); // obtained with Stripe.js
-			HashMap<String, Object> metadata = new HashMap<String, Object>();
+			HashMap<String, Object> metadata = new HashMap<>();
 			metadata.put("isRestaurantUser", false);
 			metadata.put("id", user.getId());
 			customerParams.put("metadata", metadata);
@@ -225,7 +225,7 @@ public class StripeApplication {
 	public void updateCustomer(String id_customer, String token, String id_token_card) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
 		Customer cu = Customer.retrieve(id_customer);
-		Map<String, Object> updateParams = new HashMap<String, Object>();
+		Map<String, Object> updateParams = new HashMap<>();
 		updateParams.put("source", token);
 		cu.update(updateParams);
 		
@@ -247,7 +247,7 @@ public class StripeApplication {
 	
 	public void charge(double amount, String currency, String card_id, String customer_id, String description) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		Stripe.apiKey = SECREC_KEY_STRIPE;
-		Map<String, Object> chargeParams = new HashMap<String, Object>();
+		Map<String, Object> chargeParams = new HashMap<>();
 		double total_amount = amount*100;
 		chargeParams.put("amount", (int)total_amount);
 		chargeParams.put("currency", currency);

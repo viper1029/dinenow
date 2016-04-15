@@ -209,18 +209,18 @@ public class StripeResource {
 //			RestaurantUser customer = restaurantUserDao.getRestaurantUserByRestaurantId(restaurant_id);
 //			if (customer != null) {
 //				
-//				if (customer.getSubscriptionsStripe() == null) {
+//				if (customer.getSubscriptionStripe() == null) {
 //					if (customer.getPlanStripe() != null) {
 //						Subscription mSubscription = DineNowApplication.stripe.createSubScription(customer.getCustomerStripe(), customer.getPlanStripe(), token_id);
-//						customer.setSubscriptionsStripe(mSubscription.getId());
+//						customer.setSubscriptionStripe(mSubscription.getId());
 //						restaurantUserDao.update(customer);
 //						return ResourceUtils.asSuccessResponse(Status.OK, mSubscription);
 //					}else {
 //						return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("user not assign plan, plan contact admin to assign plan"));
 //					}
 //				}else {
-//					Subscription mSubscription = DineNowApplication.stripe.updateSubScription(customer.getCustomerStripe(), customer.getSubscriptionsStripe(), customer.getPlanStripe());
-//					customer.setSubscriptionsStripe(mSubscription.getId());
+//					Subscription mSubscription = DineNowApplication.stripe.updateSubScription(customer.getCustomerStripe(), customer.getSubscriptionStripe(), customer.getPlanStripe());
+//					customer.setSubscriptionStripe(mSubscription.getId());
 //					restaurantUserDao.update(customer);
 //					return ResourceUtils.asSuccessResponse(Status.OK, mSubscription);
 //				}

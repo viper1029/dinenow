@@ -80,7 +80,7 @@ public class DeliveryZoneResource extends AbstractResource<DeliveryZone>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(DeliveryZone entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 /*		dto.put("id", entity.getId());
 		dto.put("name", entity.getName());
 		dto.put("description", entity.getDescription());

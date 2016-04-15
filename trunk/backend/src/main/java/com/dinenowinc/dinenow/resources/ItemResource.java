@@ -186,7 +186,7 @@ public class ItemResource extends AbstractResource<Item> {
     item.setNotes(inputMap.get("notes").toString());
     //entity.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
     if (inputMap.containsKey("sizePrices")) {
-      ArrayList<ItemSize> listsInfo = new ArrayList<ItemSize>();
+      ArrayList<ItemSize> listsInfo = new ArrayList<>();
       List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
       for (HashMap<String, Object> hashMap : listSizePrice) {
         Size s = sizeDao.get(hashMap.get("size").toString());
@@ -409,7 +409,7 @@ public class ItemResource extends AbstractResource<Item> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(Item entity) {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", entity.getId());
     dto.put("name", entity.getName());
     dto.put("description", entity.getDescription());
@@ -417,7 +417,7 @@ public class ItemResource extends AbstractResource<Item> {
     dto.put("linkImage", entity.getImage());
     dto.put("itemSize", ModelHelpers.fromEntities(entity.getItemSizes()));
     dto.put("modifiers", ModelHelpers.fromEntities(entity.getModifiers()));
-    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    HashMap<String, Object> returnMap = new HashMap<>();
     returnMap.put(getClassT().getSimpleName().toLowerCase(), dto);
     return returnMap;
   }

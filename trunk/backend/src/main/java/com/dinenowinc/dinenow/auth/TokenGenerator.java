@@ -20,8 +20,8 @@ public class TokenGenerator {
 
   public static Map<String, Object> generateToken(String id, UserRole role, Object user, Restaurant restaurant) {
     String signedToken = "";
-    Map<String, Object> data = new HashMap<String, Object>();
-    HashMap<String, Object> returnObject = new HashMap<String, Object>();
+    Map<String, Object> data = new HashMap<>();
+    HashMap<String, Object> returnObject = new HashMap<>();
 
     if (user instanceof Customer) {
       signedToken = generateTokenForCustomer(user, returnObject, role);
@@ -95,8 +95,7 @@ public class TokenGenerator {
   private static String generateTokenForRestaurantUser(Object user, HashMap<String, Object> returnObject, UserRole role) {
     RestaurantUser restaurantUser = (RestaurantUser) user;
     returnObject.put("id", restaurantUser.getId());
-    returnObject.put("firstName", restaurantUser.getFirstName());
-    returnObject.put("lastName", restaurantUser.getLastName());
+    returnObject.put("name", restaurantUser.getName());
     returnObject.put("email", restaurantUser.getEmail());
     returnObject.put("phoneNumber", restaurantUser.getPhone());
 
@@ -106,7 +105,7 @@ public class TokenGenerator {
         .header(JsonWebTokenHeader.HS512())
         .claim(JsonWebTokenClaim
             .builder()
-            .param("id", restaurantUser.getId()).param("role", role).param("name", restaurantUser.getFirstName() + ' ' + restaurantUser.getLastName()).param("email", restaurantUser.getEmail())
+            .param("id", restaurantUser.getId()).param("role", role).param("name", restaurantUser.getName()).param("email", restaurantUser.getEmail())
             .issuedAt(new DateTime())
             .expiration(new DateTime().plusSeconds(Constants.TOKEN_EXPIRY_IN_SECONDS))
             .build()).build();

@@ -26,7 +26,7 @@ public class RestaurantService {
 			res = resData;
 			restaurantDao.save(res);
 		}
-		return new ServiceResult<Restaurant>(resData, errorMessages);
+		return new ServiceResult<>(resData, errorMessages);
 	}
 
 	public ServiceResult<Restaurant> updateRestaurant(Restaurant resData) {
@@ -38,7 +38,7 @@ public class RestaurantService {
 			res = resData;
 			restaurantDao.update(resData);
 		}
-		return new ServiceResult<Restaurant>(resData, errorMessages);
+		return new ServiceResult<>(resData, errorMessages);
 	}
 
 	private RestaurantValidator buildTaskValidator(Restaurant res) {

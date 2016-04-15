@@ -1,3 +1,4 @@
+/*
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.model.User;
@@ -17,9 +18,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.dinenowinc.dinenow.dao.RoleDao;
+import com.dinenowinc.dinenow.dao.unused.RoleDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.Role;
+import com.dinenowinc.dinenow.model.unused.Role;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -127,3 +128,4 @@ public class RoleResource extends AbstractResource<Role> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
 }
+*/

@@ -334,14 +334,14 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 	public List<Restaurant> findByLocation(SearchType type, Point location,double distance) {
 		try {
 			List<Restaurant> restaurants = (List<Restaurant>) getEntityManager().createNativeQuery("CALL findDelivery( :lat, :lng, :distance)",Restaurant.class).setParameter("lat", location.getX()).setParameter("lng", location.getY()).setParameter("distance", distance).getResultList();
-			List<Restaurant> result = new ArrayList<Restaurant>();
+			List<Restaurant> result = new ArrayList<>();
 			switch (type) {
 			case BOTH:
-				result = new ArrayList<Restaurant>();
+				result = new ArrayList<>();
 				result = restaurants;
 				break;
 			case DELIVERY:
-				result = new ArrayList<Restaurant>();
+				result = new ArrayList<>();
 				for (Restaurant restaurant : restaurants) {
 					if (restaurant.isAcceptDelivery()) {
 						result.add(restaurant);
@@ -349,7 +349,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 				}
 				break;
 			case PICKUP:
-				result = new ArrayList<Restaurant>();
+				result = new ArrayList<>();
 				for (Restaurant restaurant : restaurants) {
 					if (restaurant.isAcceptTakeout()) {
 						result.add(restaurant);
@@ -358,7 +358,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
 				break;
 
 			default:
-				result = new ArrayList<Restaurant>();
+				result = new ArrayList<>();
 				result = restaurants;
 				break;
 			}

@@ -43,7 +43,7 @@ public class ReviewResource extends AbstractResource<Review>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(Review entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}

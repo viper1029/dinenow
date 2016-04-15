@@ -30,7 +30,7 @@ public class Utils {
 
   public static Boolean sendSMSCode(String body, String phoneNumber) throws TwilioRestException {
     TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
-    List<NameValuePair> params = new ArrayList<NameValuePair>();
+    List<NameValuePair> params = new ArrayList<>();
     params.add(new BasicNameValuePair("Body", body));
     params.add(new BasicNameValuePair("To", phoneNumber));
     params.add(new BasicNameValuePair("From", "+16477242087"));
@@ -62,7 +62,7 @@ public class Utils {
     String format = formatter.format(new Date());
     // System.out.println(format);
 
-    final List<String> list = new LinkedList<String>();
+    final List<String> list = new LinkedList<>();
     // System.out.println(DateTimeZone.getAvailableIDs());
 
     Set<String> zoneIds = DateTimeZone.getAvailableIDs();

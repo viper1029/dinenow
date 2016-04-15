@@ -1,4 +1,5 @@
-package com.dinenowinc.dinenow.model;
+/*
+package com.dinenowinc.dinenow.model.unused;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,3 +38,4 @@ public class Role extends BaseEntity {
   }
 
 }
+*/

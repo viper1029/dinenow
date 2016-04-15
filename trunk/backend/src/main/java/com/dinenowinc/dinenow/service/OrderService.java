@@ -18,7 +18,7 @@ public class OrderService {
 		
 			Order res = resData;
 			orderDao.save(res);
-		return new ServiceResult<Order>(resData);
+		return new ServiceResult<>(resData);
 	}
 
 }

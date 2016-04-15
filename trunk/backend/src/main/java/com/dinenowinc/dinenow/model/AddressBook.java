@@ -111,7 +111,7 @@ public class AddressBook extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getName());
     dto.put("address1", this.getAddress1());

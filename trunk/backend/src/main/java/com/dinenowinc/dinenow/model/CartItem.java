@@ -90,7 +90,7 @@ public class CartItem extends BaseEntity {
 
 	@Override
 	public HashMap<String, Object> toDto() {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+		HashMap<String, Object> dto = new LinkedHashMap<>();
 		dto.put("id", this.getId());
 		dto.put("price", this.getPrice());
 		dto.put("quantity", this.getQuantity());

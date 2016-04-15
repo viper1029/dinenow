@@ -30,7 +30,7 @@ public class ServiceErrorValidationMessage {
 	
     public List<ServiceErrorMessage> getErrors() {
     	if (errors == null) {
-    		errors = new ArrayList<ServiceErrorMessage>();
+    		errors = new ArrayList<>();
 		}
 		return errors;
 	}

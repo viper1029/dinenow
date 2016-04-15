@@ -3,7 +3,6 @@ package com.dinenowinc.dinenow.resources;
 import com.dinenowinc.dinenow.model.User;
 import io.dropwizard.auth.Auth;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -20,12 +19,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
-import com.dinenowinc.dinenow.dao.RoleDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.error.ServiceResult;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.Role;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.service.RestaurantUserService;
 import com.dinenowinc.dinenow.utils.MD5Hash;
@@ -45,9 +42,6 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 
 	@Inject
 	private RestaurantUserService restaurantUserService;
-	
-	@Inject
-    RoleDao  roleDao;
 
 	@Inject
 	RestaurantUserDao restaurantUserDao;
@@ -57,7 +51,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(RestaurantUser entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
@@ -67,22 +61,12 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 	protected RestaurantUser getEntityForInsertion(HashMap<String, Object> inputMap) {
 		System.out.println("@Override@Override@Override @Override@Override@Override "+ inputMap);
 		RestaurantUser entity = super.getEntityForInsertion(inputMap);
-		
 		entity.setEmail(inputMap.get("email").toString());
 		entity.setPassword(MD5Hash.md5Spring(inputMap.get("password").toString()));
 		entity.setRole(UserRole.valueOf(inputMap.get("role").toString()));
-		entity.setFirstName(inputMap.get("firstName").toString());
-		entity.setLastName(inputMap.get("lastName").toString());
+		entity.setName(inputMap.get("fullName").toString());
 		entity.setPhone(inputMap.get("phone").toString());
 		entity.setRegisteredDate(new Date());
-	//	entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
-		if (inputMap.containsKey("roles")) {
-			ArrayList<String> listKeyRoles = (ArrayList<String>) inputMap.get("roles");
-			for (String key : listKeyRoles) {
-				Role role = roleDao.get(key);
-				entity.addRestaurant(role);
-			}
-		}
 		return entity;
 	}
 	
@@ -92,8 +76,7 @@ public class RestaurantUserResource extends AbstractResource<RestaurantUser>{
 		restaurantUser.setEmail(inputMap.containsKey("email") ? inputMap.get("email").toString() : restaurantUser.getEmail());
 		restaurantUser.setPassword(inputMap.containsKey("password") ? MD5Hash.md5Spring(inputMap.get("password").toString()) : restaurantUser.getPassword());
 		restaurantUser.setRole(inputMap.containsKey("role") ? UserRole.valueOf(inputMap.get("role").toString()) : restaurantUser.getRole());
-		restaurantUser.setFirstName(inputMap.get("firstName").toString());
-		restaurantUser.setLastName(inputMap.get("lastName").toString());
+		restaurantUser.setName(inputMap.get("fullName").toString());
 		restaurantUser.setPhone(inputMap.get("phone").toString());
 		//entity.setNetworkStatus(dto.containsKey("networkStatus") ? NetworkStatus.valueOf(dto.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
 		//entity.setNumberOfOrders(Integer.parseInt(dto.get("numberOfOrders").toString()));

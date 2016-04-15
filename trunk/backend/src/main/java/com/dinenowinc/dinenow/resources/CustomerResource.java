@@ -60,7 +60,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(Customer entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}
@@ -122,7 +122,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 				}
 			}
 
-			LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
 			List<Customer> entities = this.dao.getByPage(iPage, iSize);
 			List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
 			dto.put(getClassT().getSimpleName().toLowerCase()+'s', dtos);
@@ -231,11 +231,11 @@ public class CustomerResource extends AbstractResource<Customer>{
 		if (access.getRole() == UserRole.CUSTOMER) {
 			if (customerDao.get(id) != null) {
 				List<Order> entities = orderDao.findByCustomer(id);
-				List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String,Object>>();
+				List<HashMap<String, Object>> dtos = new ArrayList<>();
 				for (Order dto : entities) {
 					dtos.add(dto.toDto());
 				}
-				LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
 				dto.put("orders", dtos);
 				return ResourceUtils.asSuccessResponse(Status.OK, dto);
 			}else {
@@ -260,7 +260,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 		if (access.getRole() == UserRole.CUSTOMER) {
 			if (customerDao.get(customerId) != null) {
 				 Order order = orderDao.findByCustomerAndOrder(customerId , orderId);
-				LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
 				dto.put("order", onGetOrder(order));
 				return ResourceUtils.asSuccessResponse(Status.OK, dto);
 			}else {
@@ -283,7 +283,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 		if (access.getRole() == UserRole.CUSTOMER) {
 			Customer customer = customerDao.get(id);
 			if (customer != null) {
-				HashMap<String, Object> dto = new HashMap<String, Object>();
+				HashMap<String, Object> dto = new HashMap<>();
 				dto.put("cart", fromEntity(customer.getCart()));
 				return ResourceUtils.asSuccessResponse(Status.OK, dto);
 			}else {
@@ -306,7 +306,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 		if (access.getRole() == UserRole.CUSTOMER) {
 			Customer customer = customerDao.get(id);
 			if (customer != null) {
-				HashMap<String, Object> dto = new HashMap<String, Object>();
+				HashMap<String, Object> dto = new HashMap<>();
 				dto.put("addressbooks", customer.getAddressBooks());
 				return ResourceUtils.asSuccessResponse(Status.OK, dto);
 			}else {
@@ -383,7 +383,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 					}
 				}
 				customerDao.update(customer);
-				HashMap<String, Object> dtos = new HashMap<String, Object>();
+				HashMap<String, Object> dtos = new HashMap<>();
 				dto.put(getClassT().getSimpleName().toLowerCase(), customer.toDto());
 				return ResourceUtils.asSuccessResponse(Status.OK, dtos);
 			}
@@ -394,7 +394,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	
 
 	private HashMap<String, Object> onGetOrder(Order entity) {
-		HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+		HashMap<String, Object> dto = new LinkedHashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("orderNumber", entity.getOrderNumber());
 	//	dto.put("paymentAt", this.getPaymentAt());
@@ -417,16 +417,16 @@ public class CustomerResource extends AbstractResource<Customer>{
 		dto.put("location", entity.getLocation() != null ? entity.getLocation() : "");
 	//	dto.put("status", entity.getAvailstatus());
 	//	Restaurant restaurantInfo = null;
-		List<HashMap<String, Object>> orderdetails = new ArrayList<HashMap<String,Object>>();
+		List<HashMap<String, Object>> orderdetails = new ArrayList<>();
 		for (OrderDetail orderDetail : entity.getOrderDetails()) {
-			HashMap<String, Object> order = new HashMap<String, Object>();
+			HashMap<String, Object> order = new HashMap<>();
 			List<Item> listItem = itemDao.getListItemByOrderDetails(orderDetail.getId());
 			order.put("id", orderDetail.getId());
 			order.put("unitPrice", orderDetail.getPrice());
 			order.put("quantity", orderDetail.getQuantity());
-			List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+			List<HashMap<String, Object>> items = new ArrayList<>();
 			for (Item item : listItem) {
-				HashMap<String, Object> itemtemp = new HashMap<String, Object>();
+				HashMap<String, Object> itemtemp = new HashMap<>();
 				itemtemp.put("id",item.getId());
 				itemtemp.put("itemName",item.getName());
 				itemtemp.put("itemDescription",item.getDescription());
@@ -446,13 +446,13 @@ public class CustomerResource extends AbstractResource<Customer>{
 /*		Customer cus = customerDao.findByOrder(entity.getId().toString());
 		HashMap<String, Object> customer = new HashMap<String, Object>();
 		customer.put("id",cus.getId());
-		customer.put("firstName",cus.getFirstName());
+		customer.put("firstName",cus.getFullName());
 		customer.put("lastName",cus.getLastName());
 		customer.put("email",cus.getEmail());
 		customer.put( "phoneNumber", cus.getPhoneNumber());
 //		customer.put("address",cus.getAddress());
 		dto.put("customer", customer);*/
-		LinkedHashMap<String, Object> odto = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> odto = new LinkedHashMap<>();
 		odto.put("order", dto);
 		return dto;
 	}
@@ -460,7 +460,7 @@ public class CustomerResource extends AbstractResource<Customer>{
 	
 	
 	protected HashMap<String, Object> fromEntity(Cart entity) {
-		LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("orderType", entity.getOrderType());
 		dto.put("total", entity.getTotal());

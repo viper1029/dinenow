@@ -255,7 +255,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
             }
             else {
-              //			DineNowApplication.stripe.charge(amount, "usd", co.getPaymentMethod().getCardStripe(), cus.getCustomerStripe(), String.format("Charge for %s", cus.getEmail() != null ? cus.getEmail() : cus.getFirstName() +" "+ cus.getLastName()));
+              //			DineNowApplication.stripe.charge(amount, "usd", co.getPaymentMethod().getCardStripe(), cus.getCustomerStripe(), String.format("Charge for %s", cus.getEmail() != null ? cus.getEmail() : cus.getFullName() +" "+ cus.getLastName()));
             }
           }
 
@@ -278,7 +278,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     }
   }
 
-
   @Path("/{restaurant_id}/search_orders")
   @ApiOperation(value = "Search Order of Restaurant")
   @ApiResponses(value = {
@@ -292,31 +291,31 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @QueryParam("query") String query, @QueryParam("customer_phone") String c_ph, @QueryParam("order_no") long o_no) {
     if (restaurantDao.get(restaurant_id) != null) {
       if (query != null) {
-        List<Order> entities = new ArrayList<Order>();
+        List<Order> entities = new ArrayList<>();
         entities = customerOrderDao.searchByOrder(restaurant_id, query);
-        List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
         for (Order dto : entities) {
           dtos.add(onGet(dto));
         }
         return ResourceUtils.asSuccessResponse(Status.OK, dtos);
       }
       else if (c_ph != null) {
-        List<Order> entities = new ArrayList<Order>();
+        List<Order> entities = new ArrayList<>();
         entities = customerOrderDao.searchByOrderAndCustomerPhone(restaurant_id, c_ph);
-        List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
         for (Order dto : entities) {
           dtos.add(onGet(dto));
         }
         return ResourceUtils.asSuccessResponse(Status.OK, dtos);
       }
       else if (o_no > 0) {
-        List<Order> entities = new ArrayList<Order>();
+        List<Order> entities = new ArrayList<>();
         entities = customerOrderDao.searchByOrderNo(restaurant_id, o_no);
-        List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
         for (Order dto : entities) {
           dtos.add(onGet(dto));
         }
-        LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("orders", dtos);
         return ResourceUtils.asSuccessResponse(Status.OK, dto);
       }
@@ -343,7 +342,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<DeliveryZone> entities = deliveryZoneDao.getAllDeliveryZonesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("deliveryzones", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -388,7 +387,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
               new ServiceErrorMessage("size not format number"));
         }
       }
-      List<Order> entities = new ArrayList<Order>();
+      List<Order> entities = new ArrayList<>();
       if (status != null && !status.equals("")) {
         // have Status
         OrderStatus orderstatus = OrderStatus.OPEN;
@@ -449,11 +448,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
         }
       }
-      List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+      List<HashMap<String, Object>> dtos = new ArrayList<>();
       for (Order dto : entities) {
         dtos.add(onGet(dto));
       }
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("orders", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -466,7 +465,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     HashMap<String, Object> uti = entity.toDto();
 
 
-    List<HashMap<String, Object>> orderdetails = new ArrayList<HashMap<String, Object>>();
+    List<HashMap<String, Object>> orderdetails = new ArrayList<>();
 /*		for (OrderDetail orderDetail : entity.getOrderDetails()) {
 			HashMap<String, Object> order = new HashMap<String, Object>();
 			List<Item> listItem = itemDao.getListItemByOrderDetails(orderDetail.getId());
@@ -513,7 +512,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 		uti.put("orderDetails", orderdetails);
 		*/
     Customer cus = customerDao.findByOrder(entity.getId().toString());
-    HashMap<String, Object> customer = new HashMap<String, Object>();
+    HashMap<String, Object> customer = new HashMap<>();
     customer.put("id", cus.getId());
     customer.put("firstName", cus.getFirstName());
     customer.put("lastName", cus.getLastName());
@@ -548,11 +547,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     }
     else if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       List<RestaurantUser> entities = restaurantUserDao.getListByRestaurant(restaurant_id);
-      List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+      List<HashMap<String, Object>> dtos = new ArrayList<>();
       for (RestaurantUser dto : entities) {
         dtos.add(onGet(dto));
       }
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("restaurantusers", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -566,11 +565,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<Item> entities = itemDao.getListByRestaurant(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> sizes = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> sizes = new ArrayList<>();
         for (ItemSize size : entities.get(i).getItemSizes()) {
-          LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
+          LinkedHashMap<String, Object> temp = new LinkedHashMap<>();
           temp.put("id", size.getSize().getId());
           temp.put("name", size.getSize().getSizeName());
           temp.put("description", size.getSize().getSizeDescription());
@@ -578,7 +577,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
           sizes.add(temp);
         }
         dtos.get(i).put("sizePrices", sizes);
-        List<HashMap<String, Object>> modifiers = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> modifiers = new ArrayList<>();
 //        for (ItemModifier info : entities.get(i).getModifiers()) { //TODO: Temp comment
 //          LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
 //          temp.put("id", info.getModifier().getId());
@@ -605,7 +604,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       List<Size> entities = sizeDao.getSizesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("sizes", dtos);
 
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
@@ -624,7 +623,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       List<Addon> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("addons", dtos);
 
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
@@ -642,9 +641,9 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<Category> entities = categoryDao.getCategoriesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> submenus = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> submenus = new ArrayList<>();
         dtos.get(i).put("items", submenus);
       }
       dto.put("categories", dtos);
@@ -662,7 +661,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<Tax> entities = taxDao.getTaxesByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("taxes", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -692,9 +691,9 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<Menu> entities = menuDao.getMenusByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> submenus = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> submenus = new ArrayList<>();
 	/*			for (SubMenu submenu : entities.get(i).getSubMenus()) {
 					LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
 					temp.put("id", submenu.getId());
@@ -720,7 +719,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     if (restaurantDao.get(restaurant_id) != null) {
       List<Review> entities = reviewDao.getReviewsByRestaurantId(restaurant_id);
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("reviews", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -739,7 +738,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
 
       for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> addons = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> addons = new ArrayList<>();
 //        for (ModifierAddon addOnInfo : entities.get(i).getModifierAddons()) { //TODO: temp comment
 //          HashMap<String, Object> temp = new HashMap<String, Object>();
 //          temp.put("addOn", addOnInfo.getAddOn().getId());
@@ -750,7 +749,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 //        }
         dtos.get(i).put("addOns", addons);
 
-        List<HashMap<String, Object>> itemSizes = new ArrayList<HashMap<String, Object>>();
+        List<HashMap<String, Object>> itemSizes = new ArrayList<>();
 //        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItems()) { //TODO: Temp comment
 //          HashMap<String, Object> temp = new HashMap<String, Object>();
 //          temp.put("item", itemSizeInfo.getItem().getId());
@@ -760,7 +759,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         dtos.get(i).put("itemSizes", itemSizes);
       }
 
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("modifiers", dtos);
 
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
@@ -863,7 +862,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       restaurant.setTimezoneId(timezone);
       if (dto.containsKey("dineInHours")) {
         List<HashMap<String, Object>> dineInHours = (List<HashMap<String, Object>>) dto.get("dineInHours");
-        ArrayList<Hour> arrHour = new ArrayList<Hour>();
+        ArrayList<Hour> arrHour = new ArrayList<>();
         for (HashMap<String, Object> hashMapDineIn : dineInHours) {
           Hour hour = new Hour();
           if (hashMapDineIn.containsKey("weekDayType")) {
@@ -897,7 +896,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       }
       if (dto.containsKey("acceptDeliveryHours")) {
         List<HashMap<String, Object>> acceptDeliveryHours = (List<HashMap<String, Object>>) dto.get("acceptDeliveryHours");
-        ArrayList<Hour> arrHour = new ArrayList<Hour>();
+        ArrayList<Hour> arrHour = new ArrayList<>();
         for (HashMap<String, Object> hashMapacceptDelivery : acceptDeliveryHours) {
           Hour hour = new Hour();
           if (hashMapacceptDelivery.containsKey("weekDayType")) {
@@ -930,7 +929,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       }
       if (dto.containsKey("acceptTakeOutHours")) {
         List<HashMap<String, Object>> acceptTakeOutHours = (List<HashMap<String, Object>>) dto.get("acceptTakeOutHours");
-        ArrayList<Hour> arrHour = new ArrayList<Hour>();
+        ArrayList<Hour> arrHour = new ArrayList<>();
         for (HashMap<String, Object> hashMapacceptTakeOut : acceptTakeOutHours) {
           Hour hour = new Hour();
           if (hashMapacceptTakeOut.containsKey("weekDayType")) {
@@ -980,7 +979,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(Restaurant entity) {
-    HashMap<String, Object> dto = new HashMap<String, Object>();
+    HashMap<String, Object> dto = new HashMap<>();
     dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
     return dto;
   }
@@ -1089,7 +1088,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
   @Override
   protected HashMap<String, Object> onGet(Restaurant entity, User access) {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", entity.getId());
     dto.put("name", entity.getName());
     dto.put("description", entity.getDescription());
@@ -1117,9 +1116,9 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     //	dto.put("discount_allowed", entity.isDiscount());
 
 
-    LinkedList<HashMap<String, Object>> holidayDtos = new LinkedList<HashMap<String, Object>>();
+    LinkedList<HashMap<String, Object>> holidayDtos = new LinkedList<>();
     for (ClosedDay day : entity.getClosedDay()) {
-      HashMap<String, Object> closeday = new LinkedHashMap<String, Object>();
+      HashMap<String, Object> closeday = new LinkedHashMap<>();
       closeday.put("id", day.getId());
       closeday.put("date", day.getDate());
       closeday.put("description", day.getDescription());
@@ -1132,15 +1131,15 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     dto.put("logo", entity.getLogo());
     System.out.println(entity.getMenus().size() + "++++++++++++++++++++++");
     // menus
-    LinkedList<HashMap<String, Object>> menuDtos = new LinkedList<HashMap<String, Object>>();
+    LinkedList<HashMap<String, Object>> menuDtos = new LinkedList<>();
 
     for (Menu menu : entity.getMenus()) {
-      HashMap<String, Object> menuDto = new LinkedHashMap<String, Object>();
+      HashMap<String, Object> menuDto = new LinkedHashMap<>();
       menuDto.put("id", menu.getId());
       menuDto.put("name", menu.getName());
       menuDto.put("description", menu.getDescription());
       // Submenu
-      ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<HashMap<String, Object>>();
+      ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<>();
 /*			for (SubMenu submenu : menu.getSubMenus()) {
 				HashMap<String, Object> submenuDto = new LinkedHashMap<String, Object>();
 				submenuDto.put("id", submenu.getId());
@@ -1240,7 +1239,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       menuDtos.add(menuDto);
     }
     dto.put("menus", menuDtos);
-    HashMap<String, Object> dtos = new HashMap<String, Object>();
+    HashMap<String, Object> dtos = new HashMap<>();
     dtos.put(getClassT().getSimpleName().toLowerCase(), dto);
     return dtos;
   }
@@ -1248,16 +1247,16 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   protected HashMap<String, Object> onGetApp(Restaurant entity, User access) {
     HashMap<String, Object> dto = super.onGet(entity, access);
     // menus
-    ArrayList<HashMap<String, Object>> menuDtos = new ArrayList<HashMap<String, Object>>();
+    ArrayList<HashMap<String, Object>> menuDtos = new ArrayList<>();
     for (Menu menu : entity.getMenus()) {
       if (menu.isShowMenu()) {
 
-        HashMap<String, Object> menuDto = new HashMap<String, Object>();
+        HashMap<String, Object> menuDto = new HashMap<>();
         menuDto.put("id", menu.getId());
         menuDto.put("menuName", menu.getName());
         menuDto.put("menuDescription", menu.getDescription());
         // Submenu
-        ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<HashMap<String, Object>>();
+        ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<>();
 /*				for (SubMenu submenu : menu.getSubMenus()) {
 					HashMap<String, Object> submenuDto = new HashMap<String, Object>();
 					submenuDto.put("id", submenu.getId());
@@ -1394,7 +1393,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
       List<Restaurant> entities = this.dao.getByPage(iPage, iSize);
       List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put(getClassT().getSimpleName().toLowerCase() + 's', dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
@@ -1437,11 +1436,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   }
 
   private List<HashMap<String, Object>> fromEntitiesSearch(List<Restaurant> entities) {
-    List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+    List<HashMap<String, Object>> dtos = new ArrayList<>();
 
 
     for (Restaurant entity : entities) {
-      HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      HashMap<String, Object> dto = new LinkedHashMap<>();
       dto.put("id", entity.getId());
       dto.put("name", entity.getName());
       dto.put("description", entity.getDescription());
@@ -1513,7 +1512,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
                 .createPoint(new Coordinate(location.getLat(),
                     location.getLng())), distance, cusine, sorted);
 
-        LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("restaurants", fromEntitiesSearch(entities));
         return ResourceUtils.asSuccessResponse(Status.OK, dto);//getMapListFromEntities(entities));
       }
@@ -1521,7 +1520,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 
         List<Restaurant> entities = restaurantDao.findDistanceNew(searchType, cusine, sorted, zone);
-        LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("restaurants", fromEntitiesSearch(entities));
         return ResourceUtils.asSuccessResponse(Status.OK, dto);
 
@@ -1559,7 +1558,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
             new GeometryFactory().createPoint(new Coordinate(
                 location.getLat(), location.getLng())),
             distance, SearchOrderBy.DISTANCE); // 25KM
-        LinkedHashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("restaurants", getMapListFromEntities(entities));
         return ResourceUtils.asSuccessResponse(Status.OK,
             dto);
@@ -1587,17 +1586,17 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   public Response getPolygon(@ApiParam(access = "internal") @Auth User access) {
     List<Restaurant> entities = this.dao.getAll();
 
-    List<HashMap<String, Object>> dtos = new ArrayList<HashMap<String, Object>>();
+    List<HashMap<String, Object>> dtos = new ArrayList<>();
 
     for (Restaurant entity : entities) {
       HashMap<String, Object> entitys = getMapFromEntity(entity);
       List<DeliveryZone> dzs = deliveryZoneDao
           .getAllDeliveryZonesByRestaurantId(entity.getId());
 
-      List<HashMap<String, Object>> deliverys = new ArrayList<HashMap<String, Object>>();
+      List<HashMap<String, Object>> deliverys = new ArrayList<>();
 
       for (int i = 0; i < dzs.size(); i++) {
-        HashMap<String, Object> delivery = new HashMap<String, Object>();
+        HashMap<String, Object> delivery = new HashMap<>();
 
         delivery.put("id", dzs.get(i).getId());
         delivery.put("name", dzs.get(i)
@@ -1608,7 +1607,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
         delivery.put("fee", dzs.get(i).getFee());
         delivery.put("type", dzs.get(i)
             .getType());
-        List<LatLng> coords = new ArrayList<LatLng>();
+        List<LatLng> coords = new ArrayList<>();
         for (int j = 0; j < dzs.get(i).getCoordinates().getCoordinates().length; j++) {
           Coordinate coord = dzs.get(i).getCoordinates()
               .getCoordinates()[j];

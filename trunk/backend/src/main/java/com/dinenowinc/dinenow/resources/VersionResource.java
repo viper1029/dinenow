@@ -47,7 +47,7 @@ public class VersionResource extends AbstractResource<Version> {
     List<Version> entities = this.dao.getAll();
     for(Version version : entities) {
       if(version.getVersion().equalsIgnoreCase(clientVersion)) {
-        HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+        HashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("forceUpdate", version.getForceUpdate());
         dto.put("updateUrl", version.getUpdateUrl());
         ResourceUtils.asSuccessResponse(Status.OK, dto);

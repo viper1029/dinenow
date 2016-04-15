@@ -45,7 +45,7 @@ public class PaymentTypeResource extends AbstractResource<PaymentType>{
 	
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(PaymentType entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put(getClassT().getSimpleName().toLowerCase(), entity.toDto());
 		return dto;
 	}

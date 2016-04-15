@@ -107,7 +107,7 @@ public class AddonResource extends AbstractResource<Addon> {
     entity.setAddonDescription(inputMap.get("description").toString());
 
     if (inputMap.containsKey("addonSize")) {
-      ArrayList<AddonSize> addonSizes = new ArrayList<AddonSize>();
+      ArrayList<AddonSize> addonSizes = new ArrayList<>();
       List<HashMap<String, Object>> addonSizeList = (List<HashMap<String, Object>>) inputMap.get("addonSize");
       for (HashMap<String, Object> addonSize : addonSizeList) {
         addonSizes.add(createNewAddonSize(addonSize, entity));
@@ -160,8 +160,8 @@ public class AddonResource extends AbstractResource<Addon> {
     entity.setAddonDescription(inputMap.get("description").toString());
 
     if (inputMap.containsKey("addonSize")) {
-      ArrayList<AddonSize> newAddonSizes = new ArrayList<AddonSize>();
-      ArrayList<AddonSize> keepExistingAddonSizes = new ArrayList<AddonSize>();
+      ArrayList<AddonSize> newAddonSizes = new ArrayList<>();
+      ArrayList<AddonSize> keepExistingAddonSizes = new ArrayList<>();
       List<HashMap<String, Object>> addonSizeList = (List<HashMap<String, Object>>) inputMap.get("addonSize");
       for (HashMap<String, Object> addonSize : addonSizeList) {
         boolean foundExisting = false;
@@ -211,12 +211,12 @@ public class AddonResource extends AbstractResource<Addon> {
 
   @Override
   protected HashMap<String, Object> getMapFromEntity(Addon entity) {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", entity.getId());
     dto.put("name", entity.getAddonName());
     dto.put("description", entity.getAddonDescription());
     dto.put("addonSize", ModelHelpers.fromEntities(entity.getAddonSize()));
-    HashMap<String, Object> returnMap = new HashMap<String, Object>();
+    HashMap<String, Object> returnMap = new HashMap<>();
     returnMap.put(getClassT().getSimpleName().toLowerCase(), dto);
     return returnMap;
   }

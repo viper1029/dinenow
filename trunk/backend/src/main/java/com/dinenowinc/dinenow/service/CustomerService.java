@@ -32,7 +32,7 @@ public class CustomerService {
     ServiceErrorValidationMessage errorMessages = validator.validateForCreation();
     LOGGER.debug(customer.toString());
 
-    return new ServiceResult<Customer>(customer, errorMessages);
+    return new ServiceResult<>(customer, errorMessages);
   }
 
   public ServiceResult<Customer> updateCustomer(Customer resData) {
@@ -45,7 +45,7 @@ public class CustomerService {
       res = resData;
       customerDao.update(resData);
     }
-    return new ServiceResult<Customer>(resData, errorMessages);
+    return new ServiceResult<>(resData, errorMessages);
   }
 
   private CustomerValidator buildTaskValidator(Customer c) {

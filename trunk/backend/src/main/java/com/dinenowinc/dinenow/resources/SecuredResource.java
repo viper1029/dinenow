@@ -498,7 +498,7 @@ public class SecuredResource {
       Customer customer = customerDao.get(id);
       if (customer != null) {
 
-        HashMap<String, Object> dto = new HashMap<String, Object>();
+        HashMap<String, Object> dto = new HashMap<>();
         dto.put("id", customer.getId());
         dto.put("email", customer.getEmail());
         dto.put("firstName", customer.getFirstName());

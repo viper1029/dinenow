@@ -48,7 +48,7 @@ public class CouponResource extends AbstractResource<Coupon> {
 
 	@Override
 	protected HashMap<String, Object> getMapFromEntity(Coupon entity) {
-		HashMap<String, Object> dto = new HashMap<String, Object>();
+		HashMap<String, Object> dto = new HashMap<>();
 		dto.put("id", entity.getId());
 		dto.put("couponType", entity.getCouponType());
 		dto.put("discountValue", entity.getDiscountValue());

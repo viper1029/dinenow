@@ -81,12 +81,12 @@ public class Customer extends BaseEntity {
   @JsonIgnore
   @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_customer", foreignKey = @ForeignKey(name = "id_customer_addressbook_fk"))
-  private final Set<AddressBook> addressBooks = new HashSet<AddressBook>();
+  private final Set<AddressBook> addressBooks = new HashSet<>();
 
   @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "id_customer", foreignKey = @ForeignKey(name = "Fk_customer_orders"))
-  private final Set<Order> orders = new HashSet<Order>();
+  private final Set<Order> orders = new HashSet<>();
 
   @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
   private Cart cart;
@@ -127,7 +127,7 @@ public class Customer extends BaseEntity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}*/
-    return new ArrayList<PaymentMethod>();
+    return new ArrayList<>();
   }
 
   public void setCardStrip(List<PaymentMethod> tokenStrip) {
@@ -314,7 +314,7 @@ public class Customer extends BaseEntity {
 
   @Override
   public HashMap<String, Object> toDto() {
-    HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+    HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("email", this.getEmail());
     dto.put("firstName", this.getFirstName());
