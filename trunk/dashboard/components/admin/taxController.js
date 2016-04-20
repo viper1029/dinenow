@@ -28,7 +28,8 @@ angular.module("app.admin.restaurant.manage.restaurant.taxes", [])
                             }, 100)
                         }, $scope.init(), $scope.save = function() {
                             $scope.isLoadingSave = !0, setTimeout(function() {
-                                $scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""), adminTaxesResource.addOrUpdate($scope.itemToProcess).success(function() {
+                                $scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""),
+                                    adminTaxesResource.addOrUpdate($scope.itemToProcess).success(function() {
                                     $scope.isLoadingSave = !1, $modalInstance.close($scope.itemToProcess)
                                 })
                             }, 300)

@@ -94,10 +94,6 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                 }
             };
 
-            $scope.$watch('models', function(model) {
-                $scope.modelAsJson = JSON.stringify(menu, null, "   ");
-            }, true);
-
 
             $scope.syncObject = function (obj) {
                 var temp = {
@@ -132,10 +128,10 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
             };
 
             $scope.save = function (menu) {
-                var obj = $scope.syncObject(menu);
+                //var obj = $scope.syncObject(menu);
                 $scope.isLoadingSave = !0;
                 setTimeout(function () {
-                    adminMenusResource.addOrUpdate(obj).success(function () {
+                    adminMenusResource.addOrUpdate(menu).success(function () {
                         $scope.isLoadingSave = !1;
                         $state.go("app.admin.restaurant.manage.menu.menu.list", {}, {
                             reload: !0
@@ -203,7 +199,7 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                 if(type === allowedType ) {
                     var newCategory = {
                         category: angular.copy(item),
-                        itemPrice: []
+                        items: []
                     };
                     $scope.menu.categoryItem.splice(index, 0, newCategory);
                     $scope.categoriesTree.splice(index, 1)
@@ -213,15 +209,10 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
             };
 
             $scope.addItem = function (event, index, item, external, type, allowedType, categoryItem) {
-                var newItemPrice = {
-                    item: angular.copy(item)
-                    price: item.price
-                };
                 var categoryItemIndex = $scope.menu.categoryItem.indexOf(categoryItem);
                 if(categoryItemIndex!==(-1)) {
-                    $scope.menu.categoryItem[categoryItemIndex].itemPrice.splice(index, 0, newItemPrice);
+                    $scope.menu.categoryItem[categoryItemIndex].items.splice(index, 0, angular.copy(item));
                 }
-
                 return false;
             };
 
@@ -246,12 +237,12 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
 
             };
 
-            $scope.removeItemFromCategory = function(categoryItem, itemPrice) {
+            $scope.removeItemFromCategory = function(categoryItem, item) {
                 var categoryItemIndex = $scope.menu.categoryItem.indexOf(categoryItem);
                 if(categoryItemIndex!==(-1)) {
-                    var itemPriceIndex = $scope.menu.categoryItem[categoryItemIndex].itemPrice.indexOf(itemPrice);
-                    if(itemPriceIndex!==(-1)) {
-                        $scope.menu.categoryItem[categoryItemIndex].itemPrice.splice(itemPriceIndex, 1);
+                    var itemIndex = $scope.menu.categoryItem[categoryItemIndex].items.indexOf(item);
+                    if(itemIndex!==(-1)) {
+                        $scope.menu.categoryItem[categoryItemIndex].items.splice(itemIndex, 1);
                         //$scope.itemsTree.push(itemPrice.item);
                     }
                 }
@@ -278,9 +269,6 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                 $scope.logEvent(message, event)
             };
 
-            $scope.$watch('menu', function (menu) {
-                $scope.itemToProcessAsJson = angular.toJson(menu, true)
-            }, true)
 
             $scope.deleteMenu = function (item) {
                 alertify.confirm("Are you sure you want to delete?", function (e) {

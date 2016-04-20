@@ -2,11 +2,7 @@ angular.module("app.admin.restaurant", ["app.admin.restaurant.service",
         "app.admin.restaurant.directive", "app.admin.restaurant.manage", "theme.google_maps"])
     .controller("RestaurantController", function($rootScope, $scope, $modal,
                                                  $state, $filter, ngTableParams, restaurantsResource,$timeout) {
-        console.log("call1");
-
-
-        $scope.initi = function(page) {
-            console.log("RestaurantController");
+        $scope.init = function(page) {
             setTimeout(function() {
                 restaurantsResource.get().success(function(payload) {
                     $scope.restaurants = payload.data.restaurants,
@@ -31,12 +27,9 @@ angular.module("app.admin.restaurant", ["app.admin.restaurant.service",
                 })
             }
         },
-            $scope.initi(),
+            $scope.init(),
 
             $scope.open = function(item) {
-                //console.log(item);
-
-
                 var modalInstance = $modal.open({
                     templateUrl: "scripts/admin/restaurant/views/modal/restaurant.html",
                     resolve: {
@@ -44,6 +37,7 @@ angular.module("app.admin.restaurant", ["app.admin.restaurant.service",
                             return item
                         }
                     },
+                    windowClass: 'app-modal-window ',
 
                     controller: function($timeout, $scope, $modalInstance, restaurantsResource, itemToProcess) {
 
@@ -58,7 +52,6 @@ angular.module("app.admin.restaurant", ["app.admin.restaurant.service",
                             console.log($scope.itemToProcess),
                             console.log($scope.tagOptions),
                             $scope.initMap = function() {
-
                                 $scope.marker,
                                     $scope.locationRestaurant = {
                                         lat: 0,

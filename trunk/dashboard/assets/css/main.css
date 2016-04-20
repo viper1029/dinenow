@@ -3473,6 +3473,9 @@ button.close {
     width: 900px;
   }
 }
+.app-modal-window .modal-dialog {
+  width: 1400px;
+}
 .tooltip {
   position: absolute;
   z-index: 1230;

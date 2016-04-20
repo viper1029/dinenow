@@ -131,15 +131,15 @@
             dnd-drop="addItem(event, index, item, external, type, 'itemType', catItem)"
             dnd-inserted="logEvent('Element was inserted at position ' + index, event)"
             class="itemlist">
-          <li ng-repeat="itemPrice in catItem.itemPrice"
+          <li ng-repeat="item in catItem.items"
               dnd-type="'itemType'"
               dnd-effect-allowed="copyMove"
               dnd-dragstart="logEvent('Started to drag an item', event)"
               dnd-copied="logEvent('Item copied', event)"
               dnd-canceled="logEvent('Drag operation canceled', event)"
               dnd-dragend="logEvent('Drag operation ended', event)">
-            <i class="fa fa-arrows"></i> {{itemPrice.item.name}}
-              <button class="btn btn-sm btn-primary align-right" ng-click="removeItemFromCategory(catItem, itemPrice)"><i class="fa fa-times"></i> Remove</button>
+            <i class="fa fa-arrows"></i> {{item.name}}
+              <button class="btn btn-sm btn-primary align-right" ng-click="removeItemFromCategory(catItem, item)"><i class="fa fa-times"></i> Remove</button>
           </li>
         </ul>
         <div class="clearfix"></div>

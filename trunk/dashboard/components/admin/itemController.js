@@ -96,7 +96,7 @@ angular.module("app.admin.restaurant.manage.menu.items", ["flow"])
                                     isVegeterian: null
                                 }
                         };
-                        $scope.init(),
+                        init(),
                             $scope.getLinkImage = function (message) {
                                 var response = JSON.parse(message);
                                 $scope.itemToProcess.linkImage = response.data.link
@@ -228,5 +228,5 @@ angular.module("app.admin.restaurant.manage.menu.items", ["flow"])
 
             initItems();
             $scope.open = open;
-            $scope.deleteAddon = deleteAddon;
+            //$scope.deleteAddon = deleteAddon;
         });

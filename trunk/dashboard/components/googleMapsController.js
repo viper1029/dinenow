@@ -1,41 +1,42 @@
 angular.module("theme.google_maps", [])
-    .controller("GMapsController", ["$scope", function($scope) {
+    .controller("GMapsController", ["$scope", function ($scope) {
         $scope.basicMapOptions = {
             lat: -12.043333,
             lng: -77.028333
-        },
-            $scope.routeMapInstance,
-            $scope.routeMapOptions = {
-                lat: -12.043333,
-                lng: -77.028333
-            },
-            $scope.startRoute = function($event) {
-                $event.preventDefault(), $scope.routeMapInstance.travelRoute({
-                    origin: [-12.044012922866312, -77.02470665341184],
-                    destination: [-12.090814532191756, -77.02271108990476],
-                    travelMode: "driving",
-                    step: function(e) {
-                        $("#instructions").append("<li>" + e.instructions + "</li>"), $("#instructions li:eq(" + e.step_number + ")").delay(450 * e.step_number).fadeIn(200, function() {
-                            $scope.routeMapInstance.setCenter(e.end_location.lat(), e.end_location.lng()),
-                                $scope.routeMapInstance.drawPolyline({
-                                    path: e.path,
-                                    strokeColor: "#131540",
-                                    strokeOpacity: .6,
-                                    strokeWeight: 6
-                                })
-                        })
-                    }
-                })
-            },
-            $scope.panoramicMapOptions = {
-                lat: -12.043333,
-                lng: -77.028333
-            };
-        google.maps.event.addListenerOnce(map, 'idle', function(){
+        };
+        $scope.routeMapInstance;
+        $scope.routeMapOptions = {
+            lat: -12.043333,
+            lng: -77.028333
+        };
+        $scope.startRoute = function ($event) {
+            $event.preventDefault(), $scope.routeMapInstance.travelRoute({
+                origin: [-12.044012922866312, -77.02470665341184],
+                destination: [-12.090814532191756, -77.02271108990476],
+                travelMode: "driving",
+                step: function (e) {
+                    $("#instructions").append("<li>" + e.instructions + "</li>"), $("#instructions li:eq(" + e.step_number + ")").delay(450 * e.step_number).fadeIn(200, function () {
+                        $scope.routeMapInstance.setCenter(e.end_location.lat(), e.end_location.lng()),
+                            $scope.routeMapInstance.drawPolyline({
+                                path: e.path,
+                                strokeColor: "#131540",
+                                strokeOpacity: .6,
+                                strokeWeight: 6
+                            })
+                    })
+                }
+            })
+        };
+        $scope.panoramicMapOptions = {
+            lat: -12.043333,
+            lng: -77.028333
+        };
+        google.maps.event.addListenerOnce(map, 'idle', function () {
             google.maps.event.trigger(map, 'resize');
             //map.setCenter(51.511966, -0.119563);
         });
         var infoWindow = new google.maps.InfoWindow({});
+
         console.log(infoWindow);
         $scope.fusionMapInstance,
             $scope.fusionMapOptions = {
@@ -53,18 +54,19 @@ angular.module("theme.google_maps", [])
             [-12.088527520066453, -77.0241058385925],
             [-12.090814532191756, -77.02271108990476]
         ];
-        $scope.polylinesMapInstance,
+        $scope.polylinesMapInstance;
             $scope.polylinesMapOptions = {
                 lat: -12.043333,
                 lng: -77.028333,
-                click: function(e) {}
-            },
-            $scope.geoCodingMapInstance,
-            $scope.geocodeAddress = "Rio",
-            $scope.submitGeocoding = function(address) {
+                click: function (e) {
+                }
+            };
+            $scope.geoCodingMapInstance;
+            $scope.geocodeAddress = "Rio";
+            $scope.submitGeocoding = function (address) {
                 GMaps.geocode({
                     address: address,
-                    callback: function(results, status) {
+                    callback: function (results, status) {
                         if ("OK" == status) {
                             var latlng = results[0].geometry.location;
                             $scope.geoCodingMapInstance.setCenter(latlng.lat(), latlng.lng()),
@@ -75,8 +77,8 @@ angular.module("theme.google_maps", [])
                         }
                     }
                 })
-            },
-            $scope.$on("GMaps:created", function(event, mapInstance) {
+            };
+            $scope.$on("GMaps:created", function (event, mapInstance) {
                 console.log(mapInstance);
                 console.log(event);
                 mapInstance.key && ($scope[mapInstance.key] = mapInstance.map),
@@ -87,7 +89,7 @@ angular.module("theme.google_maps", [])
                         },
                         suppressInfoWindows: !0,
                         events: {
-                            click: function(point) {
+                            click: function (point) {
                                 infoWindow.setContent("You clicked here!"),
                                     infoWindow.setPosition(point.latLng),
                                     infoWindow.open(fusion.map)
@@ -101,8 +103,8 @@ angular.module("theme.google_maps", [])
                     }) : "geoCodingMapInstance" == mapInstance.key
             })
     }])
-    .service("GMapService", ["$rootScope", function($rootScope) {
-        this["new"] = function(options, instance) {
+    .service("GMapService", ["$rootScope", function ($rootScope) {
+        this["new"] = function (options, instance) {
             console.log(options);
             console.log(instance);
             var gmaps = new GMaps(options);
@@ -112,8 +114,8 @@ angular.module("theme.google_maps", [])
                 map: gmaps
             })
             //delete GMaps;
-        }, this.newPanorama = function(options, instance) {
-            console.log("panorma"+instance);
+        }, this.newPanorama = function (options, instance) {
+            console.log("panorma" + instance);
             var gmaps = GMaps.createPanorama(options);
             $rootScope.$broadcast("GMaps:created", {
                 key: instance,
@@ -121,14 +123,14 @@ angular.module("theme.google_maps", [])
             })
         }
     }])
-    .directive("gmap", ["$timeout", "GMapService", function($timeout, GMapService) {
+    .directive("gmap", ["$timeout", "GMapService", function ($timeout, GMapService) {
         return {
             restrict: "A",
             scope: {
                 options: "=",
                 instance: "@"
             },
-            link: function(scope, element, attr) {
+            link: function (scope, element, attr) {
                 (attr.id = Math.random().toString(36).substring(7),
                     element.attr("id", attr.id)),
                     scope.options.el = "#" + attr.id,

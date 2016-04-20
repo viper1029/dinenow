@@ -26,7 +26,6 @@ dineNowApp.module('app.controllers',[
 
 angular
     .module('app', [
-
         'ui.bootstrap',
         'ui.tree',
         'ui.select2',

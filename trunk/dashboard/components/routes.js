@@ -17,7 +17,6 @@ angular.module('app.controllers',["app.security.service", "app.security.login", 
 
 angular
   .module('app', [
-
     'ui.bootstrap',
     'ui.tree',
     'ui.select2',
