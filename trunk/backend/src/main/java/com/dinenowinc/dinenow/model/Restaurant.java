@@ -71,12 +71,9 @@ public class Restaurant extends BaseEntity {
 
   private String stripe;
 
-  @Column(length = 10000000)
-  @Lob
-  @Type(type = "org.hibernate.type.TextType")
-  private String cuisine = "[]"; // TODO: add new table
+  private String cuisine;
 
-  private String timezoneId;
+  private String timezone;
 
   @Column(length = 10000000, name = "delivery_hours")
   @Lob
@@ -102,8 +99,6 @@ public class Restaurant extends BaseEntity {
   @Column(name = "accept_dinein", nullable = false)
   private boolean acceptDineIn;
 
-  @Lob
-  //@Type(type = "org.hibernate.spatial.GeometryType")
   private Point location;
 
   @Column(nullable = false)
@@ -124,8 +119,7 @@ public class Restaurant extends BaseEntity {
   @Column(nullable = false)
   private String country;
 
-  @Column(nullable = false, unique = true)
-  private String keyword; //TODO: add table
+  private String keyword;
 
   @Column
   private String logo;
@@ -182,7 +176,7 @@ public class Restaurant extends BaseEntity {
 
   @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_payment_type", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_payment_type"))
-  @ForeignKey(name = "Fk_restaurant_paymentType")
+  //@ForeignKey(name = "Fk_restaurant_paymentType")
   private Set<PaymentType> paymentTypes = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
@@ -202,7 +196,7 @@ public class Restaurant extends BaseEntity {
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(name = "restaurant_restaurant_user", joinColumns = @JoinColumn(name = "id_restaurant"), inverseJoinColumns = @JoinColumn(name = "id_restaurant_user"))
-  @ForeignKey(name = "Fk_restaurant_users")
+  //@ForeignKey(name = "Fk_restaurant_users")
   private Set<RestaurantUser> users = new HashSet<>();
 
 
@@ -214,12 +208,12 @@ public class Restaurant extends BaseEntity {
     this.rating = rating;
   }
 
-  public String getTimezoneId() {
-    return timezoneId;
+  public String getTimezone() {
+    return timezone;
   }
 
-  public void setTimezoneId(String timezoneId) {
-    this.timezoneId = timezoneId;
+  public void setTimezone(String timezoneId) {
+    this.timezone = timezoneId;
   }
 
   public String getCuisine() {
@@ -305,14 +299,6 @@ public class Restaurant extends BaseEntity {
   public void addItem(Item item) {
     getItems().add(item);
   }
-    
-/*	public Set<SubMenu> getSubmenus() {
-    return submenus;
-	}*/
-
-/*	public void addSubMenu(SubMenu submenu){
-		getSubmenus().create(submenu);
-	}*/
 
   public Set<Category> getCategories() {
     return categories;
@@ -371,7 +357,7 @@ public class Restaurant extends BaseEntity {
     return reviews;
   }
 
-  public void addgetReviews(Review review) {
+  public void addReview(Review review) {
     getReviews().add(review);
   }
 
@@ -506,7 +492,7 @@ public class Restaurant extends BaseEntity {
       ArrayList<Hour> list = mapper.readValue(this.accept_takeout_hours, new TypeReference<List<Hour>>() {
       });
 /*			Iterator<Hour> iter = list.iterator();
-			while (iter.hasNext()) {
+      while (iter.hasNext()) {
 				Hour hour = iter.next();
 				System.out.println("::::::::::::::::::::::::"+hour.getFromTime().getDay());
 				for(ClosedDay day : getClosedDay()){
@@ -721,7 +707,7 @@ public class Restaurant extends BaseEntity {
     dto.put("acceptTakeOutHours", this.getAcceptTakeOutHours());
     dto.put("cuisine", this.getCuisine());
     dto.put("paymentTypes", this.getPaymentTypes());
-    dto.put("timezone", this.getTimezoneId());
+    dto.put("timezone", this.getTimezone());
     dto.put("logo", this.getLogo());
     return dto;
   }

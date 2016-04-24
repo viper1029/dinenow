@@ -56,12 +56,6 @@ public class ModifierResource extends AbstractResource<Modifier> {
   private AddonDao addonDao;
 
   @Inject
-  private ItemDao itemDao;
-
-  @Inject
-  SizeDao sizeDao;
-
-  @Inject
   private ModifierDao modifierDao;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractResource.class);
@@ -76,6 +70,25 @@ public class ModifierResource extends AbstractResource<Modifier> {
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
       return super.getAll(access);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Modifier By Restaurant")
+  @GET
+  public Response getModifiersByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Modifier> entities = modifierDao.getModifiersByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("modifiers", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }

@@ -1,10 +1,12 @@
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.dao.CategoryDao;
+import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -25,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +40,9 @@ public class CategoryResource extends AbstractResource<Category> {
 
   @Inject
   private CategoryDao categoryDao;
+
+  @Inject
+  private RestaurantDao restaurantDao;
 
   @GET
   @ApiOperation(value = "get all categories for admin and owner")
@@ -52,6 +58,25 @@ public class CategoryResource extends AbstractResource<Category> {
       LinkedHashMap<String, Object> returnMap = new LinkedHashMap<>();
       returnMap.put("categories", getMapListFromEntities(entities));
       return ResourceUtils.asSuccessResponse(Status.OK, returnMap);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Categories By Restaurant")
+  @GET
+  public Response getCategoriesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Category> entities = categoryDao.getCategoriesByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("categories", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+      }
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }

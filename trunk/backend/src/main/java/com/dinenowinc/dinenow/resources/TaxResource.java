@@ -1,10 +1,12 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Tax;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -26,6 +28,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 
 @Path("/taxes")
@@ -37,6 +41,9 @@ public class TaxResource extends AbstractResource<Tax> {
   @Inject
   private TaxDao taxDao;
 
+  @Inject
+  private RestaurantDao restaurantDao;
+
   @GET
   @ApiOperation("tax of restaurant for ADMIN and OWNER")
   @ApiResponses(value = {
@@ -47,6 +54,25 @@ public class TaxResource extends AbstractResource<Tax> {
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       return super.getAll(access);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Taxes By Restaurant")
+  @GET
+  public Response getTaxesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Tax> entities = taxDao.getTaxesByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("taxes", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }

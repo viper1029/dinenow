@@ -169,7 +169,7 @@ public class SecuredResource {
           return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
         }
       }
-      Restaurant restaurant = restaurantDao.findByIDUser(restaurantUser.getId());
+      Restaurant restaurant = restaurantDao.findByRestaurantUser(restaurantUser.getId());
       Map<String, Object> data = TokenGenerator.generateToken(restaurantUser.getId(), restaurantUser.getRole(), restaurantUser, restaurant);
       return ResourceUtils.asSuccessResponse(Response.Status.OK, data);
     }

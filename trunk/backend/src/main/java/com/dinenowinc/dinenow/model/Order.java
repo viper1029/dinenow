@@ -31,7 +31,7 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "order")
+@Table(name = "\"order\"")
 @Audited
 @NamedQueries({ @NamedQuery(name = "Order.GetAll", query = "from Order o") })
 @JsonIgnoreProperties(ignoreUnknown = true)

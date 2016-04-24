@@ -59,10 +59,4 @@ public class RestaurantService {
 			return instance;
 		}
 	}
-
-	
-	public Restaurant getUserByEmail(String name){
-		return restaurantDao.findByExactUserName(name);
-	}
-
 }

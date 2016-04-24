@@ -17,32 +17,31 @@ import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Addon;
-import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.ClosedDay;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.DeliveryZone;
-import com.dinenowinc.dinenow.model.helpers.Hour;
 import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.ItemSize;
-import com.dinenowinc.dinenow.model.helpers.LatLng;
 import com.dinenowinc.dinenow.model.Menu;
-import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.Modifier;
-import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.OrderDetail;
-import com.dinenowinc.dinenow.model.helpers.OrderStatus;
-import com.dinenowinc.dinenow.model.helpers.OrderType;
 import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.Review;
-import com.dinenowinc.dinenow.model.helpers.SearchOrderBy;
-import com.dinenowinc.dinenow.model.helpers.SearchType;
 import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.Tax;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.Hour;
+import com.dinenowinc.dinenow.model.helpers.LatLng;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
+import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
+import com.dinenowinc.dinenow.model.helpers.OrderStatus;
+import com.dinenowinc.dinenow.model.helpers.OrderType;
+import com.dinenowinc.dinenow.model.helpers.SearchOrderBy;
+import com.dinenowinc.dinenow.model.helpers.SearchType;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.model.helpers.WeekDayType;
 import com.dinenowinc.dinenow.utils.Utils;
@@ -91,25 +90,10 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   private RestaurantDao restaurantDao;
 
   @Inject
-  ReviewDao reviewDao;
-
-  @Inject
   private ItemDao itemDao;
 
   @Inject
-  private SizeDao sizeDao;
-
-  @Inject
   PaymentTypeDao paymentTypeDao;
-
-  @Inject
-  private AddonDao addonDao;
-
-  @Inject
-  private CategoryDao categoryDao;
-
-  @Inject
-  private MenuDao menuDao;
 
   @Inject
   private OrderDao orderDao;
@@ -121,18 +105,59 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   private OrderDao customerOrderDao;
 
   @Inject
-  private ModifierDao modifierDao;
-
-  @Inject
-  private ItemInfoDao itemInfoDao;
-
-  @Inject
-  private TaxDao taxDao;
-
-  @Inject
   RestaurantUserDao restaurantUserDao;
 
-  private AbstractResource<Size> size1;
+  @GET
+  @ApiOperation(value = "api get all restaurant by admin", notes = "must login admin")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 401, message = "access denied for user"),
+      @ApiResponse(code = 400, message = "page not format number"),
+      @ApiResponse(code = 400, message = "size not format number")
+  })
+  public Response getAll(@ApiParam(access = "internal") @Auth User access, @QueryParam("page") String page, @QueryParam("size") String size) {
+    if (access.getRole() == UserRole.ADMIN) {
+      int pageInt = 1;
+      int sizeInt = 50;
+      if (page != null) {
+        try {
+          pageInt = Integer.parseInt(page);
+        }
+        catch (Exception e) {
+          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Page is not a number."));
+        }
+      }
+      if (size != null) {
+        try {
+          sizeInt = Integer.parseInt(size);
+        }
+        catch (Exception e) {
+          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Size is not a number."));
+        }
+      }
+      List<Restaurant> entities = this.dao.getByPage(pageInt, sizeInt);
+      List<HashMap<String, Object>> returnMap = getMapListFromEntities(entities);
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+      dto.put("restaurants", returnMap);
+      return ResourceUtils.asSuccessResponse(Status.OK, dto);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
+  }
+
+  @GET
+  @Path("/{id}")
+  @ApiOperation(value = "api get detail restaurant")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 404, message = "Cannot found entity")
+  })
+  @Override
+  public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      return super.get(access, id);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
+  }
 
   @POST
   @ApiOperation(value = "add new restaurant")
@@ -149,6 +174,43 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
 
+  @Override
+  protected Restaurant getEntityForInsertion(HashMap<String, Object> inputMap) {
+    Restaurant entity = super.getEntityForInsertion(inputMap);
+    entity.setName(inputMap.get("name").toString());
+    entity.setDescription(inputMap.get("description").toString());
+    entity.setAcceptDelivery(inputMap.containsKey("acceptDelivery") ? Boolean.parseBoolean(inputMap.get("acceptDelivery").toString()) : false);
+    entity.setAcceptDineIn(inputMap.containsKey("acceptDineIn") ? Boolean.parseBoolean(inputMap.get("acceptDineIn").toString()) : false);
+    entity.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") ? Boolean.parseBoolean(inputMap.get("acceptTakeOut").toString()) : false);
+    entity.setAddress1(inputMap.get("address1").toString());
+    entity.setAddress2(inputMap.containsKey("address2") ? inputMap.get("address2").toString() : null);
+    entity.setCity(inputMap.get("city").toString());
+    entity.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() : null);
+    entity.setProvince(inputMap.get("province").toString());
+    entity.setCountry(inputMap.get("country").toString());
+    entity.setPostalCode(inputMap.get("postalCode").toString());
+    entity.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
+    entity.setWebsite(inputMap.get("webSite").toString());
+    entity.setContactPerson(inputMap.containsKey("contactPerson") ? inputMap.get("contactPerson").toString() : null);
+    entity.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
+//    entity.setContactPerson(inputMap.containsKey("cuisine") ? inputMap.get("cuisine").toString() : null);
+//    entity.setContactPerson(inputMap.containsKey("logo") ? inputMap.get("logo").toString() : null);
+//    entity.setContactPerson(inputMap.containsKey("stripe") ? inputMap.get("stripe").toString() : null);
+    entity.setTimezone(inputMap.containsKey("timeZoneId") ? inputMap.get("timeZoneId").toString() : "UTC");
+    HashMap<String, Double> location = (HashMap<String, Double>) inputMap.get("location");
+    GeometryFactory gf = new GeometryFactory();
+    Point point = gf.createPoint(new Coordinate(location.get("lat"), location.get("lng")));
+    entity.setLocation(point);
+    if (inputMap.containsKey("paymentTypes")) {
+      ArrayList<String> listKeyPaymentTypes = (ArrayList<String>) inputMap.get("paymentTypes");
+      for (String key : listKeyPaymentTypes) {
+        PaymentType paymentType = paymentTypeDao.get(key);
+        entity.addPaymentTypes(paymentType);
+      }
+    }
+    return entity;
+  }
+
   @PUT
   @ApiOperation(value = "api update restaurant")
   @ApiResponses(value = {
@@ -160,9 +222,51 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @Override
   public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
-      return super.update(access, id, inputMap);
+      Restaurant restaurant = restaurantDao.get(id);
+      if (restaurant != null) {
+        return super.update(access, id, inputMap);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
+  }
+
+  @Override
+  protected Restaurant getEntityForUpdate(Restaurant restaurant, HashMap<String, Object> inputMap) {
+    restaurant.setName(inputMap.containsKey("name") ? inputMap.get("name").toString() : restaurant.getName());
+    restaurant.setDescription(inputMap.containsKey("description") ? inputMap.get("description").toString() : restaurant.getDescription());
+    restaurant.setAcceptDelivery(inputMap.containsKey("acceptDelivery") && Boolean.parseBoolean(inputMap.get("acceptDelivery").toString()));
+    restaurant.setAcceptDineIn(inputMap.containsKey("acceptDineIn") && Boolean.parseBoolean(inputMap.get("acceptDineIn").toString()));
+    restaurant.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") && Boolean.parseBoolean(inputMap.get("acceptTakeOut").toString()));
+    restaurant.setAddress1(inputMap.get("address1").toString());
+    restaurant.setAddress2(inputMap.get("address2").toString());
+    restaurant.setCity(inputMap.get("city").toString());
+    restaurant.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() : restaurant.getKeyword());
+    restaurant.setProvince(inputMap.get("province").toString());
+    restaurant.setCountry(inputMap.get("country").toString());
+    restaurant.setPostalCode(inputMap.get("postalCode").toString());
+    restaurant.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
+    restaurant.setWebsite(inputMap.get("webSite").toString());
+    restaurant.setContactPerson(inputMap.get("contactPerson").toString());
+    restaurant.setActive(inputMap.containsKey("active") ? Boolean.parseBoolean(inputMap.get("active").toString()) : restaurant.isActive());
+    restaurant.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : restaurant.getNetworkStatus());
+    if (inputMap.containsKey("location")) {
+      HashMap<String, Double> location = (HashMap<String, Double>) inputMap.get("location");
+      double lat = location.get("lat");
+      double lng = location.get("lng");
+      GeometryFactory gf = new GeometryFactory();
+      Point point = gf.createPoint(new Coordinate(lat, lng));
+      restaurant.setLocation(point);
+    }
+    if (inputMap.containsKey("logo")) {
+      restaurant.setLogo(inputMap.get("logo").toString());
+    }
+    if (inputMap.containsKey("cuisine")) {
+      restaurant.setCuisine(inputMap.get("cuisine").toString());
+    }
+    return restaurant;
   }
 
   @DELETE
@@ -176,182 +280,11 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   })
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
-    if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
+    if (access.getRole() == UserRole.ADMIN) {
       return super.delete(access, id);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
-
-  @POST
-  @Path("/{restaurant_id}/checkout")
-  @ApiOperation(value = "api CheckOut for Customer")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "only for customer"),
-      @ApiResponse(code = 404, message = "restaurant not found")
-  })
-  public Response checkOut(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
-    try {
-      if (access.getRole() == UserRole.CUSTOMER) {
-        Restaurant restaurant = restaurantDao.get(restaurant_id);
-        if (restaurant != null) {
-
-          Order co = new Order();
-          //	co.setOrderStatus(OrderStatus.OPEN);
-          co.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
-          //co.setOrderNumber(new Date().getTime());
-          co.setTip(Double.parseDouble(dto.get("tip").toString()));
-          co.setReceivedTime(new Date());
-
-          if (dto.containsKey("location")) {
-            HashMap<String, Double> location = (HashMap<String, Double>) dto.get("location");
-            co.setLocation(new LatLng(location.get("lat"), location.get("lng")));
-          }
-          /*if (dto.containsKey("deliveryAddress")) {
-            co.setDeliveryAddress(dto.get("deliveryAddress").toString());
-					}
-					if (dto.containsKey("paymentMethod")) {
-						HashMap<String, String> paymentMethod = (HashMap<String, String>)dto.get("paymentMethod");
-						co.setPaymentMethod(new PaymentMethod(paymentMethod.get("name"), paymentMethod.get("cardStripe"), paymentMethod.get("last4")));
-						
-					}*/
-					/*if (dto.containsKey("coupons")) {
-						co.setCoupons(dto.get("coupons").toString());
-					}*/
-          if (dto.containsKey("items")) {
-            ArrayList<HashMap<String, Object>> items = (ArrayList<HashMap<String, Object>>) dto.get("items");
-            for (HashMap<String, Object> hashMap : items) {
-              OrderDetail od = new OrderDetail();
-              od.setQuantity(Integer.parseInt(hashMap.get("quantity").toString()));
-
-              Item item = itemDao.get(hashMap.get("id").toString());
-              //ItemPrice itemPrice = itemInfoDao.get(hashMap.get("info").toString());
-
-
-              HashMap<String, Object> sizes = (HashMap<String, Object>) hashMap.get("sizes");
-
-              /////Must Price is Sizes.........
-
-
-              //od.setPrice(itemPrice.getPrice());
-              od.setNote(hashMap.get("spacialNotes").toString());
-
-              //item.addOrderDetails(od); //TODO}: temp comment
-              co.addOrderDetail(od);
-            }
-          }
-          Customer cus = customerDao.get(access.getId().toString());
-          cus.addCustomerOrder(co);
-
-
-          //	double defaultTax = restaurant.getTaxes() == null ? 0.0 : restaurant.getTaxes().getValue();
-
-          //	double amount = calculatorAmount((ArrayList<HashMap<String, Object>>)dto.get("items"), Double.parseDouble(dto.get("tip").toString()), defaultTax, 0);
-
-          if (dto.containsKey("paymentMethod")) {
-            HashMap<String, String> paymentMethod = (HashMap<String, String>) dto.get("paymentMethod");
-            if (paymentMethod.get("name").equals("Cash")) {
-
-
-            }
-            else {
-              //			DineNowApplication.stripe.charge(amount, "usd", co.getPaymentMethod().getCardStripe(), cus.getCustomerStripe(), String.format("Charge for %s", cus.getEmail() != null ? cus.getEmail() : cus.getFullName() +" "+ cus.getLastName()));
-            }
-          }
-
-
-          orderDao.save(co);
-          customerDao.update(cus);
-          return ResourceUtils.asSuccessResponse(Status.OK, co);
-
-        }
-        else {
-          return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-        }
-      }
-      else {
-        return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("only for customer"));
-      }
-    }
-    catch (Exception e) {
-      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(e.getMessage()));
-    }
-  }
-
-  @Path("/{restaurant_id}/search_orders")
-  @ApiOperation(value = "Search Order of Restaurant")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 400, message = "page not format number"),
-      @ApiResponse(code = 404, message = "restaurant not found")
-  })
-  @GET
-  public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,
-      @QueryParam("query") String query, @QueryParam("customer_phone") String c_ph, @QueryParam("order_no") long o_no) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      if (query != null) {
-        List<Order> entities = new ArrayList<>();
-        entities = customerOrderDao.searchByOrder(restaurant_id, query);
-        List<HashMap<String, Object>> dtos = new ArrayList<>();
-        for (Order dto : entities) {
-          dtos.add(onGet(dto));
-        }
-        return ResourceUtils.asSuccessResponse(Status.OK, dtos);
-      }
-      else if (c_ph != null) {
-        List<Order> entities = new ArrayList<>();
-        entities = customerOrderDao.searchByOrderAndCustomerPhone(restaurant_id, c_ph);
-        List<HashMap<String, Object>> dtos = new ArrayList<>();
-        for (Order dto : entities) {
-          dtos.add(onGet(dto));
-        }
-        return ResourceUtils.asSuccessResponse(Status.OK, dtos);
-      }
-      else if (o_no > 0) {
-        List<Order> entities = new ArrayList<>();
-        entities = customerOrderDao.searchByOrderNo(restaurant_id, o_no);
-        List<HashMap<String, Object>> dtos = new ArrayList<>();
-        for (Order dto : entities) {
-          dtos.add(onGet(dto));
-        }
-        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-        dto.put("orders", dtos);
-        return ResourceUtils.asSuccessResponse(Status.OK, dto);
-      }
-      else {
-        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("query is not null"));
-      }
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-
-  }
-
-
-  @Path("/{restaurant_id}/deliver_zones")
-  @ApiOperation(value = "Get all deliver zones by restaurant", notes = "Not Implement")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 404, message = "restaurant not found")
-  })
-  @GET
-  public Response getDeliverByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<DeliveryZone> entities = deliveryZoneDao.getAllDeliveryZonesByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("deliveryzones", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-
-  }
-
 
   @Path("/{restaurant_id}/order_details")
   @ApiOperation(value = "Get All Order Details By Restaurant", notes = "status=open/accepted/completed/scheduled/late <br/> from: 2015/01/01 <br/> to: 2015/03/19")
@@ -466,51 +399,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
 
     List<HashMap<String, Object>> orderdetails = new ArrayList<>();
-/*		for (OrderDetail orderDetail : entity.getOrderDetails()) {
-			HashMap<String, Object> order = new HashMap<String, Object>();
-			List<Item> listItem = itemDao.getListItemByOrderDetails(orderDetail.getId());
-			
-			order.put("id", orderDetail.getId());
-			//order.put("unitPrice", orderDetail.getUnitPrice());
-			order.put("price", orderDetail.getPrice());
-			order.put("quantity", orderDetail.getQuantity());
-			
-			List<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
-			for (Item item : listItem) {
-				HashMap<String, Object> itemtemp = new HashMap<String, Object>();
-				itemtemp.put("id",item.getId());
-				itemtemp.put("availabilityStatus",item.getAvailabilityStatus());
-				itemtemp.put("itemName",item.getName());
-				itemtemp.put("itemDescription",item.getDescription());
-				itemtemp.put("notes",item.getNotes());
-				itemtemp.put("spiceLevel",item.getSpiceLevel());
-			//	itemtemp.put("keywords",item.getKeywords());
-			//	itemtemp.put("price",item.getPrice());
-				itemtemp.put("linkImage",item.getImage());
-				itemtemp.put("isVegeterian",item.isVegeterian());
-				
-				Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
-				for (ItemSize sizeInfo : item.getAddonSize()) {
-					Size size = sizeInfo.getSize();
-					HashMap<String, Object> sizeDto = new HashMap<String, Object>();
-					sizeDto.put("id", size.getId());
-					sizeDto.put("sizeName", size.getSizeName());
-					sizeDto.put("sizeDescription", size.getSizeDescription());
-					sizeDto.put("price", sizeInfo.getPrice());
-					sizeDtos.add(sizeDto);
-				}
-				itemtemp.put("sizes", sizeDtos);
-				
-				
-				
-				items.add(itemtemp);
-			}
-			order.put("items", items);
-			orderdetails.add(order);
-		}
-		
-		uti.put("orderDetails", orderdetails);
-		*/
     Customer cus = customerDao.findByOrder(entity.getId().toString());
     HashMap<String, Object> customer = new HashMap<>();
     customer.put("id", cus.getId());
@@ -558,118 +446,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
-  @Path("/{restaurant_id}/items")
-  @ApiOperation("Get All Items By Restaurant")
-  @GET
-  public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Item> entities = itemDao.getListByRestaurant(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> sizes = new ArrayList<>();
-        for (ItemSize size : entities.get(i).getItemSizes()) {
-          LinkedHashMap<String, Object> temp = new LinkedHashMap<>();
-          temp.put("id", size.getSize().getId());
-          temp.put("name", size.getSize().getSizeName());
-          temp.put("description", size.getSize().getSizeDescription());
-          temp.put("price", size.getPrice());
-          sizes.add(temp);
-        }
-        dtos.get(i).put("sizePrices", sizes);
-        List<HashMap<String, Object>> modifiers = new ArrayList<>();
-//        for (ItemModifier info : entities.get(i).getModifiers()) { //TODO: Temp comment
-//          LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
-//          temp.put("id", info.getModifier().getId());
-//          temp.put("name", info.getModifier().getModifierName());
-//          temp.put("description", info.getModifier().getModifierDescription());
-//          modifiers.add(temp);
-//        }
-        dtos.get(i).put("modifiers", modifiers);
-      }
-      dto.put("items", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-
-  @Path("/{restaurant_id}/sizes")
-  @ApiOperation("Get All Sizes By Restaurant")
-  @GET
-  public Response getSizesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Size> entities = sizeDao.getSizesByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("sizes", dtos);
-
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-
-  @Path("/{restaurant_id}/addons")
-  @ApiOperation("Get All AddOns By Restaurant")
-  @GET
-  public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Addon> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("addons", dtos);
-
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-
-  @Path("/{restaurant_id}/categories")
-  @ApiOperation("Get All Categories By Restaurant")
-  @GET
-  public Response getCategoriesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Category> entities = categoryDao.getCategoriesByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> submenus = new ArrayList<>();
-        dtos.get(i).put("items", submenus);
-      }
-      dto.put("categories", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-  @Path("/{restaurant_id}/taxes")
-  @ApiOperation("Get All Taxes By Restaurant")
-  @GET
-  public Response getTaxesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Tax> entities = taxDao.getTaxesByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("taxes", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
   @Path("/{restaurant_id}/aboutus")
   @GET
   public Response getAboutUsByRestaurantId(@PathParam("restaurant_id") String restaurant_id) {
@@ -682,93 +458,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
     }
   }
-
-
-  @Path("/{restaurant_id}/menus")
-  @ApiOperation("Get All Menus By Restaurant")
-  @GET
-  public Response getMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Menu> entities = menuDao.getMenusByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> submenus = new ArrayList<>();
-	/*			for (SubMenu submenu : entities.get(i).getSubMenus()) {
-					LinkedHashMap<String, Object> temp = new LinkedHashMap<String, Object>();
-					temp.put("id", submenu.getId());
-					temp.put("name", submenu.getMenuSubName());
-					temp.put("description", submenu.getSubMenuDescription());
-					temp.put("notes", submenu.getSubMenuNotes());
-					submenus.add(temp);
-				}*/
-        dtos.get(i).put("submenus", submenus);
-      }
-      dto.put("menus", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-  @Path("/{restaurant_id}/comments")
-  @ApiOperation("Get All Reviews By Restaurant")
-  @GET
-  public Response getReviewsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Review> entities = reviewDao.getReviewsByRestaurantId(restaurant_id);
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("reviews", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
-  @Path("/{restaurant_id}/modifiers")
-  @ApiOperation("Get All Modifier By Restaurant")
-  @GET
-  public Response getModifiersByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
-    if (restaurantDao.get(restaurant_id) != null) {
-      List<Modifier> entities = modifierDao.getModifiersByRestaurantId(restaurant_id);
-      System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + entities.size());
-      List<HashMap<String, Object>> dtos = ModelHelpers.fromEntities(entities);
-
-      for (int i = 0; i < entities.size(); i++) {
-        List<HashMap<String, Object>> addons = new ArrayList<>();
-//        for (ModifierAddon addOnInfo : entities.get(i).getModifierAddons()) { //TODO: temp comment
-//          HashMap<String, Object> temp = new HashMap<String, Object>();
-//          temp.put("addOn", addOnInfo.getAddOn().getId());
-//          temp.put("availabilityStatus", addOnInfo.getAvailStatus());
-//          temp.put("price", addOnInfo.getPrice());
-////					temp.put("isDefault", addOnInfo.isDefault());
-//          addons.add(temp);
-//        }
-        dtos.get(i).put("addOns", addons);
-
-        List<HashMap<String, Object>> itemSizes = new ArrayList<>();
-//        for (ItemSizeInfo itemSizeInfo : entities.get(i).getItems()) { //TODO: Temp comment
-//          HashMap<String, Object> temp = new HashMap<String, Object>();
-//          temp.put("item", itemSizeInfo.getItem().getId());
-//          temp.put("size", itemSizeInfo.getSize().getId());
-//          itemSizes.add(temp);
-//        }
-        dtos.get(i).put("itemSizes", itemSizes);
-      }
-
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("modifiers", dtos);
-
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
-    }
-  }
-
 
   @Path("/{restaurant_id}/holiday")
   @ApiOperation(value = "Set time  Dine-In Hours, Accept Delivery, Accept TakeOut")
@@ -791,7 +480,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
           if (day.containsKey("date")) {
             try {
               Date date = df.parse(day.get("date").toString());
-              cday.setDate(Utils.convertTimeZones(restaurant.getTimezoneId(), "UTC", day.get("date").toString()));
+              cday.setDate(Utils.convertTimeZones(restaurant.getTimezone(), "UTC", day.get("date").toString()));
             }
             catch (ParseException e) {
               e.printStackTrace();
@@ -811,47 +500,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   }
 
   @Path("/{restaurant_id}/time")
-  @ApiOperation(value = "Set time  Dine-In Hours, Accept Delivery, Accept TakeOut", notes = "<pre><code>{"
-      + "<br/>  \"dineInHours\": ["
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    },"
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    }"
-      + "<br/>  ],"
-      + "<br/>  \"acceptDeliveryHours\": ["
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    },"
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    }"
-      + "<br/>  ],"
-      + "<br/>  \"acceptTakeOutHours\": ["
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    },"
-      + "<br/>    {"
-      + "<br/>      \"weekDayType\": \"MON\","
-      + "<br/>      \"fromTime\": \"2015-03-19T13:26:55Z\","
-      + "<br/>      \"toTime\": \"2015-03-19T13:26:55Z\""
-      + "<br/>    }"
-      + "<br/>  ],"
-      + "<br/>  \"acceptDelivery\": true,"
-      + "<br/>  \"acceptTakeOut\": true,"
-      + "<br/>  \"timeZoneId\": \"Asia/Kolkata\""
-      + "<br/>}</code></pre>")
+  @ApiOperation(value = "Set time  Dine-In Hours, Accept Delivery, Accept TakeOut", notes = "")
   @PUT
   public Response setTimeRestaurant(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
     Restaurant restaurant = restaurantDao.get(restaurant_id);
@@ -859,7 +508,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
       String timezone = dto.get("timeZoneId").toString();
       System.out.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
-      restaurant.setTimezoneId(timezone);
+      restaurant.setTimezone(timezone);
       if (dto.containsKey("dineInHours")) {
         List<HashMap<String, Object>> dineInHours = (List<HashMap<String, Object>>) dto.get("dineInHours");
         ArrayList<Hour> arrHour = new ArrayList<>();
@@ -984,108 +633,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return dto;
   }
 
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected Restaurant getEntityForInsertion(HashMap<String, Object> inputMap) {
-    Restaurant entity = super.getEntityForInsertion(inputMap);
-    entity.setName(inputMap.get("name").toString());
-    entity.setDescription(inputMap.get("description").toString());
-    entity.setAcceptDelivery(inputMap.containsKey("acceptDelivery") ? Boolean.parseBoolean(inputMap.get("acceptDelivery").toString()) : false);
-    entity.setAcceptDineIn(inputMap.containsKey("acceptDineIn") ? Boolean.parseBoolean(inputMap.get("acceptDineIn").toString()) : false);
-    entity.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") ? Boolean.parseBoolean(inputMap.get("acceptTakeOut").toString()) : false);
-    entity.setAddress1(inputMap.get("address1").toString());
-    entity.setAddress2(inputMap.containsKey("address2") ? inputMap.get("address2").toString() : null);
-    entity.setCity(inputMap.get("city").toString());
-    entity.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() : null);
-    entity.setProvince(inputMap.get("province").toString());
-    entity.setCountry(inputMap.get("country").toString());
-    entity.setPostalCode(inputMap.get("postalCode").toString());
-    entity.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
-    entity.setWebsite(inputMap.get("webSite").toString());
-    entity.setContactPerson(inputMap.containsKey("contactPerson") ? inputMap.get("contactPerson").toString() : null);
-    entity.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : NetworkStatus.OFFLINE);
-    entity.setContactPerson(inputMap.containsKey("stripe") ? inputMap.get("stripe").toString() : null);
-    entity.setContactPerson(inputMap.containsKey("cuisine") ? inputMap.get("cuisine").toString() : null);
-    entity.setContactPerson(inputMap.containsKey("logo") ? inputMap.get("logo").toString() : null);
-    entity.setContactPerson(inputMap.containsKey("deliveryFee") ? inputMap.get("deliveryFee").toString() : null);
-    entity.setContactPerson(inputMap.containsKey("minimumOrder") ? inputMap.get("minimumOrder").toString() : null);
-    entity.setTimezoneId(inputMap.containsKey("timeZoneId") ? inputMap.get("timeZoneId").toString() : "UTC");
-    HashMap<String, Double> location = (HashMap<String, Double>) inputMap.get("location");
-    GeometryFactory gf = new GeometryFactory();
-    Point point = gf.createPoint(new Coordinate(location.get("lat"), location.get("lng")));
-    entity.setLocation(point);
-
-    if (inputMap.containsKey("paymentTypes")) {
-      ArrayList<String> listKeyPaymentTypes = (ArrayList<String>) inputMap.get("paymentTypes");
-      for (String key : listKeyPaymentTypes) {
-        PaymentType paymentType = paymentTypeDao.get(key);
-        entity.addPaymentTypes(paymentType);
-      }
-    }
-    return entity;
-  }
-
-  @Override
-  protected Restaurant getEntityForUpdate(Restaurant restaurant, HashMap<String, Object> inputMap) {
-    restaurant.setName(inputMap.containsKey("name") ? inputMap.get("name").toString() : restaurant.getName());
-    restaurant.setDescription(inputMap.containsKey("description") ? inputMap.get("description").toString() : restaurant.getDescription());
-    restaurant.setAcceptDelivery(inputMap.containsKey("acceptDelivery") ? Boolean.parseBoolean(inputMap.get(
-        "acceptDelivery").toString()) : false);
-    restaurant.setAcceptDineIn(inputMap.containsKey("acceptDineIn") ? Boolean.parseBoolean(inputMap.get(
-        "acceptDineIn").toString()) : false);
-    restaurant.setAcceptTakeout(inputMap.containsKey("acceptTakeOut") ? Boolean.parseBoolean(inputMap.get(
-        "acceptTakeOut").toString()) : false);
-    restaurant.setAddress1(inputMap.get("address1").toString());
-    restaurant.setAddress2(inputMap.get("address2").toString());
-    restaurant.setCity(inputMap.get("city").toString());
-    restaurant.setKeyword(inputMap.containsKey("keyword") ? inputMap.get("keyword").toString() : restaurant.getKeyword());
-    restaurant.setProvince(inputMap.get("province").toString());
-    restaurant.setCountry(inputMap.get("country").toString());
-    restaurant.setPostalCode(inputMap.get("postalCode").toString());
-    restaurant.setPhoneNumber(inputMap.containsKey("phoneNumber") ? inputMap.get("phoneNumber").toString() : null);
-    restaurant.setWebsite(inputMap.get("webSite").toString());
-    restaurant.setContactPerson(inputMap.get("contactPerson").toString());
-    restaurant.setActive(inputMap.containsKey("active") ? Boolean.parseBoolean(inputMap.get("active").toString()) : restaurant.isActive());
-    restaurant.setNetworkStatus(inputMap.containsKey("networkStatus") ? NetworkStatus.valueOf(inputMap.get("networkStatus").toString()) : restaurant.getNetworkStatus());
-    if (inputMap.containsKey("location")) {
-      HashMap<String, Double> loca = (HashMap<String, Double>) inputMap.get("location");
-      double lat = loca.get("lat");
-      double lng = loca.get("lng");
-      GeometryFactory gf = new GeometryFactory();
-      Point point = gf.createPoint(new Coordinate(lat, lng));
-      restaurant.setLocation(point);
-    }
-    if (inputMap.containsKey("logo")) {
-      restaurant.setLogo(inputMap.get("logo").toString());
-    }
-
-    if (inputMap.containsKey("deliveryFee")) {
-      restaurant.setLogo(inputMap.get("deliveryFee").toString());
-    }
-
-    if (inputMap.containsKey("minimumOrder")) {
-      restaurant.setLogo(inputMap.get("minimumOrder").toString());
-    }
-		
-/*		if (dto.containsKey("discount_allowed")) {
-			entity.setDiscount(Boolean.parseBoolean(dto.get("discount_allowed").toString()));
-		}*/
-
-    if (inputMap.containsKey("cuisine")) {
-      restaurant.setCuisine(inputMap.get("cuisine").toString());
-    }
-/*		if (dto.containsKey("acceptDeliveryHours")) {
-			entity.setAccept_delivery_hours(dto.get("acceptDeliveryHours").toString());
-		}
-		if (dto.containsKey("acceptTakeOutHours")) {
-			entity.setAccept_takeout_hours(dto.get("acceptTakeOutHours").toString());
-		}*/
-
-    return restaurant;
-  }
-
-
   @Override
   protected HashMap<String, Object> onGet(Restaurant entity, User access) {
     HashMap<String, Object> dto = new LinkedHashMap<>();
@@ -1127,7 +674,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
 
     dto.put("closedays", holidayDtos);
     dto.put("paymentTypes", entity.getPaymentTypes());
-    dto.put("timezone", entity.getTimezoneId());
+    dto.put("timezone", entity.getTimezone());
     dto.put("logo", entity.getLogo());
     System.out.println(entity.getMenus().size() + "++++++++++++++++++++++");
     // menus
@@ -1140,101 +687,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       menuDto.put("description", menu.getDescription());
       // Submenu
       ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<>();
-/*			for (SubMenu submenu : menu.getSubMenus()) {
-				HashMap<String, Object> submenuDto = new LinkedHashMap<String, Object>();
-				submenuDto.put("id", submenu.getId());
-				submenuDto.put("name", submenu.getMenuSubName());
-				submenuDto.put("description",submenu.getSubMenuDescription());
-
-				ArrayList<HashMap<String, Object>> categoryDtos = new ArrayList<HashMap<String, Object>>();
-				for (CategoryItem categoryInfo : submenu.getCategoryItem()) {
-					HashMap<String, Object> categoryDto = new LinkedHashMap<String, Object>();
-
-					Category category = categoryInfo.getCategory();
-
-					categoryDto.put("id", category.getId());
-					categoryDto.put("name", category.getCategoryName());
-					categoryDto.put("description",
-							category.getCategoryDescription());
-
-					// items
-									ArrayList<HashMap<String, Object>> itemDtos = new ArrayList<HashMap<String, Object>>();
-					for (ItemPrice itemInfo : categoryInfo.getItems()) {
-						HashMap<String, Object> itemDto = new LinkedHashMap<String, Object>();
-						Item item = itemInfo.getItem();
-
-						itemDto.put("id", item.getId());
-						itemDto.put("name", item.getName());
-						itemDto.put("description",
-								item.getDescription());
-						itemDto.put("linkImage", item.getImage());
-						itemDto.put("notes", item.getNotes());
-						itemDto.put("isVegeterian", item.isVegeterian());
-						itemDto.put("spiceLevel", item.getSpiceLevel());
-//						itemDto.put("isShowSpice", item.isShowSpice());
-						itemDto.put("availabilityStatus",
-								item.getAvailabilityStatus());
-						itemDto.put(
-								"price",
-								(itemInfo.getPrice() != 0) ? itemInfo
-										.getPrice() : item.getPrice());
-						
-						ArrayList<HashMap<String, Object>> sizeDtos = new ArrayList<HashMap<String, Object>>();
-						for (ItemSize sizeInfo : item.getAddonSize()) {
-							Size size = sizeInfo.getSize();
-							HashMap<String, Object> sizeDto = new LinkedHashMap<String, Object>();
-							sizeDto.put("id", size.getId());
-							sizeDto.put("name", size.getSizeName());
-							sizeDto.put("description", size.getSizeDescription());
-							sizeDto.put("price",sizeInfo.getPrice());
-							sizeDtos.add(sizeDto);
-						}
-						itemDto.put("sizes", sizeDtos);
-						
-						
-						
-	//					 * MODIFIER INPUT THentityERE
-						ArrayList<HashMap<String, Object>> modifierDtos = new ArrayList<HashMap<String, Object>>();
-						//System.out.println(item.getModifiers().size()+"------------------");
-						for (ItemModifier modifierInfo : item.getModifiers()) {
-							Modifier modifier = modifierInfo.getModifier();
-							HashMap<String, Object> modifierDto = new LinkedHashMap<String, Object>();
-							modifierDto.put("id", modifier.getId());
-							modifierDto.put("name", modifier.getName());
-							modifierDto.put("description", modifier.getDescription());
-							modifierDto.put("minselection", modifier.getMinSelection());
-							modifierDto.put("maxselection", modifier.getMaxSelection());
-							modifierDto.put("availabilityStatus", modifierInfo.getAvailabilityStatus());
-							
-							
-							//modifier addons
-							ArrayList<HashMap<String, Object>> addonDtos = new ArrayList<HashMap<String, Object>>();
-							for(ModifierAddon modifierAddOn : modifier.getModifierAddons()){
-							     Addon addon = modifierAddOn.getAddOn();
-							     HashMap<String, Object> addonDto = new LinkedHashMap<String, Object>();
-							     addonDto.put("id", addon.getId());
-							     addonDto.put("name", addon.getAddonName());
-							     addonDto.put("description", addon.getAddonDescription());
-							     addonDto.put("price", modifierAddOn.getPrice());
-							     addonDto.put("availabilityStatus", addon.getAvailabilityStatus());
-							     addonDtos.add(addonDto);
-							}
-							
-							modifierDto.put("addons", addonDtos);
-							modifierDtos.add(modifierDto);
-						} 
-						itemDto.put("modifiers", modifierDtos);
-		             
-						itemDtos.add(itemDto);
-
-					}
-					categoryDto.put("items", itemDtos);
-					categoryDtos.add(categoryDto);
-				}
-				submenuDto.put("categories", categoryDtos);
-				sunmenuDtos.add(submenuDto);
-
-			}*/
       menuDto.put("submenus", sunmenuDtos);
       menuDtos.add(menuDto);
     }
@@ -1244,196 +696,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return dtos;
   }
 
-  protected HashMap<String, Object> onGetApp(Restaurant entity, User access) {
-    HashMap<String, Object> dto = super.onGet(entity, access);
-    // menus
-    ArrayList<HashMap<String, Object>> menuDtos = new ArrayList<>();
-    for (Menu menu : entity.getMenus()) {
-      if (menu.isShowMenu()) {
-
-        HashMap<String, Object> menuDto = new HashMap<>();
-        menuDto.put("id", menu.getId());
-        menuDto.put("menuName", menu.getName());
-        menuDto.put("menuDescription", menu.getDescription());
-        // Submenu
-        ArrayList<HashMap<String, Object>> sunmenuDtos = new ArrayList<>();
-/*				for (SubMenu submenu : menu.getSubMenus()) {
-					HashMap<String, Object> submenuDto = new HashMap<String, Object>();
-					submenuDto.put("id", submenu.getId());
-					submenuDto.put("menuSubName", submenu.getMenuSubName());
-					submenuDto.put("subMenuDescription",submenu.getSubMenuDescription());
-
-					ArrayList<HashMap<String, Object>> categoryDtos = new ArrayList<HashMap<String, Object>>();
-					for (CategoryItem categoryInfo : submenu.getCategoryItem()) {
-						HashMap<String, Object> categoryDto = new HashMap<String, Object>();
-
-						Category category = categoryInfo.getCategory();
-
-						categoryDto.put("id", category.getId());
-						categoryDto.put("categoryName", category.getCategoryName());
-						categoryDto.put("categoryDescription",
-								category.getCategoryDescription());
-
-						// items
-						Set<HashMap<String, Object>> itemDtos = new HashSet<HashMap<String, Object>>();//new ArrayList<HashMap<String, Object>>();
-						for (ItemPrice itemInfo : categoryInfo.getItems()) {
-							HashMap<String, Object> itemDto = new HashMap<String, Object>();
-							Item item = itemInfo.getItem();
-
-							itemDto.put("info", itemInfo.getId());
-							itemDto.put("id", item.getId());
-							itemDto.put("itemName", item.getName());
-							itemDto.put("itemDescription",
-									item.getDescription());
-							itemDto.put("linkImage", item.getImage());
-							itemDto.put("notes", item.getNotes());
-							itemDto.put("isVegeterian", item.isVegeterian());
-							itemDto.put("spiceLevel", item.getSpiceLevel());
-							itemDto.put("availabilityStatus",
-									item.getAvailabilityStatus());
-							itemDto.put(
-									"price",
-									(itemInfo.getPrice() != 0) ? itemInfo
-											.getPrice() : item.getPrice());
-							
-							Set<HashMap<String, Object>> sizeDtos = new HashSet<HashMap<String, Object>>();
-							for (ItemSize sizeInfo : item.getAddonSize()) {
-								Size size = sizeInfo.getSize();
-								HashMap<String, Object> sizeDto = new HashMap<String, Object>();
-								sizeDto.put("id", size.getId());
-								sizeDto.put("sizeName", size.getSizeName());
-								sizeDto.put("sizeDescription", size.getSizeDescription());
-								sizeDto.put("price", sizeInfo.getPrice());
-								sizeDtos.add(sizeDto);
-							}
-							itemDto.put("sizes", sizeDtos);
-							
-							Set<HashMap<String, Object>> addOnDtos = new HashSet<HashMap<String, Object>>();
-							for (ItemModifier modifierInfo : item.getModifiers()) {
-								Modifier modifier = modifierInfo.getModifier();
-								for (ItemSizeInfo hashMap : modifier.getItems()) {
-									if (hashMap.getItem().getId().equals(item.getId())) {
-										for (ModifierAddon hashMap2 : modifier.getModifierAddons()) {
-											Addon addon = hashMap2.getAddOn();
-											HashMap<String, Object> addOnDto = new HashMap<String, Object>();
-											addOnDto.put("id", addon.getId());
-											addOnDto.put("addOnName", addon.getAddonName());
-											addOnDto.put("addOnDescription", addon.getAddonDescription());
-//											addOnDto.put("isDefault", hashMap2.isDefault());
-											for (ItemSize hashMap3 : addon.getAddonSize()) {
-												if (hashMap.getSize().getId().equals(hashMap3.getSize().getId())) {
-													addOnDto.put("price", hashMap3.getPrice());
-												}
-											}
-											addOnDtos.add(addOnDto);
-										}
-									}
-								}
-								
-							}
-							itemDto.put("addOns", addOnDtos);
-							
-							
-							
-
-							itemDtos.add(itemDto);
-
-						}
-						categoryDto.put("items", itemDtos);
-						categoryDtos.add(categoryDto);
-					}
-					submenuDto.put("categories", categoryDtos);
-					sunmenuDtos.add(submenuDto);
-
-				}*/
-        menuDto.put("submenus", sunmenuDtos);
-        menuDtos.add(menuDto);
-
-      }
-    }
-    dto.put("menus", menuDtos);
-
-    return dto;
-  }
 
 
-  // =================================METHOD=================================//
-
-  @GET
-  @ApiOperation(value = "api get all restaurant by admin", notes = "must login admin")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "access denied for user"),
-      @ApiResponse(code = 400, message = "page not format number"),
-      @ApiResponse(code = 400, message = "size not format number")
-  })
-  public Response getAll(@ApiParam(access = "internal") @Auth User access, @QueryParam("page") String page, @QueryParam("size") String size) {
-    if (access.getRole() == UserRole.ADMIN) {
-      int iPage = 1;
-      int iSize = 50;
-
-      if (page != null) {
-        try {
-          iPage = Integer.parseInt(page);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST,
-              new ServiceErrorMessage("page not format number"));
-        }
-      }
-      if (size != null) {
-        try {
-          iSize = Integer.parseInt(size);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST,
-              new ServiceErrorMessage("size not format number"));
-        }
-      }
-
-      List<Restaurant> entities = this.dao.getByPage(iPage, iSize);
-      List<HashMap<String, Object>> dtos = getMapListFromEntities(entities);
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put(getClassT().getSimpleName().toLowerCase() + 's', dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
-  }
-
-  @GET
-  @Path("/{id}")
-  @ApiOperation(value = "api get detail restaurant")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 404, message = "Cannot found entity")
-  })
-  @Override
-  public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
-    Restaurant entity = restaurantDao.findByKeyword(id);
-    if (entity != null)
-      return ResourceUtils.asSuccessResponse(Status.OK, entity);
-    else
-      return super.get(access, id);
-  }
-
-  @GET
-  @Path("/{id}/app")
-  @ApiOperation(value = "api get detail restaurant")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 404, message = "Cannot found entity")
-  })
-  public Response getApp(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
-
-    Restaurant entity = dao.get(id);
-    if (entity != null) {
-      HashMap<String, Object> dto = onGetApp(entity, access);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
-    }
-    else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Cannot found entity"));
-    }
-  }
 
   private List<HashMap<String, Object>> fromEntitiesSearch(List<Restaurant> entities) {
     List<HashMap<String, Object>> dtos = new ArrayList<>();
@@ -1572,6 +836,153 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(
           "Format Incorrect " + e));
     }
+  }
+
+  @POST
+  @Path("/{restaurant_id}/checkout")
+  @ApiOperation(value = "api CheckOut for Customer")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 401, message = "only for customer"),
+      @ApiResponse(code = 404, message = "restaurant not found")
+  })
+  public Response checkOut(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, HashMap<String, Object> dto) {
+    try {
+      if (access.getRole() == UserRole.CUSTOMER) {
+        Restaurant restaurant = restaurantDao.get(restaurant_id);
+        if (restaurant != null) {
+
+          Order co = new Order();
+          //	co.setOrderStatus(OrderStatus.OPEN);
+          co.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
+          //co.setOrderNumber(new Date().getTime());
+          co.setTip(Double.parseDouble(dto.get("tip").toString()));
+          co.setReceivedTime(new Date());
+
+          if (dto.containsKey("location")) {
+            HashMap<String, Double> location = (HashMap<String, Double>) dto.get("location");
+            co.setLocation(new LatLng(location.get("lat"), location.get("lng")));
+          }
+          /*if (dto.containsKey("deliveryAddress")) {
+            co.setDeliveryAddress(dto.get("deliveryAddress").toString());
+					}
+					if (dto.containsKey("paymentMethod")) {
+						HashMap<String, String> paymentMethod = (HashMap<String, String>)dto.get("paymentMethod");
+						co.setPaymentMethod(new PaymentMethod(paymentMethod.get("name"), paymentMethod.get("cardStripe"), paymentMethod.get("last4")));
+
+					}*/
+					/*if (dto.containsKey("coupons")) {
+						co.setCoupons(dto.get("coupons").toString());
+					}*/
+          if (dto.containsKey("items")) {
+            ArrayList<HashMap<String, Object>> items = (ArrayList<HashMap<String, Object>>) dto.get("items");
+            for (HashMap<String, Object> hashMap : items) {
+              OrderDetail od = new OrderDetail();
+              od.setQuantity(Integer.parseInt(hashMap.get("quantity").toString()));
+
+              Item item = itemDao.get(hashMap.get("id").toString());
+              //ItemPrice itemPrice = itemInfoDao.get(hashMap.get("info").toString());
+
+
+              HashMap<String, Object> sizes = (HashMap<String, Object>) hashMap.get("sizes");
+
+              /////Must Price is Sizes.........
+
+
+              //od.setPrice(itemPrice.getPrice());
+              od.setNote(hashMap.get("spacialNotes").toString());
+
+              //item.addOrderDetails(od); //TODO}: temp comment
+              co.addOrderDetail(od);
+            }
+          }
+          Customer cus = customerDao.get(access.getId().toString());
+          cus.addCustomerOrder(co);
+
+
+          //	double defaultTax = restaurant.getTaxes() == null ? 0.0 : restaurant.getTaxes().getValue();
+
+          //	double amount = calculatorAmount((ArrayList<HashMap<String, Object>>)dto.get("items"), Double.parseDouble(dto.get("tip").toString()), defaultTax, 0);
+
+          if (dto.containsKey("paymentMethod")) {
+            HashMap<String, String> paymentMethod = (HashMap<String, String>) dto.get("paymentMethod");
+            if (paymentMethod.get("name").equals("Cash")) {
+
+
+            }
+            else {
+              //			DineNowApplication.stripe.charge(amount, "usd", co.getPaymentMethod().getCardStripe(), cus.getCustomerStripe(), String.format("Charge for %s", cus.getEmail() != null ? cus.getEmail() : cus.getFullName() +" "+ cus.getLastName()));
+            }
+          }
+
+
+          orderDao.save(co);
+          customerDao.update(cus);
+          return ResourceUtils.asSuccessResponse(Status.OK, co);
+
+        }
+        else {
+          return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+        }
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("only for customer"));
+      }
+    }
+    catch (Exception e) {
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage(e.getMessage()));
+    }
+  }
+
+  @Path("/{restaurant_id}/search_orders")
+  @ApiOperation(value = "Search Order of Restaurant")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "data"),
+      @ApiResponse(code = 401, message = "access denied for user"),
+      @ApiResponse(code = 400, message = "page not format number"),
+      @ApiResponse(code = 404, message = "restaurant not found")
+  })
+  @GET
+  public Response searchByOrder(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id,
+      @QueryParam("query") String query, @QueryParam("customer_phone") String c_ph, @QueryParam("order_no") long o_no) {
+    if (restaurantDao.get(restaurant_id) != null) {
+      if (query != null) {
+        List<Order> entities = new ArrayList<>();
+        entities = customerOrderDao.searchByOrder(restaurant_id, query);
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
+        for (Order dto : entities) {
+          dtos.add(onGet(dto));
+        }
+        return ResourceUtils.asSuccessResponse(Status.OK, dtos);
+      }
+      else if (c_ph != null) {
+        List<Order> entities = new ArrayList<>();
+        entities = customerOrderDao.searchByOrderAndCustomerPhone(restaurant_id, c_ph);
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
+        for (Order dto : entities) {
+          dtos.add(onGet(dto));
+        }
+        return ResourceUtils.asSuccessResponse(Status.OK, dtos);
+      }
+      else if (o_no > 0) {
+        List<Order> entities = new ArrayList<>();
+        entities = customerOrderDao.searchByOrderNo(restaurant_id, o_no);
+        List<HashMap<String, Object>> dtos = new ArrayList<>();
+        for (Order dto : entities) {
+          dtos.add(onGet(dto));
+        }
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("orders", dtos);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("query is not null"));
+      }
+    }
+    else {
+      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+    }
+
   }
 
   @Inject

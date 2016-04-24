@@ -1,10 +1,12 @@
 package com.dinenowinc.dinenow.resources;
 
+import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -26,6 +28,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 
 @Path("/sizes")
@@ -36,6 +40,9 @@ public class SizeResource extends AbstractResource<Size> {
 
   @Inject
   private SizeDao sizeDao;
+
+  @Inject
+  private RestaurantDao restaurantDao;
 
   @GET
   @ApiOperation("size of restaurant for ADMIN and OWNER")
@@ -49,6 +56,25 @@ public class SizeResource extends AbstractResource<Size> {
       return super.getAll(access);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Sizes By Restaurant")
+  @GET
+  public Response getSizesByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Size> entities = sizeDao.getSizesByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("sizes", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }
 
   @GET

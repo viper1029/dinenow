@@ -88,6 +88,25 @@ public class ItemResource extends AbstractResource<Item> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
 
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Items By Restaurant")
+  @GET
+  public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Item> entities = itemDao.getListByRestaurant(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("items", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
+  }
+
   @GET
   @Path("/{id}")
   @ApiOperation("api get detail of items")

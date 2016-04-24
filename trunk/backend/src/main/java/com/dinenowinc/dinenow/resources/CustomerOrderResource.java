@@ -28,7 +28,6 @@ import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.OrderDetailsDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.DeliveryZone;
 import com.dinenowinc.dinenow.model.helpers.Hour;
@@ -337,9 +336,9 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 				}
 				ArrayList<Hour> hours = restaurant.getAcceptDeliveryHours();
 				for(Hour hour :hours){
-					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(new Date()));
-					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getFromTime()));
-					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getToTime()));
+					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezone(), Utils.DATEMORMAT1.format(new Date()));
+					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getFromTime()));
+					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getToTime()));
 					
 					if (restfromDate.getTime() <= serverDate.getTime() 
 							&& resttoDate.getTime() >= (serverDate.getTime()+Utils.TENMINUTE)) 
@@ -355,9 +354,9 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 			} else 	if(type.name().equals("OUT")){
 				ArrayList<Hour> hours = restaurant.getAcceptTakeOutHours();
 				for(Hour hour :hours){
-					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(new Date()));
-					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getFromTime()));
-					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getToTime()));
+					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezone(), Utils.DATEMORMAT1.format(new Date()));
+					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getFromTime()));
+					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getToTime()));
 					
 					System.out.println(serverDate + "    "+restfromDate+" "+resttoDate);
 					if (restfromDate.getTime() <= serverDate.getTime() 
@@ -392,9 +391,9 @@ public class CustomerOrderResource extends AbstractResource<Order>{
 				
 				
 				for(Hour hour :hours){
-					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(new Date()));
-					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getFromTime()));
-					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezoneId(), Utils.DATEMORMAT1.format(hour.getToTime()));
+					Date serverDate = Utils.convertTimeZones(TimeZone.getDefault().getID(),restaurant.getTimezone(), Utils.DATEMORMAT1.format(new Date()));
+					Date restfromDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getFromTime()));
+					Date resttoDate = Utils.convertTimeZones(Utils.UTC,restaurant.getTimezone(), Utils.DATEMORMAT1.format(hour.getToTime()));
 					
 					if (restfromDate.getTime() <= serverDate.getTime() 
 							&& resttoDate.getTime() >= (serverDate.getTime()+Utils.TENMINUTE)) 

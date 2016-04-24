@@ -12,6 +12,7 @@ import com.dinenowinc.dinenow.model.Item;
 import com.dinenowinc.dinenow.model.Menu;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.model.helpers.WeekDayType;
 import com.dinenowinc.dinenow.utils.Utils;
@@ -70,6 +71,25 @@ public class MenuResource extends AbstractResource<Menu> {
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       return super.getAll(access);
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All Menus By Restaurant")
+  @GET
+  public Response getMenusByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Menu> entities = menuDao.getMenusByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("menus", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
   }
@@ -313,7 +333,7 @@ public class MenuResource extends AbstractResource<Menu> {
 
       if (menu != null) {
         Restaurant restaurant = restaurantDao.findByMenuId(menu.getId());
-        String timezone = restaurant.getTimezoneId();
+        String timezone = restaurant.getTimezone();
         if (dto.containsKey("hours")) {
           List<HashMap<String, Object>> menuHours = (List<HashMap<String, Object>>) dto.get("hours");
           ArrayList<Hour> arrHour = new ArrayList<>();
@@ -332,7 +352,7 @@ public class MenuResource extends AbstractResource<Menu> {
           }
           menu.setHours(arrHour);
         }
-        if (!Utils.inRange(restaurant.getDineInHours(), restaurant.getTimezoneId(), menu.getHours())) {
+        if (!Utils.inRange(restaurant.getDineInHours(), restaurant.getTimezone(), menu.getHours())) {
           List<ServiceErrorMessage> errorMessages = new ArrayList<>();
           errorMessages.add(new ServiceErrorMessage("these hours not available"));
           return ResourceUtils.asFailedResponse(Status.NOT_ACCEPTABLE, errorMessages);

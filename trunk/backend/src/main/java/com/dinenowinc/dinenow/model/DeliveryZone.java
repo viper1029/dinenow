@@ -1,29 +1,26 @@
 package com.dinenowinc.dinenow.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-
 import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.dinenowinc.dinenow.model.helpers.DeliveryZoneType;
 import com.dinenowinc.dinenow.model.helpers.LatLng;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Polygon;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Polygon;
+import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Entity
 @Audited
-@NamedQueries({ @NamedQuery(name = "DeliveryZone.GetAll", query = "from DeliveryZone c") })
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NamedQueries({ @NamedQuery(name = "DeliveryZone.GetAll", query = "from DeliveryZone c") })
+
 public class DeliveryZone extends BaseEntity {
 
   private String name;
@@ -36,31 +33,7 @@ public class DeliveryZone extends BaseEntity {
 
   private DeliveryZoneType type;
 
-  @Lob
-  //@Type(type = "org.hibernate.spatial.GeometryType")
   private Polygon coordinates;
-
-/*	@Column(nullable=false,columnDefinition="Decimal(10,6)")
-	private double lat;
-	
-	@Column(nullable=false,columnDefinition="Decimal(10,6)")
-	private double lng;*/
-
-
-  public DeliveryZone() {
-  }
-
-  public DeliveryZone(String name, String description, double minimum, double fee, DeliveryZoneType type, Polygon po, String createdBy, Date createdDate) {
-    this.name = name;
-    this.description = description;
-    this.minimum = minimum;
-    this.fee = fee;
-    this.type = type;
-    this.coordinates = po;
-    this.setCreatedBy(createdBy);
-    this.setCreatedDate(createdDate);
-  }
-
 
   public String getName() {
     return name;
@@ -101,24 +74,7 @@ public class DeliveryZone extends BaseEntity {
   public void setType(DeliveryZoneType type) {
     this.type = type;
   }
-	
-	/*public double getLat() {
-		return lat;
-	}
 
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
-
-	public double getLng() {
-		return lng;
-	}
-
-	public void setLng(double lng) {
-		this.lng = lng;
-	}*/
-
-  //@Type(type = "org.hibernate.spatial.GeometryType")
   public Polygon getCoordinates() {
     return coordinates;
   }

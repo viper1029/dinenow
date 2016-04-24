@@ -1,6 +1,7 @@
 package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.dao.AddonDao;
+import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Addon;
@@ -44,6 +45,9 @@ public class AddonResource extends AbstractResource<Addon> {
   @Inject
   private SizeDao sizeDao;
 
+  @Inject
+  private RestaurantDao restaurantDao;
+
   @GET
   @ApiOperation("get all addon of restaurant for ADMIN and OWNER")
   @ApiResponses(value = {
@@ -56,6 +60,25 @@ public class AddonResource extends AbstractResource<Addon> {
       return super.getAll(access);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
+  }
+
+  @Path("/restaurant/{restaurant_id}")
+  @ApiOperation("Get All AddOns By Restaurant")
+  @GET
+  public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+    if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if (restaurantDao.get(restaurant_id) != null) {
+        List<Addon> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
+        List<HashMap<String, Object>> returnMap = ModelHelpers.fromEntities(entities);
+        LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+        dto.put("addons", returnMap);
+        return ResourceUtils.asSuccessResponse(Status.OK, dto);
+      }
+      else {
+        return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Restaurant not found."));
+      }
+    }
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }
 
   @GET
