@@ -285,24 +285,6 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
           .setParameter("zoneId", zone)
           .setParameter("value", "%" + cusine + "%")
           .getResultList();
-
-
-			/*			System.out.println(l);
-      if(sorted !=null && sorted.equalsIgnoreCase(SortedBY.RAT.name())) {
-				System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-			Comparator<Restaurant> comparator = new Comparator<Restaurant>() {
-			    public int compare(Restaurant c1, Restaurant c2) {
-			    	if(getRating(c1)==getRating(c2))  
-			    		return 0;  
-			    		else if(getRating(c1)>getRating(c2))  
-			    		return 1;  
-			    		else  
-			    		return -1;  // use your logic
-			    }
-			};
-			Collections.sort(l, comparator);
-			}
-			System.out.println(l);*/
       return l;
     }
     catch (NoResultException e) {

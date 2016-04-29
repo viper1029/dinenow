@@ -16,7 +16,6 @@
     <class>com.dinenowinc.dinenow.model.DeliveryZone</class>
     <class>com.dinenowinc.dinenow.model.Item</class>
     <class>com.dinenowinc.dinenow.model.ItemPrice</class>
-    <class>com.dinenowinc.dinenow.model.helpers.ItemKeyword</class>
     <class>com.dinenowinc.dinenow.model.Menu</class>
     <class>com.dinenowinc.dinenow.model.Modifier</class>
     <class>com.dinenowinc.dinenow.model.ModifierAddon</class>
@@ -71,7 +70,7 @@
 
       <!-- <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect"
         /> -->
-      <property name="hibernate.hbm2ddl.auto" value="create"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
       <!-- update -->
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
@@ -79,7 +78,7 @@
       <!-- <property name="org.hibernate.envers.audit_table_suffix" value="_HIST"
         /> -->
       <property name="org.hibernate.envers.audit_table_prefix"
-                value="HIST_"/>
+                value="Z_HIST_"/>
       <!-- <property name="org.hibernate.envers.audit_strategy" -->
       <!-- value="org.hibernate.envers.strategy.ValidityAuditStrategy" /> -->
       <property
