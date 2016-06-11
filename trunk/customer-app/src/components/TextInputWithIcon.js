@@ -1,4 +1,5 @@
-import React, {Component, PropTypes, StyleSheet, View, TextInput} from 'react-native';
+import React, {Component} from 'react';
+import {PropTypes, StyleSheet, View, TextInput} from 'react-native';
 import {ComponentsStyle} from '../configs/CommonStyles';
 
 export default class TextInputWithIcon extends Component {

@@ -1,6 +1,6 @@
-/*
-import React, {Component, View, Text, StyleSheet, TextInput} from 'react-native';
-import Button from '../components/Button';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
+import Button from 'apsl-react-native-button';
 import {Actions} from 'react-native-router-flux'
 
 export default class SignIn extends Component {
@@ -34,8 +34,8 @@ export default class SignIn extends Component {
           value={this.state.password}
           onChangeText={(text) => this.setState({password: text})}
           />
-        <Button text={'Sign In'} onPress={this.onSignInPress} />
-        <Button text={'Sign Up'} onPress={this.onSignUpPress} />
+        <Button onPress={this.onSignInPress}>Sign In</Button>
+        <Button onPress={this.onSignUpPress}>Sign Up</Button>
       </View>
     );
   }
@@ -69,4 +69,3 @@ var styles = StyleSheet.create({
     fontSize: 18
   }
 });
-*/

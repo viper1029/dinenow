@@ -1,8 +1,10 @@
-import React, {Component, View, Text, StyleSheet, TextInput} from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
+
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Actions} from 'react-native-router-flux'
+import Button from 'apsl-react-native-button';
 import {ComponentsStyle} from '../configs/CommonStyles';
-import Button from '../components/Button';
 import TextInputWithIcon from '../components/TextInputWithIcon';
 
 export default class SignUp extends Component {
@@ -18,7 +20,7 @@ export default class SignUp extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <TextInputWithIcon
           placeholder="Full Name"
           value={this.state.fullName}
@@ -44,11 +46,12 @@ export default class SignUp extends Component {
           icon={<MaterialIcons name="phone" size={30} style={ComponentsStyle.TextInput.TextInputWithIcon.iconStyle}/>}
         />
         <Button
-          buttonStyle={ComponentsStyle.Buttons.LargeButton.ButtonStyle}
+          style={ComponentsStyle.Buttons.LargeButton.ButtonStyle}
           underLayColor={ComponentsStyle.Buttons.LargeButton.Colors.BLUE_BUTTON_PRESS}
           textStyle={ComponentsStyle.Buttons.LargeButton.TextStyle}
-          text={'Sign Up'}
-          onPress={Actions.Drawer}/>
+          onPress={Actions.search}>
+          Sign Up
+        </Button>
       </View>
     );
   }

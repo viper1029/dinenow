@@ -1,4 +1,5 @@
-import React, { Component, Text, StyleSheet, TouchableHighlight} from 'react-native';
+import React, { Component } from 'react';
+import {Text, StyleSheet, TouchableHighlight} from 'react-native';
 
 var styles = StyleSheet.create({
   buttonStyle: {

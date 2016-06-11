@@ -1,33 +1,32 @@
-import React, { Component, PropTypes } from 'react-native'
+/*
+import React, { Component } from 'react';
+import { PropTypes } from 'react-native';
+
 import Drawer from 'react-native-drawer'
 import SideDrawerContent from './SideDrawerContent'
+import {DefaultRenderer} from 'react-native-router-flux';
 
 export default class SideDrawer extends Component {
   render() {
     return (
       <Drawer
-        ref={c => this.drawer = c}
-        type="overlay"
+        ref="navigation"
+        type="displace"
         content={<SideDrawerContent />}
         tapToClose={true}
         openDrawerOffset={0.2}
         panCloseMask={0.2}
-        closedDrawerOffset={-3}
+        negotiatePan={true}
+        tweenHandler={(ratio) => ({ main: { opacity:Math.max(0.54,1-ratio) }})}>
         styles={drawerStyles}
-        tweenHandler={(ratio) => ({ main: { opacity: (2 - ratio) / 2 } })}
       >
-        {React.Children.map(this.props.children, c => React.cloneElement(c, {route: this.props.route}))}
+        <DefaultRenderer navigationState={children[0]} />
       </Drawer>
     )
   }
 }
 
-  SideDrawer.propTypes = {
-    children: PropTypes.node,
-    route: PropTypes.object
-  };
-
   var drawerStyles = {
     drawer: { backgroundColor: '#ffffff' },
     main: { paddingLeft: 3 }
-  };
+  };*/

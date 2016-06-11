@@ -1,10 +1,9 @@
-import React, {Component, View, Text, StyleSheet, TextInput, Switch, PixelRatio, TouchableHighlight} from 'react-native';
+import React, {Component } from 'react';
+import { View, Text, StyleSheet, TextInput, Switch, PixelRatio, TouchableHighlight} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Actions} from 'react-native-router-flux'
 import {ComponentsStyle} from '../configs/CommonStyles';
-import Button from '../components/Button';
 import TextInputWithIcon from '../components/TextInputWithIcon';
-import SettingsList from 'react-native-settings-list';
 
 export default class AboutUs extends Component {
   constructor(props) {
@@ -19,7 +18,7 @@ export default class AboutUs extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <TouchableHighlight
           style={styles.firstRow}
           underlayColor="#48BBEC"
