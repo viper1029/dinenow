@@ -13,7 +13,7 @@ import {closeDrawer} from './actions/drawer';
 import {popRoute} from './actions/route';
 import Navigator from 'Navigator';
 
-import Login from './components/login/';
+import Intro from './components/intro/';
 import SplashPage from './components/splashscreen/';
 import Home from './components/home/';
 import SignUp from './components/sign-up/';
@@ -97,7 +97,7 @@ class AppNavigator extends Component {
         BackAndroid.addEventListener('hardwareBackPress', () => {
             var routes = this._navigator.getCurrentRoutes();
 
-            if(routes[routes.length - 1].id == 'home' || routes[routes.length - 1].id == 'login') {
+            if(routes[routes.length - 1].id == 'home' || routes[routes.length - 1].id == 'intro') {
                 // CLose the app
                 return false;
             }
@@ -148,7 +148,7 @@ class AppNavigator extends Component {
                             gestures: {}
                         };
                     }}
-                    initialRoute={{id: (Platform.OS === "android") ? 'splashscreen' : 'login', statusBarHidden: true}}
+                    initialRoute={{id: (Platform.OS === "android") ? 'splashscreen' : 'intro', statusBarHidden: true}}
                     renderScene={this.renderScene}
                   />
             </Drawer>
@@ -161,8 +161,8 @@ class AppNavigator extends Component {
         switch (route.id) {
             case 'splashscreen':
                 return <SplashPage navigator={navigator} />;
-            case 'login':
-                return <Login navigator={navigator} />;
+            case 'intro':
+                return <Intro navigator={navigator} />;
             case 'home':
                 return <Home navigator={navigator} />;
             case 'inbox':
@@ -192,7 +192,7 @@ class AppNavigator extends Component {
             case 'chat':
                 return <Chat navigator={navigator} />;
             default :
-                return <Login navigator={navigator}  />;
+                return <Intro navigator={navigator}  />;
         }
     }
 }
