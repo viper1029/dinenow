@@ -160,6 +160,7 @@ var styles = StyleSheet.create({
   },
   slideText: {
     fontSize: 30,
+    height: 40,
     fontWeight: 'bold',
     color: 'white'
   },
