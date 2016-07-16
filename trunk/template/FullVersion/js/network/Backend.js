@@ -1,13 +1,17 @@
 import {fetchAsJson} from './CommonUtils';
 
-export function login() {
+export function login(email, pass) {
   var params =  {
     method: 'POST',
     headers: {
-      'Authentication': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OTA=',
+      'asdfasf': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OTA=',
       'Content-Type': 'application/json',
-    }
-  };
+    },
+    body: JSON.stringify({
+      email: email,
+      password: pass
+    })
+  }
   var json = FetchAsJson('http://192.168.1.120:30505/api/v1/auth/login', params)
     .then(function(json) {
       this.setState({
@@ -16,10 +20,11 @@ export function login() {
         lastName : json.user.lastName
       });
      // this.props.navigator.immediatelyResetRouteStack([{ name: 'search'}]);
-     return json
+     return json;
     })
     .catch((error) => {
       console.warn(error);
+      return error;
     });
 }
 

@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 // import CodePush from 'react-native-code-push';
 import { Image , StyleSheet } from 'react-native';
 import {popRoute} from '../../actions/route';
+import {login} from '../../network/Backend'
 
 import {Container, Header, Title, Content, Text, Icon, InputGroup, Input, View } from 'native-base';
 
@@ -76,7 +77,8 @@ class Login extends Component {
       
       var  email = this.state.email;
       var pass = this.state.password;
-      console.log(email+ " " + pass);
+      var response = login.login(email,pass);
+      console.log(response);
 
     }
 }
