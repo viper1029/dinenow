@@ -17,6 +17,7 @@ import Intro from './components/intro/';
 import SplashPage from './components/splashscreen/';
 import Home from './components/home/';
 import SignUp from './components/sign-up/';
+import Login from './components/login/';
 import Inbox from './components/inbox/';
 import Mail from './components/mail/';
 import Compose from './components/compose/';
@@ -171,6 +172,8 @@ class AppNavigator extends Component {
                 return <Compose navigator={navigator} />;
             case 'signUp':
                 return <SignUp navigator={navigator} />;
+            case 'login':
+                return <Login navigator={navigator} />;
             case 'mail':
                 return <Mail navigator={navigator} />;
             case 'lists':

@@ -100,7 +100,7 @@ class Intro extends Component {
               <Button
                 style={styles.signInButton}
                 textStyle={styles.buttonText}
-                onPress={() => this.pushNewRoute('home')}>
+                onPress={() => this.pushNewRoute('login')}>
                 Sign In
               </Button>
             </View>
@@ -110,7 +110,7 @@ class Intro extends Component {
               style={styles.skipButton}
               textStyle={styles.skipButtonText}
               onPress={() => this.pushNewRoute('signUp')}>
-              Skip
+              Skip1
             </Button>
           </View>
         </View>

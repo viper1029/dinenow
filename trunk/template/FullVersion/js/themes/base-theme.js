@@ -1,4 +1,4 @@
-import Color from 'color';
+//import Color from 'color';
 
 import {Platform} from 'react-native';
 
@@ -55,7 +55,8 @@ module.exports = {
     toolbarInverseBg: "#222",
 
     get statusBarColor() {
-		return Color(this.toolbarDefaultBg).darken(0.1).hexString();
+		//return Color(this.toolbarDefaultBg).darken(0.1).hexString();
+		return "#00c497";
 	},
 
     get btnPrimaryBg () {
