@@ -12,7 +12,7 @@ export function login(email, pass) {
       password: pass
     })
   }
-  var json = FetchAsJson('http://192.168.1.120:30505/api/v1/auth/login', params)
+  var json = fetchAsJson('http://localhost:30505/api/v1/auth/login', params)
     .then(function(json) {
       this.setState({
         userId : json.user.id,
@@ -42,7 +42,7 @@ export function register() {
       phoneNumber: this.state.phoneNumber
     })
   };
-  var json = FetchAsJson('http://192.168.1.120:30505/api/v1/auth/register', params)
+  var json = fetchAsJson('http://192.168.1.120:30505/api/v1/auth/register', params)
     .then(function (json) {
       this.setState({
         userId: json.data.user.id,

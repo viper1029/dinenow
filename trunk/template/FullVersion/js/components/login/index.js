@@ -11,15 +11,81 @@ import {connect} from 'react-redux';
 // import CodePush from 'react-native-code-push';
 import { Image , StyleSheet } from 'react-native';
 import {popRoute} from '../../actions/route';
-import {login} from '../../network/Backend'
+import {pushNewRoute, replaceRoute} from '../../actions/route';
 
 import {Container, Header, Title, Content, Text, Icon, InputGroup, Input, View } from 'native-base';
 
 import theme from '../../themes/base-theme';
 
 import Button from 'apsl-react-native-button';
-
+//import {fetchAsJson} from './../../network/CommonUtils';
 import styles from './styles';
+
+
+function login1(email, pass) {
+  var params =  {
+    method: 'POST',
+    headers: {
+      'Authentication': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OT=',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: pass
+    })
+  }
+  fetch('http://192.168.1.180:30505/api/v1/auth/login', params)
+    .then(function(response){
+      var message = response.json();
+      return message;
+
+     // return response.json();
+    }).then((message) => {
+    if(message){
+      // failed
+      console.warn(message);
+    }else {
+      //passed
+      console.warn('passed');
+    }
+    console.warn('response' + response);
+    }
+
+  ).catch((error) => {
+        console.warn(error);
+        return error;
+      })
+}
+
+function login(email, pass) {
+  var params =  {
+    method: 'POST',
+    headers: {
+      'asdfasf': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OTA=',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: pass
+    })
+  }
+  fetch('http://192.75.243.53:30505/api/v1/auth/login', params)
+    .then(function(response) {
+      // this.props.navigator.immediatelyResetRouteStack([{ name: 'search'}]);
+      return response.json();
+    })
+    .catch((error) => {
+      console.warn(error);
+      return error;
+    });
+}
+
+function fetchAsJson(url, params) {
+  return fetch(url, params)
+    .then(function(response) {
+      return response.json();
+    });
+}
 
 class Login extends Component {
 
@@ -34,7 +100,12 @@ class Login extends Component {
         this.props.popRoute();
     }
 
-    render() {
+  replaceRoute(route) {
+    this.props.replaceRoute(route);
+  }
+
+
+  render() {
         return (
             <Container theme={theme} style={{backgroundColor:'#384850'}}>
               <Image source={require('../../../images/glow2.png')} style={styles.container} >
@@ -74,18 +145,20 @@ class Login extends Component {
     }
 
     login() {
-      
       var  email = this.state.email;
       var pass = this.state.password;
-      var response = login.login(email,pass);
-      console.log(response);
+      var response = login1('1','1', this.replaceRoute('signUp'));
+       //this.replaceRoute('home');
+     // this.replaceRoute('signUp');
 
+      //console.warn('test' + response);
     }
 }
 
 function bindAction(dispatch) {
     return {
-        popRoute: () => dispatch(popRoute())
+        popRoute: () => dispatch(popRoute()),
+        replaceRoute: () => dispatch(replaceRoute())
     }
 }
 

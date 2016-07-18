@@ -149,7 +149,7 @@ class AppNavigator extends Component {
                             gestures: {}
                         };
                     }}
-                    initialRoute={{id: (Platform.OS === "android") ? 'splashscreen' : 'intro', statusBarHidden: true}}
+                    initialRoute={{id: (Platform.OS === "android") ? 'login' : 'intro', statusBarHidden: true}}
                     renderScene={this.renderScene}
                   />
             </Drawer>
