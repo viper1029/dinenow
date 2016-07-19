@@ -8,10 +8,12 @@
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
 // import CodePush from 'react-native-code-push';
-import { Image , StyleSheet } from 'react-native';
+import { Image , StyleSheet, Platform } from 'react-native';
 import {popRoute} from '../../actions/route';
 import {pushNewRoute, replaceRoute} from '../../actions/route';
+import { verifyCredential, removeToken } from '../../actions/authActions'
 
 import {Container, Header, Title, Content, Text, Icon, InputGroup, Input, View } from 'native-base';
 
@@ -21,78 +23,15 @@ import Button from 'apsl-react-native-button';
 //import {fetchAsJson} from './../../network/CommonUtils';
 import styles from './styles';
 
-
-function login1(email, pass) {
-  var params =  {
-    method: 'POST',
-    headers: {
-      'Authentication': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OT=',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: email,
-      password: pass
-    })
-  }
-  fetch('http://192.168.1.180:30505/api/v1/auth/login', params)
-    .then(function(response){
-      var message = response.json();
-      return message;
-
-     // return response.json();
-    }).then((message) => {
-    if(message){
-      // failed
-      console.warn(message);
-    }else {
-      //passed
-      console.warn('passed');
-    }
-    console.warn('response' + response);
-    }
-
-  ).catch((error) => {
-        console.warn(error);
-        return error;
-      })
-}
-
-function login(email, pass) {
-  var params =  {
-    method: 'POST',
-    headers: {
-      'asdfasf': 'Basic YWRtaW5AYWRtaW4uY29tOjEyMzQ1Njc4OTA=',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: email,
-      password: pass
-    })
-  }
-  fetch('http://192.75.243.53:30505/api/v1/auth/login', params)
-    .then(function(response) {
-      // this.props.navigator.immediatelyResetRouteStack([{ name: 'search'}]);
-      return response.json();
-    })
-    .catch((error) => {
-      console.warn(error);
-      return error;
-    });
-}
-
-function fetchAsJson(url, params) {
-  return fetch(url, params)
-    .then(function(response) {
-      return response.json();
-    });
-}
+import * as AuthActions from '../../actions/authActions'
 
 class Login extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { password: '',
-                       email : ''
+        this.state = {
+            password: '',
+            email: ''
          };
     }
 
@@ -104,6 +43,14 @@ class Login extends Component {
     this.props.replaceRoute(route);
   }
 
+  // added for testing
+  _login() {
+  if (Platform.OS === 'android') {
+    //dismissKeyboard();
+  }
+  console.log("Login using ",this.state.email);
+    this.props.verifyCredential(this.state.username, this.state.password);
+  }
 
   render() {
         return (
@@ -134,7 +81,7 @@ class Login extends Component {
                                 onChangeText={(password) => this.setState({password})}
                             />
                         </InputGroup>
-                        <Button rounded block onPress={() => this.login()} style={{backgroundColor: '#fff', marginTop: 20}} textStyle={{color: '#00c497'}}>
+                        <Button rounded block onPress={() => this._login()} style={{backgroundColor: '#fff', marginTop: 20}} textStyle={{color: '#00c497'}}>
                             Login
                         </Button>
                     </View>
@@ -143,23 +90,37 @@ class Login extends Component {
             </Container>
         )
     }
-
-    login() {
-      var  email = this.state.email;
-      var pass = this.state.password;
-      var response = login1('1','1', this.replaceRoute('signUp'));
-       //this.replaceRoute('home');
-     // this.replaceRoute('signUp');
-
-      //console.warn('test' + response);
-    }
 }
 
 function bindAction(dispatch) {
     return {
         popRoute: () => dispatch(popRoute()),
-        replaceRoute: () => dispatch(replaceRoute())
+        replaceRoute: () => dispatch(replaceRoute()),
     }
 }
 
-export default connect(null, bindAction)(Login);
+var mapStateToProps = function(state) {
+  var login = false;
+  //console.log('mapStateToProps', state.getIn(['currentUser','accessToken']));
+  //if (state.getIn(['currentUser','accessToken'])){
+//    login = true;
+//  }
+
+
+  return {
+    //isLoggedIn: login,
+    //loginError: state.getIn(['email','error']),
+    //isLoading: state.getIn(['currentUser','isLoading']),
+  };
+};
+
+var mapDispatchToProps = function (dispatch) {
+  return bindActionCreators({
+    verifyCredential,
+    removeToken,
+  }, dispatch);
+
+};
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Login);
+//export default connect(null, bindAction)(Login);
