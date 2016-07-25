@@ -19,7 +19,7 @@ import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem, C
 
 
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class ProgressBarNSP extends Component {

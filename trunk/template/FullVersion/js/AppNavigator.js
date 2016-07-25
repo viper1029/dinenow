@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash/core';
 import {Drawer} from 'native-base';
-import {BackAndroid, Platform, StatusBar} from 'react-native';
+import {BackAndroid, Platform, StatusBar, View} from 'react-native';
 import {closeDrawer} from './actions/drawer';
 import {popRoute} from './actions/route';
 import Navigator from 'Navigator';
@@ -17,7 +17,7 @@ import Intro from './components/intro/';
 import SplashPage from './components/splashscreen/';
 import Home from './components/home/';
 import SignUp from './components/sign-up/';
-import Login from './components/login/';
+import SignIn from './components/SignIn/';
 import Inbox from './components/inbox/';
 import Mail from './components/mail/';
 import Compose from './components/compose/';
@@ -31,7 +31,7 @@ import Form from './components/form/';
 import Modal from './components/modal/';
 import Chat from './components/chat/';
 import SideBar from './components/sideBar';
-import { statusBarColor } from "./themes/base-theme";
+import { statusBarColor } from "./theme/Theme";
 
 Navigator.prototype.replaceWithAnimation = function (route) {
   const activeLength = this.state.presentedIndex + 1;
@@ -75,7 +75,7 @@ const reducerCreate = params=>{
     }
 };
 
-const drawerStyle  = { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3};
+const drawerStyle  = { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3, marginTop: 0};
 class AppNavigator extends Component {
     constructor(props){
         super(props);
@@ -128,6 +128,7 @@ class AppNavigator extends Component {
     render() {
         return (
             <Drawer
+                styles={drawerStyle}
                 ref={(ref) => this._drawer = ref}
                 type="overlay"
                 content={<SideBar navigator={this._navigator} />}
@@ -149,7 +150,7 @@ class AppNavigator extends Component {
                             gestures: {}
                         };
                     }}
-                    initialRoute={{id: (Platform.OS === "android") ? 'login' : 'intro', statusBarHidden: true}}
+                    initialRoute={{id: (Platform.OS === "android") ? 'home' : 'intro', statusBarHidden: true}}
                     renderScene={this.renderScene}
                   />
             </Drawer>
@@ -172,8 +173,15 @@ class AppNavigator extends Component {
                 return <Compose navigator={navigator} />;
             case 'signUp':
                 return <SignUp navigator={navigator} />;
-            case 'login':
-                return <Login navigator={navigator} />;
+            case 'signIn':
+                return (
+                <View style={{flex:1}}>
+                <StatusBar
+                    backgroundColor={statusBarColor}
+                    barStyle="light-content"
+                />
+                <SignIn navigator={navigator} />
+                    </View>);
             case 'mail':
                 return <Mail navigator={navigator} />;
             case 'lists':

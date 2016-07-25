@@ -15,7 +15,7 @@ import {popRoute} from '../../actions/route';
 
 import {Container, Header, Title, Content, Text, Button, Icon, Card, CardItem, Thumbnail, View } from 'native-base';
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Compose extends Component {

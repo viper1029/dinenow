@@ -14,7 +14,7 @@ import {popRoute} from '../../actions/route';
 
 import {Container, Header, Title, Content, Text, Button, Icon, InputGroup, Input, View } from 'native-base';
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class SignUp extends Component {
@@ -31,7 +31,7 @@ class SignUp extends Component {
                     <Button transparent onPress={() => this.popRoute()}>
                         <Icon name="ios-arrow-back" />
                     </Button>
-                    <Title>SignUp</Title>
+                    <View><Text style={{}}>SignUp</Text></View>
                 </Header>
 
                 <Content padder style={{backgroundColor: 'transparent'}}>

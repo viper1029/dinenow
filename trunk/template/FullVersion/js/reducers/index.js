@@ -4,12 +4,12 @@ import {combineReducers} from 'redux';
 
 import drawer from './drawer';
 import route from './route';
-import loginReducer from './loginReducer';
+import auth from './auth';
 
 export default combineReducers({
   drawer,
   route,
-  loginReducer
+  auth
 })
 
 

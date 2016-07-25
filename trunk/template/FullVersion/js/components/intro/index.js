@@ -100,7 +100,7 @@ class Intro extends Component {
               <Button
                 style={styles.signInButton}
                 textStyle={styles.buttonText}
-                onPress={() => this.pushNewRoute('login')}>
+                onPress={() => this.pushNewRoute('signIn')}>
                 Sign In
               </Button>
             </View>

@@ -17,7 +17,7 @@ import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem, F
 import FooterComponent from "./../footer";
 import CalendarPicker from 'react-native-calendar-picker';
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Calendar extends Component {

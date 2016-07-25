@@ -1,9 +1,22 @@
-//import Color from 'color';
-
 import {Platform} from 'react-native';
+import Color from './Color';
 
 module.exports = {
-    brandPrimary : "#428bca",
+    mainGreen: "#00c497",
+
+    toolbarDefaultBg: Color.mainGreen,
+    statusBarColor: Color.mainGreen,
+
+    fontSizeBase: 15,
+    titleFontSize: 18,
+
+    btnTextSizeSmall: this.fontSizeBase * .8,
+    btnTextSize: this.fontSizeBase * 1.1,
+    btnTextSizeLarge: this.fontSizeBase * 1.5,
+
+    toolbarHeight: (Platform.OS === 'ios' ) ? 70 : 55,
+
+    brandPrimary: "#428bca",
     brandInfo: "#5bc0de",
     brandSuccess: "#5cb85c",
     brandDanger: "#d9534f",
@@ -15,87 +28,72 @@ module.exports = {
     inverseTextColor: "#000",
     textColor: "#fff",
 
-    fontSizeBase: 15,
-    titleFontSize: 18,
 
-    get fontSizeH1 () {
-        return this.fontSizeBase*1.8;
+    get fontSizeH1() {
+        return this.fontSizeBase * 1.8;
     },
-    get fontSizeH2 () {
-        return this.fontSizeBase* 1.6;
+    get fontSizeH2() {
+        return this.fontSizeBase * 1.6;
     },
-    get fontSizeH3 () {
-        return this.fontSizeBase* 1.4;
+    get fontSizeH3() {
+        return this.fontSizeBase * 1.4;
     },
-    get btnTextSize () {
-        return this.fontSizeBase* 1.1;
+
+    get iconSizeLarge() {
+        return this.iconFontSize * 1.4;
     },
-    get btnTextSizeLarge () {
-        return this.fontSizeBase* 1.5;
-    },
-    get btnTextSizeSmall () {
-        return this.fontSizeBase* .8;
-    },
-    get iconSizeLarge () {
-        return this.iconFontSize* 1.4;
-    },
-    get iconSizeSmall () {
-        return this.iconFontSize* .6;
+    get iconSizeSmall() {
+        return this.iconFontSize * .6;
     },
 
     borderRadiusBase: 4,
 
-    get borderRadiusLarge () {
-        return this.fontSizeBase* 3.8;
+    get borderRadiusLarge() {
+        return this.fontSizeBase * 3.8;
     },
 
     footerHeight: 55,
-    toolbarHeight: (Platform.OS === 'ios' ) ? 70 : 55,
-    toolbarDefaultBg: "#00c497",
+
+
     toolbarInverseBg: "#222",
 
-    get statusBarColor() {
-		//return Color(this.toolbarDefaultBg).darken(0.1).hexString();
-		return "#00c497";
-	},
-
-    get btnPrimaryBg () {
+    get btnPrimaryBg() {
         return this.brandPrimary;
     },
-    get btnPrimaryColor () {
+    get btnPrimaryColor() {
         return this.inverseTextColor;
     },
-    get btnSuccessBg () {
+    get btnSuccessBg() {
         return this.brandSuccess;
     },
-    get btnSuccessColor () {
+    get btnSuccessColor() {
         return this.inverseTextColor;
     },
-    get btnDangerBg () {
+    get btnDangerBg() {
         return this.brandDanger;
     },
-    get btnDangerColor () {
+    get btnDangerColor() {
         return this.inverseTextColor;
     },
-    get btnInfoBg () {
+    get btnInfoBg() {
         return this.brandInfo;
     },
-    get btnInfoColor () {
+    get btnInfoColor() {
         return this.inverseTextColor;
     },
-    get btnWarningBg () {
+    get btnWarningBg() {
         return this.brandWarning;
     },
-    get btnWarningColor () {
+    get btnWarningColor() {
         return this.inverseTextColor;
     },
 
     borderWidth: 1,
 
-    get inputColor () {
+    get inputColor() {
         return this.textColor;
     },
-    get inputColorPlaceholder () {
+    get inputColorPlaceholder() {
         return 'rgba(255, 255, 255, 1.0)';
     },
 
@@ -103,8 +101,8 @@ module.exports = {
     inputHeightBase: 40,
     inputGroupMarginBottom: 10,
     inputPaddingLeft: 5,
-    get inputPaddingLeftIcon () {
-        return this.inputPaddingLeft* 8;
+    get inputPaddingLeftIcon() {
+        return this.inputPaddingLeft * 8;
     },
 
     dropdownBg: "#000",

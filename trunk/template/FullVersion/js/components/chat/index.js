@@ -16,7 +16,7 @@ import {Container, Header, Title, Content, Text, Button, Icon } from 'native-bas
 
 import Messenger from 'react-native-gifted-messenger';
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Chat extends Component {

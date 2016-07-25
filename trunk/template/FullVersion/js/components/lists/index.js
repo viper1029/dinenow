@@ -15,7 +15,7 @@ import { Image, View } from 'react-native';
 
 import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem} from 'native-base';
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Lists extends Component {

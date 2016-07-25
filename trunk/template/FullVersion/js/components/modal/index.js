@@ -15,7 +15,7 @@ import {popRoute} from '../../actions/route';
 
 import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem} from 'native-base';
 import Modal from 'react-native-modalbox';
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Modal1 extends Component {

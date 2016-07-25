@@ -10,7 +10,7 @@ import CodePush from 'react-native-code-push';
 import { StyleSheet, AppState, Dimensions, Image} from 'react-native';
 import Modal from 'react-native-modalbox';
 import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem, View} from 'native-base';
-import theme from './themes/base-theme';
+import theme from './theme/Theme';
 import ProgressBar from './components/loaders/ProgressBar';
 
 var height = Dimensions.get('window').height;

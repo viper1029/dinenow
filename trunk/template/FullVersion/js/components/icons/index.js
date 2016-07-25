@@ -16,7 +16,7 @@ import {popRoute} from '../../actions/route';
 import {Container, Header, Title, Content, Text, Button, Icon, List, ListItem} from 'native-base';
 import { Grid, Col, Row } from "react-native-easy-grid";
 
-import theme from '../../themes/base-theme';
+import theme from '../../theme/Theme';
 import styles from './styles';
 
 class Icons extends Component {
