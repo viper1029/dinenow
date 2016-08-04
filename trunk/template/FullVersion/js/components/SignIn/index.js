@@ -11,6 +11,9 @@ import theme from "../../theme/Theme";
 import styles from "./styles";
 import Button from "../new/Button";
 import NavBar from "../new/NavBar";
+import Form from "../new/Form";
+import FormInput from "../new/FormInput";
+import InlineTextInput from "../new/InlineTextInput";
 
 class SignIn extends Component {
 
@@ -34,32 +37,44 @@ class SignIn extends Component {
     }
 
     render() {
+        const { name, email, password } = this.state
+        const nameValid = (name && name.length > 0 ? true : false)
+        const emailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
+        const passwordValid = (password && password.length >= 8 ? true : false)
         return (
             <Container theme={theme} style={{backgroundColor: '#384850'}}>
                 <Image source={require('../../../images/glow2.png')} style={styles.container}>
                     <NavBar onLeftPress={() => this.props.popRoute()} title="Sign In" leftButton={true}/>
                     <Content padder style={{backgroundColor: 'transparent'}}>
                         <View padder>
-                            <InputGroup style={styles.mb20}>
-                                <Icon name="ios-mail-open-outline"/>
-
-                                <Input placeholder="Email"
-                                       value={this.state.email}
-                                       onChangeText={(email) => this.setState({email})}
+                            <Form style={{ backgroundColor: 'transparent'}}>
+                                <FormInput
+                                    placeholder='Email'
+                                    autoCorrect={false}
+                                    autoCapitalize='none'
+                                    keyboardType='email-address'
+                                    iconName='email'
+                                    value={email}
+                                    valid={emailValid}
+                                    message={email && !emailValid ? 'Please enter a valid email address' : null}
+                                    onChangeText={(text) => { this.setState({email: text}) }}
                                 />
-                            </InputGroup>
-                            <InputGroup style={styles.mb20}>
-                                <Icon name="ios-unlock-outline"/>
-                                <Input
-                                    placeholder="Password"
+                                <FormInput
+                                    title='Password'
+                                    placeholder='Password'
+                                    autoCorrect={false}
+                                    autoCapitalize='none'
                                     secureTextEntry={true}
-                                    value={this.state.password}
-                                    onChangeText={(password) => this.setState({password})}
+                                    iconName='lock'
+                                    value={password}
+                                    valid={passwordValid}
+                                    message={password && !passwordValid ? 'Password too short' : null}
+                                    onChangeText={(text) => { this.setState({password: text}) }}
                                 />
-                            </InputGroup>
+                            </Form>
                             <Button isLoading={this.props.signingIn}
                                     onPress={ () => this.props.verifyCredential(this.state.email, this.state.password)}
-                                    style={{marginTop: 20}}>
+                                    style={{marginTop: 40}}>
                                 Sign In
                             </Button>
                         </View>

@@ -14,6 +14,8 @@ module.exports = {
     btnTextSize: this.fontSizeBase * 1.1,
     btnTextSizeLarge: this.fontSizeBase * 1.5,
 
+    iconFontSize: 30,
+
     toolbarHeight: (Platform.OS === 'ios' ) ? 70 : 55,
 
     brandPrimary: "#428bca",
@@ -119,7 +121,7 @@ module.exports = {
     listNoteColor: "#ddd",
     listBg: "#fff",
 
-    iconFontSize: 30,
+
 
     badgeColor: "#fff",
     badgeBg: "#ED1727",

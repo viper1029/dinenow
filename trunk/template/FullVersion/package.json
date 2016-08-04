@@ -12,6 +12,7 @@
     "lodash": "^4.13.1",
     "moment": "^2.13.0",
     "native-base": "0.5.0",
+    "qs": "^6.2.1",
     "react": "15.1.0",
     "react-native": "^0.27.2",
     "react-native-button": "^1.6.0",
@@ -25,7 +26,8 @@
     "redux": "^3.5.2",
     "redux-persist": "^3.2.2",
     "redux-thunk": "^2.1.0",
-    "rx": "^4.1.0"
+    "rx": "^4.1.0",
+    "validate-model": "0.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

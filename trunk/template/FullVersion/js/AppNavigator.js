@@ -16,8 +16,9 @@ import Navigator from 'Navigator';
 import Intro from './components/intro/';
 import SplashPage from './components/splashscreen/';
 import Home from './components/home/';
-import SignUp from './components/sign-up/';
+import SignUp from './components/SignUp/';
 import SignIn from './components/SignIn/';
+import Search from './components/Search/Search';
 import Inbox from './components/inbox/';
 import Mail from './components/mail/';
 import Compose from './components/compose/';
@@ -150,7 +151,7 @@ class AppNavigator extends Component {
                             gestures: {}
                         };
                     }}
-                    initialRoute={{id: (Platform.OS === "android") ? 'home' : 'intro', statusBarHidden: true}}
+                    initialRoute={{id: (Platform.OS === "android") ? 'intro' : 'intro', statusBarHidden: true}}
                     renderScene={this.renderScene}
                   />
             </Drawer>
@@ -182,6 +183,8 @@ class AppNavigator extends Component {
                 />
                 <SignIn navigator={navigator} />
                     </View>);
+            case 'search':
+                return <Search navigator={navigator} />;
             case 'mail':
                 return <Mail navigator={navigator} />;
             case 'lists':
