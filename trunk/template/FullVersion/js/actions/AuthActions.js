@@ -2,6 +2,7 @@ import {
     AUTH_SET_TOKEN,
     AUTH_SIGN_IN_SUCCESS,
     AUTH_SIGN_IN_ERROR,
+    AUTH_SIGN_IN_ERROR_RESET,
     AUTH_START_SIGN_IN,
     AUTH_END_SIGN_IN
 } from "./ActionTypes";
@@ -15,10 +16,17 @@ export function setToken(username, token) {
     };
 }
 
-export function loginError(error) {
+export function signInError(error) {
     return {
         type: AUTH_SIGN_IN_ERROR,
         error
+    };
+}
+
+export function signInErrorReset() {
+    return {
+        type: AUTH_SIGN_IN_ERROR_RESET,
+        error: null
     };
 }
 
@@ -48,7 +56,7 @@ export function verifyCredential(username, password) {
         AuthService.login(username, password, function (error, data) {
             if (error) {
                 console.log("Error: ", error);
-                dispatch(loginError(error));
+                dispatch(signInError(error));
             } else {
                 console.log("SignIn Success");
                 dispatch(setToken(username, data));

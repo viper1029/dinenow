@@ -151,7 +151,7 @@ class AppNavigator extends Component {
                             gestures: {}
                         };
                     }}
-                    initialRoute={{id: (Platform.OS === "android") ? 'intro' : 'intro', statusBarHidden: true}}
+                    initialRoute={{id: (Platform.OS === "android") ? 'search' : 'intro', statusBarHidden: true}}
                     renderScene={this.renderScene}
                   />
             </Drawer>
@@ -177,10 +177,6 @@ class AppNavigator extends Component {
             case 'signIn':
                 return (
                 <View style={{flex:1}}>
-                <StatusBar
-                    backgroundColor={statusBarColor}
-                    barStyle="light-content"
-                />
                 <SignIn navigator={navigator} />
                     </View>);
             case 'search':

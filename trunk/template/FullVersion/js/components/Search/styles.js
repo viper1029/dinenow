@@ -10,12 +10,7 @@ export default StyleSheet.create({
         height: null,
     },
     mb20: {
-      marginBottom: 20,
-      borderBottomColor: "rgba(182, 182, 182, 0.62)"
-    },
-    modal: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 300
+        marginBottom: 20,
+        borderBottomColor: "rgba(182, 182, 182, 0.62)"
     }
 });
