@@ -49,9 +49,9 @@
                 value="jdbc:postgresql://testserver.cd6k9zemzybu.us-west-2.rds.amazonaws.com:5432/dinenowdevelopertest"></property>-->
 
       <property name="hibernate.connection.username" value="postgres"></property>
-      <property name="hibernate.connection.password" value="1234567890"></property>
+      <property name="hibernate.connection.password" value="Dra8KvMD"></property>
       <property name="hibernate.connection.url"
-                value="jdbc:postgresql://localhost:5432/dinenowtestserver1"></property>
+                value="jdbc:postgresql://130.211.139.128:5432/postgres"></property>
 
       <!-- Postgres Sql Daligates -->
       <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect"></property>
