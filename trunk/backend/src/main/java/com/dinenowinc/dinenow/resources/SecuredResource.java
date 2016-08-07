@@ -109,11 +109,11 @@ public class SecuredResource {
   public Response login(@Context HttpHeaders headers) {
 
     if (headers == null) {
-      ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: missing headers."));
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: missing headers."));
     }
 
     if (headers.getRequestHeader("Authentication") == null) {
-      ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: missing Authentication header."));
+      return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Exception: missing Authentication header."));
     }
 
     String authentication = headers.getRequestHeader("Authentication").toString();

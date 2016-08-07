@@ -1,44 +1,27 @@
 package com.dinenowinc.dinenow.resources;
 
-import com.dinenowinc.dinenow.dao.AddonDao;
-import com.dinenowinc.dinenow.dao.CategoryDao;
 import com.dinenowinc.dinenow.dao.CustomerDao;
 import com.dinenowinc.dinenow.dao.DeliveryZoneDao;
 import com.dinenowinc.dinenow.dao.ItemDao;
-import com.dinenowinc.dinenow.dao.ItemInfoDao;
-import com.dinenowinc.dinenow.dao.MenuDao;
-import com.dinenowinc.dinenow.dao.ModifierDao;
 import com.dinenowinc.dinenow.dao.OrderDao;
 import com.dinenowinc.dinenow.dao.PaymentTypeDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
-import com.dinenowinc.dinenow.dao.ReviewDao;
-import com.dinenowinc.dinenow.dao.SizeDao;
-import com.dinenowinc.dinenow.dao.TaxDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.Addon;
-import com.dinenowinc.dinenow.model.Category;
 import com.dinenowinc.dinenow.model.ClosedDay;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.DeliveryZone;
 import com.dinenowinc.dinenow.model.Item;
-import com.dinenowinc.dinenow.model.ItemSize;
 import com.dinenowinc.dinenow.model.Menu;
-import com.dinenowinc.dinenow.model.Modifier;
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.OrderDetail;
 import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
-import com.dinenowinc.dinenow.model.Review;
-import com.dinenowinc.dinenow.model.Size;
-import com.dinenowinc.dinenow.model.Tax;
 import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.helpers.Hour;
 import com.dinenowinc.dinenow.model.helpers.LatLng;
-import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
-import com.dinenowinc.dinenow.model.helpers.OrderStatus;
 import com.dinenowinc.dinenow.model.helpers.OrderType;
 import com.dinenowinc.dinenow.model.helpers.SearchOrderBy;
 import com.dinenowinc.dinenow.model.helpers.SearchType;
@@ -117,24 +100,18 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   })
   public Response getAll(@ApiParam(access = "internal") @Auth User access, @QueryParam("page") String page, @QueryParam("size") String size) {
     if (access.getRole() == UserRole.ADMIN) {
-      int pageInt = 1;
-      int sizeInt = 50;
-      if (page != null) {
-        try {
-          pageInt = Integer.parseInt(page);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Page is not a number."));
-        }
+      int pageInt;
+      int sizeInt;
+      try {
+        pageInt = parseInteger(page);
+        sizeInt = parseInteger(size);
+        pageInt = pageInt == -1 ? 1 : pageInt;
+        sizeInt = sizeInt == -1 ? 50 : sizeInt;
       }
-      if (size != null) {
-        try {
-          sizeInt = Integer.parseInt(size);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Size is not a number."));
-        }
+      catch (Exception e) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Could not parse page or size."));
       }
+
       List<Restaurant> entities = this.dao.getByPage(pageInt, sizeInt);
       List<HashMap<String, Object>> returnMap = getMapListFromEntities(entities);
       LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
@@ -143,6 +120,15 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }
+
+  private int parseInteger(final String intStr) {
+    int pageInt = -1;
+    if (intStr != null) {
+      pageInt = Integer.parseInt(intStr);
+    }
+    return pageInt;
+  }
+
 
   @GET
   @Path("/{id}")
@@ -286,6 +272,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
 
+  @SuppressWarnings("Duplicates")
   @Path("/{restaurant_id}/order_details")
   @ApiOperation(value = "Get All Order Details By Restaurant", notes = "status=open/accepted/completed/scheduled/late <br/> from: 2015/01/01 <br/> to: 2015/03/19")
   @ApiResponses(value = {
@@ -295,104 +282,80 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @ApiResponse(code = 404, message = "restaurant not found")
   })
   @GET
-  public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status, @QueryParam("from") String from, @QueryParam("to") String to, @QueryParam("page") String page, @QueryParam("size") String size) {
+  public Response getOrderByRestaurantId(@ApiParam(access = "internal") @Auth User access,
+      @PathParam("restaurant_id") String restaurant_id, @QueryParam("status") String status,
+      @QueryParam("from") String from, @QueryParam("to") String to, @QueryParam("page") String page,
+      @QueryParam("size") String size) {
 
-    int iPage = 1;
-    int iSize = 50;
-
+    /*int pageInt;
+    int sizeInt;
     if (restaurantDao.get(restaurant_id) != null) {
-
-      if (page != null) {
-        try {
-          iPage = Integer.parseInt(page);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST,
-              new ServiceErrorMessage("page not format number"));
-        }
+      try {
+        pageInt = parseInteger(page);
+        sizeInt = parseInteger(size);
+        pageInt = pageInt == -1 ? 1 : pageInt;
+        sizeInt = sizeInt == -1 ? 50 : sizeInt;
       }
-      if (size != null) {
-        try {
-          iSize = Integer.parseInt(size);
-        }
-        catch (Exception e) {
-          return ResourceUtils.asFailedResponse(Status.BAD_REQUEST,
-              new ServiceErrorMessage("size not format number"));
-        }
+      catch (Exception e) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Could not parse page or size."));
       }
-      List<Order> entities = new ArrayList<>();
-      if (status != null && !status.equals("")) {
-        // have Status
-        OrderStatus orderstatus = OrderStatus.OPEN;
-        if (status.toLowerCase().equals("open")) {
-          orderstatus = OrderStatus.OPEN;
-        }
-        if (status.toLowerCase().equals("accepted")) {
-          orderstatus = OrderStatus.ACCEPTED;
-        }
-        if (status.toLowerCase().equals("completed")) {
-          orderstatus = OrderStatus.COMPLETED;
-        }
-        if (status.toLowerCase().equals("scheduled")) {
-          orderstatus = OrderStatus.SCHEDULED;
-        }
-        if (status.toLowerCase().equals("late")) {
-          orderstatus = OrderStatus.LATE;
-        }
 
-        if (from != null && to != null) {
-          // have from - to
-          SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-          Date f = new Date();
-          Date t = new Date();
-          try {
-            f = ft.parse(from);
-            t = ft.parse(to);
-            System.out.println(f);
-          }
-          catch (ParseException e) {
-            System.out.println("Unparseable using " + ft);
-          }
-          entities = customerOrderDao.getListByRestaurant(restaurant_id, orderstatus, f, t, iPage, iSize);
+      if (from != null && to != null) {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date f = new Date();
+        Date t = new Date();
+        try {
+          f = ft.parse(from);
+          t = ft.parse(to);
         }
-        else {
-          entities = customerOrderDao.getListByRestaurant(restaurant_id, orderstatus, iPage, iSize);
+        catch (ParseException e) {
+          System.out.println("Unparseable using " + ft);
         }
+        entities = customerOrderDao.getListByRestaurant(restaurant_id, orderstatus, f, t, pageInt, sizeInt);
       }
       else {
-        // status == null
-        if (from != null && to != null) {
-          // have from - to
-          SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-          Date f = new Date();
-          Date t = new Date();
-          try {
-            f = ft.parse(from);
-            t = ft.parse(to);
-            System.out.println(f);
-          }
-          catch (ParseException e) {
-            System.out.println("Unparseable using " + ft);
-          }
-          entities = customerOrderDao.getListByRestaurant(restaurant_id, f, t, iPage, iSize);
-        }
-        else {
-          entities = customerOrderDao.getListByRestaurant(restaurant_id, iPage, iSize);
-
-        }
+        entities = customerOrderDao.getListByRestaurant(restaurant_id, orderstatus, pageInt, sizeInt);
       }
-      List<HashMap<String, Object>> dtos = new ArrayList<>();
-      for (Order dto : entities) {
-        dtos.add(onGet(dto));
-      }
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("orders", dtos);
-      return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
     else {
-      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+      // status == null
+      if (from != null && to != null) {
+        // have from - to
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date f = new Date();
+        Date t = new Date();
+        try {
+          f = ft.parse(from);
+          t = ft.parse(to);
+          System.out.println(f);
+        }
+        catch (ParseException e) {
+          System.out.println("Unparseable using " + ft);
+        }
+        entities = customerOrderDao.getListByRestaurant(restaurant_id, f, t, iPage, iSize);
+      }
+      else {
+        entities = customerOrderDao.getListByRestaurant(restaurant_id, iPage, iSize);
+
+      }
     }
+    List<HashMap<String, Object>> dtos = new ArrayList<>();
+    for (Order dto : entities) {
+      dtos.add(onGet(dto));
+    }
+    LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+    dto.put("orders", dtos);
+    return ResourceUtils.asSuccessResponse(Status.OK, dto);
   }
+
+  else
+
+  {
+    return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+  }*/
+    return null;
+
+}
 
   private HashMap<String, Object> onGet(Order entity) {
     HashMap<String, Object> uti = entity.toDto();
@@ -415,7 +378,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   private HashMap<String, Object> onGet(RestaurantUser entity) {
     HashMap<String, Object> uti = entity.toDto();
 /*		uti.put("email", orderdetails);
-		uti.put("first_name", customer);
+    uti.put("first_name", customer);
 		uti.put("last_name", customer);
 		uti.put("phone_number", customer);
 		uti.put("role", customer);*/
@@ -450,8 +413,8 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
   @GET
   public Response getAboutUsByRestaurantId(@PathParam("restaurant_id") String restaurant_id) {
     if (restaurantDao.get(restaurant_id) != null) {
-			/*List<Restaurant> entities = null ;
-			List<HashMap<String, Object>> dtos = ModelHelpers.getMapListFromEntities(entities);*/
+      /*List<Restaurant> entities = null ;
+      List<HashMap<String, Object>> dtos = ModelHelpers.getMapListFromEntities(entities);*/
       return ResourceUtils.asSuccessResponse(Status.OK, new ServiceErrorMessage("this is Utilsing for Aboutus"));
     }
     else {
@@ -695,8 +658,6 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     dtos.put(getClassT().getSimpleName().toLowerCase(), dto);
     return dtos;
   }
-
-
 
 
   private List<HashMap<String, Object>> fromEntitiesSearch(List<Restaurant> entities) {

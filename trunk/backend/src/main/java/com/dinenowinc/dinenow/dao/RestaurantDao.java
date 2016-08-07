@@ -30,8 +30,7 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
   public Restaurant findByMenuId(String menu_id) {
     try {
       Restaurant restaurant = (Restaurant) getEntityManager().createQuery(
-          "SELECT r FROM Restaurant r JOIN r.menus m WHERE m.id = :id")
-          .setParameter("id", menu_id).getSingleResult();
+          "SELECT r FROM Restaurant r JOIN r.menus m WHERE m.id = :id").setParameter("id", menu_id).getSingleResult();
       return restaurant;
     }
     catch (NoResultException e) {
@@ -42,73 +41,13 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
   public Restaurant findByRestaurantUser(String id) {
     try {
       Restaurant restaurant = (Restaurant) getEntityManager().createQuery(
-          "SELECT r FROM Restaurant r JOIN r.users u WHERE u.id = :id")
-          .setParameter("id", id).getSingleResult();
+          "SELECT r FROM Restaurant r JOIN r.users u WHERE u.id = :id").setParameter("id", id).getSingleResult();
       return restaurant;
     }
     catch (NoResultException e) {
       return null;
     }
   }
-
-  @SuppressWarnings("unchecked")
-  public List<Restaurant> findBy(SearchType type, Point location, double distance) {
-    System.out.println("LLLLLLLLLLLLLLLLL>>>>>" + type);
-    try {
-      boolean delivery = false;
-      boolean takeout = false;
-      if (distance < 0) {
-        distance = 0;
-      }
-      if (type == SearchType.BOTH) {
-        delivery = true;
-        takeout = true;
-        List<Restaurant> l = (ArrayList<Restaurant>) getEntityManager()
-            .createNativeQuery("SELECT r.*,(((acos(sin(( :lat *pi()/180)) * sin((X(location)*pi()/180))+cos(( :lat2 *pi()/180)) * cos((X(location)*pi()/180)) * cos((( :lng - Y(location))*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance FROM restaurant r,deliveryzone dz WHERE r.id = dz.id_restaurant AND ST_Contains(dz.deliveryZoneCoords, POINT( :lat3, :lng2)) AND (r.acceptDeliveryOrders = :delivery OR r.acceptTakeOutOrders = :takeout) HAVING distance <= :distance ORDER BY distance", Restaurant.class)
-            .setParameter("lat", location.getX())
-            .setParameter("lat2", location.getX())
-            .setParameter("lng", location.getY())
-            .setParameter("lat3", location.getX())
-            .setParameter("lng2", location.getY())
-            .setParameter("delivery", delivery)
-            .setParameter("takeout", takeout)
-            .setParameter("distance", distance).getResultList();
-        return l;
-      }
-      else {
-        if (type == SearchType.DELIVERY) {
-          delivery = true;
-          List<Restaurant> l = (ArrayList<Restaurant>) getEntityManager()
-              .createNativeQuery("SELECT r.*,(((acos(sin(( :lat *pi()/180)) * sin((X(location)*pi()/180))+cos(( :lat2 *pi()/180)) * cos((X(location)*pi()/180)) * cos((( :lng - Y(location))*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance FROM restaurant r,deliveryzone dz WHERE r.id = dz.id_restaurant AND ST_Contains(dz.deliveryZoneCoords, POINT( :lat3, :lng2)) AND r.acceptDeliveryOrders = :delivery HAVING distance <= :distance ORDER BY distance", Restaurant.class)
-              .setParameter("lat", location.getX())
-              .setParameter("lat2", location.getX())
-              .setParameter("lng", location.getY())
-              .setParameter("lat3", location.getX())
-              .setParameter("lng2", location.getY())
-              .setParameter("delivery", delivery)
-              .setParameter("distance", distance).getResultList();
-          return l;
-        }
-        else {
-          takeout = true;
-          List<Restaurant> l = (ArrayList<Restaurant>) getEntityManager()
-              .createNativeQuery("SELECT r.*,(((acos(sin(( :lat *pi()/180)) * sin((X(location)*pi()/180))+cos(( :lat2 *pi()/180)) * cos((X(location)*pi()/180)) * cos((( :lng - Y(location))*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance FROM restaurant r,deliveryzone dz WHERE r.id = dz.id_restaurant AND ST_Contains(dz.deliveryZoneCoords, POINT( :lat3, :lng2)) AND r.acceptTakeOutOrders = :takeout HAVING distance <= :distance ORDER BY distance", Restaurant.class)
-              .setParameter("lat", location.getX())
-              .setParameter("lat2", location.getX())
-              .setParameter("lng", location.getY())
-              .setParameter("lat3", location.getX())
-              .setParameter("lng2", location.getY())
-              .setParameter("takeout", takeout)
-              .setParameter("distance", distance).getResultList();
-          return l;
-        }
-      }
-    }
-    catch (NoResultException e) {
-      return null;
-    }
-  }
-
 
   @SuppressWarnings("unchecked")
   public List<Restaurant> findDistance(Point location, double distance, SearchOrderBy orderBy) {

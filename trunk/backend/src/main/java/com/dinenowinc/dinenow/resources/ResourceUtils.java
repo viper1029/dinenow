@@ -24,7 +24,9 @@ public final class ResourceUtils {
     if (errorMessage instanceof ServiceErrorMessage) {
       List<ServiceErrorMessage> errorMessages = new ArrayList<>();
       errorMessages.add((ServiceErrorMessage) errorMessage);
-      return Response.status(statusCode).entity(errorMessages).type(MediaType.APPLICATION_JSON).build();
+      HashMap<String, Object> entity = new HashMap<>();
+      entity.put("errors", errorMessages);
+      return Response.status(statusCode).entity(entity).type(MediaType.APPLICATION_JSON).build();
     }
     return Response.status(statusCode).entity(errorMessage).type(MediaType.APPLICATION_JSON).build();
   }
@@ -35,7 +37,7 @@ public final class ResourceUtils {
     for (int i = 0; i < errorMessage.size(); i++) {
       errorList += errorMessage.get(i).getMessageName().toString() + (i != errorMessage.size() - 1 ? ", " : "");
     }
-    entity.put("errorMessage", errorList);
+    entity.put("errors", errorList);
     entity.put("data", null);
     return Response.status(statusCode).entity(entity).type(MediaType.APPLICATION_JSON).build();
   }
