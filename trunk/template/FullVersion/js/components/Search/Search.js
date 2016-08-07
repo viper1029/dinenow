@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {Image, StyleSheet, Platform, TouchableOpacity, StatusBar} from "react-native";
 import {replaceRoute, popRoute} from "../../actions/route";
+import {openDrawer} from "../../actions/drawer";
 import {Container, Header, Title, Content, Text, Icon, InputGroup, Input, View} from "native-base";
 import theme from "../../theme/Theme";
 import styles from "./styles";
@@ -23,22 +24,14 @@ class Search extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log("Receiving new Properties: ", nextProps.signedIn);
-        if (nextProps.signedIn) {
-            this.props.replaceRoute('home');
-        }
-
-        if (nextProps.signInError && this.props.signInError !== nextProps.signInError) {
-            console.log(nextProps.signInError);
-        }
-    }
-
     render() {
         return (
             <View theme={theme} style={{flex: 1, backgroundColor: '#384850'}}>
                 <Image source={require('../../../images/glow2.png')} style={styles.container}>
-                    <NavBar onLeftPress={() => this.props.popRoute()} title="Search" leftButton={true}/>
+                    <NavBar onLeftPress={() => this.props.openDrawer()} title="Search" leftButton={true} leftIconName="menu"
+                            iconStyle={{
+                                fontSize: 32,
+                            }}/>
                     <GooglePlacesAutocomplete
                         enablePoweredByContainer={false}
                         placeholder='Enter Address'
@@ -95,7 +88,7 @@ var mapStateToProps = function (state) {
 var mapDispatchToProps = function (dispatch) {
     return bindActionCreators({
         popRoute,
-        replaceRoute,
+        openDrawer,
     }, dispatch);
 
 };

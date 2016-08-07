@@ -10,17 +10,17 @@ export default class NavBar extends Component {
     }
 
     render() {
-        const {leftButton, rightButton, onLeftPress, children, title} = this.props
+        const {leftButton, rightButton, onLeftPress, children, title, iconStyle} = this.props
         return (
             <View style={styles.navBar}>
                 <View style={styles.leftContainer}>
                     {leftButton &&
                     <TouchableHighlight underlayColor={'grey'} onPress={onLeftPress} style={styles.button}>
                         <View>
-                            <Icon name="keyboard-arrow-left" style={{
+                            <Icon name={this.props.leftIconName != null && this.props.leftIconName || "keyboard-arrow-left"} style={[{
                                 color: 'black',
                                 fontSize: 36,
-                            }}/>
+                            }, iconStyle]}/>
                         </View>
                     </TouchableHighlight>
                     }

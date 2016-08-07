@@ -121,7 +121,7 @@ class SignIn extends Component {
                                 fontSize: 16,
                                 marginBottom: 20,
                                 marginTop: 20
-                            }}>{this.props.signInError}</Text>
+                            }}>{typeof this.props.signInError === 'string' && this.props.signInError}</Text>
                         <Button
                             style={{margin: 0, padding: 0}}
                             onPress={() => this.props.signInErrorReset()}>
