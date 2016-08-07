@@ -61,7 +61,9 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.3'
     compile group: 'org.codemonkey.simplejavamail', name: 'simple-java-mail', version: '2.1'
     compile group: 'javax.mail', name: 'mail', version: '1.4'
-    compile group: 'com.googlecode.jsontoken', name: 'jsontoken', version: '1.0'
+    compile (group: 'com.googlecode.jsontoken', name: 'jsontoken', version: '1.0') {
+        exclude(module: 'google-collections')
+    }
     compile group: 'io.federecio', name: 'dropwizard-swagger', version: '0.7.0'
     compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.22.1'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.22.1'
