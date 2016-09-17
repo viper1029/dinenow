@@ -8,6 +8,9 @@ import IntroScreen from './views/IntroScreen'
 import SignInScreen from './views/SignInScreen'
 import SearchScreen from './views/SearchScreen'
 import AboutScreen from './views/AboutScreen'
+import AccountScreen from './views/AccountScreen'
+import ResultsScreen from './views/ResultsScreen'
+import SendFeedbackScreen from './views/SendFeedbackScreen'
 import {Actions as NavActions} from 'react-native-router-flux'
 
 class NavigationRouter extends Component {
@@ -33,19 +36,30 @@ class NavigationRouter extends Component {
             }}
         />)
 
+        const BackToHomeNavBar = (props) => (<NavBar
+            onLeftPress={NavActions.drawer}
+            title={props.title}
+            leftButton={true}
+            iconStyle={{
+                fontSize: 32,
+            }}
+        />)
+
 
         return (
             <Router>
                 <Scene key='root'>
-                    <Scene initial key='intro' component={IntroScreen} hideNavBar={true}/>
-                    <Scene key='signIn' component={SignInScreen} hideNavBar={false} navBar={() => (<BackNavBar title="Sign In"/>)} />
+
                     <Scene key="drawer" component={NavigationDrawer} open={false} type={ActionConst.RESET} direction="horizontal">
                         <Scene key="main" tabs={true}>
                             <Scene initial key='search' component={SearchScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Search"/>)}/>
                             <Scene key='about' component={AboutScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="About Us"/>)}/>
+                            <Scene key='sendFeedback' component={SendFeedbackScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Send Feedback"/>)}/>
+                            <Scene key='account' component={AccountScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Account"/>)}/>
                         </Scene>
 
-                    </Scene>
+                </Scene>
+                    <Scene key='results' component={ResultsScreen} hideNavBar={false} navBar={() => (<BackToHomeNavBar title="Restaurants"/>)} />
                 </Scene>
             </Router>
         )

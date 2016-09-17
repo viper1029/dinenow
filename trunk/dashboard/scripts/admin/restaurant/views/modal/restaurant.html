@@ -2,7 +2,7 @@
     <button type="button" class="close" ng-click="cancel()">×</button>
     <h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.name : "Name" }}</h3>
 </div>
-<div class="modal-body">
+<div class="modal-body" ng-controller="SearchBoxController">
     <div class="container">
         <div class="row">
             <form class="form-horizontal" name="form">
@@ -114,6 +114,32 @@
                 </div>
             </div>
             <div class="col-md-12">
+                <!--<ui-gmap-google-map
+                        center="map.center"
+                        zoom="map.zoom"
+                        dragging="map.dragging"
+                        bounds="map.bounds"
+                        events="map.events"
+                        options="map.options"
+                        pan="true"
+                        control="map.control"
+                >
+                    &lt;!&ndash;to add as a map control &ndash;&gt;
+                    <ui-gmap-search-box options="searchbox.options" template="searchbox.template"  events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
+                    <ui-gmap-markers idkey="map.idkey" models="map.markers" coords="'self'" icon="'icon'"
+                                     click="'onClicked'"></ui-gmap-markers>
+                    <ui-gmap-window show="window.show" coords="window.coords" idkey="window.place_id" templateurl="window.templateurl"
+                                    templateparameter="window.templateparameter" options="window.options"
+                                    closeClick='window.closeClick()' ng-cloak>
+
+                    </ui-gmap-window>
+
+
+                </ui-gmap-google-map>-->
+                <div class="form-group">
+                <input type="text" name="geocoding" placeholder="Search for address" ng-model="geocodeAddress">
+                <button class="btn btn-primary" ng-click="submitGeocoding(geocodeAddress)">Search</button>
+                    </div>
             <div class="form-group" ng-if="loadMap">
                 <label for="address" class="col-md-12 control-label align-left">Choice location of restaurant by click on map <span
                         class="text-danger">(*)</span></label>

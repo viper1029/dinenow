@@ -3,6 +3,7 @@
 angular.module("common.config", [])
 .constant("ROOT", "http://localhost:30505/api/v1/")
 .constant("API_IMAGE_UPLOAD", "http://ec2-54-213-249-95.us-west-2.compute.amazonaws.com:30505/api/v1/images/");
+
 angular.module('app.controllers',["app.security.service", "app.security.login", "app.security.signup",
     "app.admin.orders", "app.admin.restaurant", "app.admin.user", "app.admin.plan",
     "app.admin.user.services", "app.admin.user.manage", 
@@ -23,6 +24,7 @@ angular
     'theme.services',
     'theme.directives',
     'theme.google_maps','angular-toArrayFilter',
+      'searchBoxAutocomplete',
   /*  'ngMask',*/
     'ngCookies',
     'ngResource',
@@ -33,7 +35,6 @@ angular
     'angular-ladda',
   'angularPayments',
    'angularMoment',
-    
     'daterangepicker',
     'ngTable',
     'ui.router',

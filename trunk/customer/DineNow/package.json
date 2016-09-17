@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "remotedev-debugger",
+    "postinstall": "remotedev-debugger --hostname 142.58.212.21 --port 5678 --injectserver",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "remotedev": "remotedev --hostname=localhost --port=8000"
   },

@@ -19,6 +19,7 @@ import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.dinenowinc.dinenow.model.helpers.Hour;
 import com.dinenowinc.dinenow.model.helpers.LatLng;
 import com.dinenowinc.dinenow.model.helpers.NetworkStatus;
@@ -270,6 +271,26 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       return super.delete(access, id);
     }
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+  }
+
+  @Path("getRestaurantDetails")
+  @ApiOperation(value = "Get menu and restaurant info")
+  @GET
+  public Response getRestaurantDetails(@QueryParam("status") String restaurantId) {
+    Restaurant restaurant = restaurantDao.get(restaurantId);
+    if (restaurant == null) {
+      return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
+    }
+    else {
+      List<RestaurantUser> entities = restaurant.getMenus();
+      List<HashMap<String, Object>> dtos = new ArrayList<>();
+      for (RestaurantUser dto : entities) {
+        dtos.add(onGet(dto));
+      }
+      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
+      dto.put("restaurantusers", dtos);
+      return ResourceUtils.asSuccessResponse(Status.OK, dto);
+    }
   }
 
   @SuppressWarnings("Duplicates")
@@ -687,6 +708,7 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       dto.put("rating", entity.getRating());
       dto.put("active", entity.isActive());
       dto.put("logo", entity.getLogo());
+      dto.put("distance", entity.getDistance());
       //		dto.put("stripe", entity.getStripe());
       dto.put("dineInHours", entity.getDineInHours());
       //		dto.put("acceptDeliveryHours", entity.getAccept_delivery_hours());
@@ -733,9 +755,9 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
             .split(",")[0]),
             Double.parseDouble(latlng.split(",")[1]));
         List<Restaurant> entities = restaurantDao.findDistanceNew(
-            searchType, new GeometryFactory()
+            new GeometryFactory()
                 .createPoint(new Coordinate(location.getLat(),
-                    location.getLng())), distance, cusine, sorted);
+                    location.getLng())), distance);
 
         LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
         dto.put("restaurants", fromEntitiesSearch(entities));
@@ -767,24 +789,19 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
       @ApiResponse(code = 400, message = "location is not null"),
       @ApiResponse(code = 400, message = "Format Incorrect ###")
   })
-  public Response get(@ApiParam(access = "internal") @Auth User access,
-      @ApiParam(required = true) @QueryParam("location") String latlng,
+  public Response get(@ApiParam(required = true) @QueryParam("location") String latlng,
       @QueryParam("distance") double distance) {
     try {
-      distance = distance / 1000;
-      if (distance <= 0) {
-        distance = 25;
-      }
       if (latlng != null) {
         LatLng location = new LatLng(Double.parseDouble(latlng
             .split(",")[0]),
             Double.parseDouble(latlng.split(",")[1]));
-        List<Restaurant> entities = restaurantDao.findDistance(
+        List<Restaurant> entities = restaurantDao.findDistanceNew(
             new GeometryFactory().createPoint(new Coordinate(
                 location.getLat(), location.getLng())),
-            distance, SearchOrderBy.DISTANCE); // 25KM
+            distance); // 25KM
         LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-        dto.put("restaurants", getMapListFromEntities(entities));
+        dto.put("restaurants", fromEntitiesSearch(entities));
         return ResourceUtils.asSuccessResponse(Status.OK,
             dto);
       }

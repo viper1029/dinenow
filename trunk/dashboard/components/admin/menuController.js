@@ -470,7 +470,7 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                                         },
                                         events: $scope.getEvents,
                                         timeFormat: "H(:mm)",
-                                        defaultView: "agendaWeek",
+                                        defaultView: "weekDay",
                                         editable: !1,
                                         eventLimit: !0,
                                         firstDay: 1,

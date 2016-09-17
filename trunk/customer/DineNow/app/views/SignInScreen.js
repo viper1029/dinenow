@@ -58,6 +58,7 @@ class SignInScreen extends Component {
 
         if (nextProps.signInError && this.props.signInError !== nextProps.signInError) {
             console.log(nextProps.signInError);
+            alert(nextProps.signInError);
         }
     }
 
@@ -95,7 +96,7 @@ class SignInScreen extends Component {
                             />
                         </Form>
                         <Button isLoading={this.props.signingIn}
-                                onPress={ /*() => this.props.verifyCredential(this.state.email, this.state.password)*/NavActions.drawer} // TODO: remove this}
+                                onPress={ () => this.props.verifyCredential(this.state.email, this.state.password)}
                                 style={{marginTop: 40}}>
                             Sign In
                         </Button>

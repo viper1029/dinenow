@@ -6,6 +6,8 @@ import {bindActionCreators} from "redux";
 import {Image, View, StyleSheet, Platform, TouchableOpacity, StatusBar} from "react-native";
 import {GooglePlacesAutocomplete} from "../components/GooglePlacesAutoComplete";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {search} from "../redux/actions/SearchActions";
+import {Actions as NavActions, ActionConst} from 'react-native-router-flux'
 
 class Search extends Component {
 
@@ -17,6 +19,20 @@ class Search extends Component {
             offset: 0,
         };
     }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("Receiving new Properties: ", nextProps.searchSuccess);
+        if (nextProps.searchSuccess) {
+            NavActions.results({type: ActionConst.RESET})
+            console.log('go to new screen')
+        }
+
+        //if (nextProps.signInError && this.props.signInError !== nextProps.signInError) {
+        //    console.log(nextProps.signInError);
+        //    alert(nextProps.signInError);
+        //}
+    }
+
 
     render() {
         return (
@@ -31,6 +47,7 @@ class Search extends Component {
                         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                             console.log(data);
                             console.log(details);
+                            this.props.search(details.geometry.location.lat, details.geometry.location.lng, 25);
                         }}
                         getDefaultValue={() => {
                             return ''; // text input default value
@@ -39,7 +56,7 @@ class Search extends Component {
                             // available options: https://developers.google.com/places/web-service/autocomplete
                             key: 'AIzaSyBpwX1y-lK6GoA-KjcY0Y9U6l5lSLplxtE',
                             language: 'en', // language of the results
-                            types: '(cities)', // default: 'geocode'
+                           // types: '(address)', // default: 'geocode'
                         }}
                         styles={{
                             description: {
@@ -60,7 +77,7 @@ class Search extends Component {
                         GooglePlacesSearchQuery={{
                             // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
                             rankby: 'distance',
-                            types: 'food',
+                            //types: 'food',
                         }}
                         filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                     />
@@ -81,11 +98,14 @@ var styles =  StyleSheet.create({
 });
 
 var mapStateToProps = function (state) {
-    return {};
+    return {
+        searchSuccess: state.search.searchSuccess,
+    };
 };
 
 var mapDispatchToProps = function (dispatch) {
     return bindActionCreators({
+        search
     }, dispatch);
 
 };

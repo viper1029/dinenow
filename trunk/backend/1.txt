@@ -1,0 +1,1672 @@
+:dependencies
+
+------------------------------------------------------------
+Root project - dinenow
+------------------------------------------------------------
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Compile classpath for source set 'main'.
++--- io.dropwizard:dropwizard-core:0.9.2
+|    +--- io.dropwizard:dropwizard-util:0.9.2
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- com.google.code.findbugs:jsr305:3.0.1
+|    |    \--- joda-time:joda-time:2.9
+|    +--- io.dropwizard:dropwizard-jackson:0.9.2
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- ch.qos.logback:logback-classic:1.1.3
+|    |         \--- ch.qos.logback:logback-core:1.1.3
+|    +--- io.dropwizard:dropwizard-validation:0.9.2
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- org.hibernate:hibernate-validator:5.2.2.Final
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    +--- org.jboss.logging:jboss-logging:3.2.1.Final -> 3.3.0.Final
+|    |    |    \--- com.fasterxml:classmate:1.1.0
+|    |    \--- org.glassfish:javax.el:3.0.0
+|    +--- io.dropwizard:dropwizard-configuration:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- org.yaml:snakeyaml:1.15
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-logging:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-logback:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- ch.qos.logback:logback-core:1.1.3
+|    |    +--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    |    +--- org.slf4j:log4j-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jcl-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    +--- io.dropwizard:dropwizard-metrics:0.9.2
+|    |    +--- io.dropwizard:dropwizard-lifecycle:0.9.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    |    +--- com.google.guava:guava:18.0
+|    |    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730
+|    |    |    |    +--- javax.servlet:javax.servlet-api:3.1.0
+|    |    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730
+|    |    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730
+|    |    |    |         \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- org.slf4j:slf4j-api:1.7.12
+|    +--- io.dropwizard:dropwizard-jersey:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    |    +--- org.glassfish.jersey.bundles.repackaged:jersey-guava:2.22.1
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31
+|    |    |    |    |    +--- javax.inject:javax.inject:1
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31
+|    |    |    |    |    |    \--- javax.inject:javax.inject:1
+|    |    |    |    |    \--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31 (*)
+|    |    |    |    |    \--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-client:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    \--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.media:jersey-media-jaxb:2.22.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    \--- javax.validation:validation-api:1.1.0.Final
+|    |    +--- org.glassfish.jersey.ext:jersey-metainf-services:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.glassfish.jersey.ext:jersey-bean-validation:2.22.1
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- io.dropwizard.metrics:metrics-jersey2:3.1.2
+|    |    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-annotation:3.1.2
+|    |    |         \--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3
+|    |    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.6.3
+|    |    |    \--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.6.3
+|    |    +--- org.glassfish.jersey.containers:jersey-container-servlet:2.22.1
+|    |    |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-webapp:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-xml:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730
+|    |    |         \--- org.eclipse.jetty:jetty-security:9.2.13.v20150730
+|    |    |              \--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-servlets:0.9.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-annotation:3.1.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    +--- io.dropwizard:dropwizard-jetty:0.9.2
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-jetty9:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlets:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    |    |    +--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730 (*)
+|    |    \--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    +--- io.dropwizard:dropwizard-lifecycle:0.9.2 (*)
+|    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-jvm:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-servlets:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-json:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-jvm:3.1.2 (*)
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- net.sourceforge.argparse4j:argparse4j:0.6.0
+|    \--- org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3
++--- com.hubspot.dropwizard:dropwizard-guice:0.8.4.0
+|    +--- com.google.code.findbugs:annotations:3.0.0
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- com.google.inject:guice:4.0
+|    |    +--- javax.inject:javax.inject:1
+|    |    +--- aopalliance:aopalliance:1.0
+|    |    \--- com.google.guava:guava:16.0.1 -> 18.0
+|    +--- com.google.inject.extensions:guice-servlet:4.0
+|    |    \--- com.google.inject:guice:4.0 (*)
+|    +--- org.glassfish.jersey.core:jersey-server:2.21 -> 2.22.1 (*)
+|    +--- com.squarespace.jersey2-guice:jersey2-guice:0.10
+|    |    +--- com.google.inject.extensions:guice-multibindings:4.0
+|    |    |    \--- com.google.inject:guice:4.0 (*)
+|    |    \--- com.google.inject.extensions:guice-servlet:4.0 (*)
+|    +--- org.reflections:reflections:0.9.9
+|    |    +--- org.javassist:javassist:3.18.2-GA
+|    |    \--- com.google.code.findbugs:annotations:2.0.1 -> 3.0.0
+|    +--- javax.servlet:javax.servlet-api:3.1.0
+|    +--- javax.inject:javax.inject:1
+|    +--- org.slf4j:slf4j-api:1.7.12
+|    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    \--- com.google.guava:guava:18.0
++--- io.dropwizard:dropwizard-auth:0.9.2
+|    \--- io.dropwizard:dropwizard-core:0.9.2 (*)
++--- com.google.inject.extensions:guice-persist:4.0
+|    \--- com.google.inject:guice:4.0 (*)
++--- com.restfb:restfb:1.16.0
++--- org.hibernate:hibernate-spatial:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    |    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    |    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
+|    |    +--- org.jboss:jandex:2.0.0.Final
+|    |    +--- dom4j:dom4j:1.6.1
+|    |    |    \--- xml-apis:xml-apis:1.0.b2 -> 1.4.01
+|    |    \--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final
+|    |         \--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- postgresql:postgresql:8.4-701.jdbc4
+|    +--- org.geolatte:geolatte-geom:1.0.1
+|    |    +--- com.vividsolutions:jts:1.13
+|    |    +--- org.slf4j:slf4j-api:1.6.1 -> 1.7.12
+|    |    \--- org.apfloat:apfloat:1.8.2
+|    \--- dom4j:dom4j:1.6.1 (*)
++--- org.hsqldb:hsqldb:2.3.1
++--- org.hibernate:hibernate-entitymanager:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    +--- dom4j:dom4j:1.6.1 (*)
+|    +--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final (*)
+|    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    \--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
++--- org.hibernate:hibernate-core:5.0.7.Final (*)
++--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
++--- org.hibernate:hibernate-envers:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- org.hibernate:hibernate-entitymanager:5.0.7.Final (*)
++--- mysql:mysql-connector-java:5.1.25
++--- org.postgresql:postgresql:9.4-1200-jdbc41
+|    \--- com.github.dblock.waffle:waffle-jna:1.7
+|         +--- net.java.dev.jna:jna:4.1.0
+|         +--- net.java.dev.jna:jna-platform:4.1.0
+|         |    \--- net.java.dev.jna:jna:4.1.0
+|         +--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|         \--- com.google.guava:guava:18.0
++--- org.hibernate:hibernate-c3p0:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- com.mchange:c3p0:0.9.2.1
+|         \--- com.mchange:mchange-commons-java:0.2.3.4
++--- org.projectlombok:lombok:1.14.8
++--- joda-time:joda-time:2.9
++--- com.github.toastshaman:dropwizard-auth-jwt:0.9.1-1
+|    \--- io.dropwizard:dropwizard-auth:0.9.0 -> 0.9.2 (*)
++--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
++--- org.codemonkey.simplejavamail:simple-java-mail:2.1
+|    +--- log4j:log4j:1.2.16
+|    \--- javax.mail:mail:1.4.1
+|         \--- javax.activation:activation:1.1
++--- javax.mail:mail:1.4 -> 1.4.1 (*)
++--- com.googlecode.jsontoken:jsontoken:1.0
+|    +--- com.google.code.gson:gson:1.4 -> 2.2.4
+|    +--- commons-codec:commons-codec:1.4 -> 1.6
+|    +--- joda-time:joda-time:1.6 -> 2.9
+|    +--- javax.servlet:servlet-api:2.5
+|    \--- org.apache.httpcomponents:httpcore:4.0.1 -> 4.4.4
++--- io.federecio:dropwizard-swagger:0.7.0
+|    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-assets:0.8.0
+|    |    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    |    \--- io.dropwizard:dropwizard-servlets:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views:0.8.0
+|    |    \--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views-freemarker:0.8.0
+|    |    +--- io.dropwizard:dropwizard-views:0.8.0 (*)
+|    |    \--- org.freemarker:freemarker:2.3.21
+|    +--- com.wordnik:swagger-jersey2-jaxrs:1.5.1-M2
+|    |    \--- com.wordnik:swagger-jaxrs:1.5.1-M2
+|    |         +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.2
+|    |         |    \--- org.codehaus.woodstox:stax2-api:3.1.4
+|    |         +--- com.wordnik:swagger-core:1.5.1-M2
+|    |         |    +--- com.wordnik:swagger-models:1.5.1-M2
+|    |         |    |    \--- com.wordnik:swagger-annotations:1.5.1-M2
+|    |         |    \--- javax.validation:validation-api:1.1.0.Final
+|    |         \--- org.reflections:reflections:0.9.9 (*)
+|    \--- xml-apis:xml-apis:1.4.01
++--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
++--- org.glassfish.jersey.media:jersey-media-multipart:2.22.1
+|    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    \--- org.jvnet.mimepull:mimepull:1.9.6
++--- com.twilio.sdk:twilio-java-sdk:3.4.5
+|    +--- org.apache.httpcomponents:httpclient:4.1.2 -> 4.3.5
+|    |    +--- org.apache.httpcomponents:httpcore:4.3.2 -> 4.4.4
+|    |    +--- commons-logging:commons-logging:1.1.3
+|    |    \--- commons-codec:commons-codec:1.6
+|    +--- commons-lang:commons-lang:2.6
+|    +--- com.googlecode.json-simple:json-simple:1.1
+|    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.3
+|         \--- org.codehaus.jackson:jackson-core-asl:1.9.3
++--- org.apache.httpcomponents:httpclient:4.3.5 (*)
++--- org.apache.httpcomponents:httpcore:4.4.4
++--- com.googlecode.libphonenumber:libphonenumber:7.0.3
++--- com.stripe:stripe-java:1.42.0
+|    \--- com.google.code.gson:gson:2.2.4
++--- com.google.code.gson:gson:2.2.4
++--- org.apache.commons:commons-lang3:3.4
+\--- org.liquibase:liquibase-core:3.0.7
+     \--- org.yaml:snakeyaml:1.13 -> 1.15
+
+default - Configuration for default artifacts.
++--- io.dropwizard:dropwizard-core:0.9.2
+|    +--- io.dropwizard:dropwizard-util:0.9.2
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- com.google.code.findbugs:jsr305:3.0.1
+|    |    \--- joda-time:joda-time:2.9
+|    +--- io.dropwizard:dropwizard-jackson:0.9.2
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- ch.qos.logback:logback-classic:1.1.3
+|    |         \--- ch.qos.logback:logback-core:1.1.3
+|    +--- io.dropwizard:dropwizard-validation:0.9.2
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- org.hibernate:hibernate-validator:5.2.2.Final
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    +--- org.jboss.logging:jboss-logging:3.2.1.Final -> 3.3.0.Final
+|    |    |    \--- com.fasterxml:classmate:1.1.0
+|    |    \--- org.glassfish:javax.el:3.0.0
+|    +--- io.dropwizard:dropwizard-configuration:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- org.yaml:snakeyaml:1.15
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-logging:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-logback:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- ch.qos.logback:logback-core:1.1.3
+|    |    +--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    |    +--- org.slf4j:log4j-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jcl-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    +--- io.dropwizard:dropwizard-metrics:0.9.2
+|    |    +--- io.dropwizard:dropwizard-lifecycle:0.9.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    |    +--- com.google.guava:guava:18.0
+|    |    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730
+|    |    |    |    +--- javax.servlet:javax.servlet-api:3.1.0
+|    |    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730
+|    |    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730
+|    |    |    |         \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- org.slf4j:slf4j-api:1.7.12
+|    +--- io.dropwizard:dropwizard-jersey:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    |    +--- org.glassfish.jersey.bundles.repackaged:jersey-guava:2.22.1
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31
+|    |    |    |    |    +--- javax.inject:javax.inject:1
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31
+|    |    |    |    |    |    \--- javax.inject:javax.inject:1
+|    |    |    |    |    \--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31 (*)
+|    |    |    |    |    \--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-client:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    \--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.media:jersey-media-jaxb:2.22.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    \--- javax.validation:validation-api:1.1.0.Final
+|    |    +--- org.glassfish.jersey.ext:jersey-metainf-services:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.glassfish.jersey.ext:jersey-bean-validation:2.22.1
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- io.dropwizard.metrics:metrics-jersey2:3.1.2
+|    |    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-annotation:3.1.2
+|    |    |         \--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3
+|    |    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.6.3
+|    |    |    \--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.6.3
+|    |    +--- org.glassfish.jersey.containers:jersey-container-servlet:2.22.1
+|    |    |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-webapp:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-xml:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730
+|    |    |         \--- org.eclipse.jetty:jetty-security:9.2.13.v20150730
+|    |    |              \--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-servlets:0.9.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-annotation:3.1.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    +--- io.dropwizard:dropwizard-jetty:0.9.2
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-jetty9:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlets:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    |    |    +--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730 (*)
+|    |    \--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    +--- io.dropwizard:dropwizard-lifecycle:0.9.2 (*)
+|    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-jvm:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-servlets:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-json:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-jvm:3.1.2 (*)
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- net.sourceforge.argparse4j:argparse4j:0.6.0
+|    \--- org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3
++--- com.hubspot.dropwizard:dropwizard-guice:0.8.4.0
+|    +--- com.google.code.findbugs:annotations:3.0.0
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- com.google.inject:guice:4.0
+|    |    +--- javax.inject:javax.inject:1
+|    |    +--- aopalliance:aopalliance:1.0
+|    |    \--- com.google.guava:guava:16.0.1 -> 18.0
+|    +--- com.google.inject.extensions:guice-servlet:4.0
+|    |    \--- com.google.inject:guice:4.0 (*)
+|    +--- org.glassfish.jersey.core:jersey-server:2.21 -> 2.22.1 (*)
+|    +--- com.squarespace.jersey2-guice:jersey2-guice:0.10
+|    |    +--- com.google.inject.extensions:guice-multibindings:4.0
+|    |    |    \--- com.google.inject:guice:4.0 (*)
+|    |    \--- com.google.inject.extensions:guice-servlet:4.0 (*)
+|    +--- org.reflections:reflections:0.9.9
+|    |    +--- org.javassist:javassist:3.18.2-GA
+|    |    \--- com.google.code.findbugs:annotations:2.0.1 -> 3.0.0
+|    +--- javax.servlet:javax.servlet-api:3.1.0
+|    +--- javax.inject:javax.inject:1
+|    +--- org.slf4j:slf4j-api:1.7.12
+|    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    \--- com.google.guava:guava:18.0
++--- io.dropwizard:dropwizard-auth:0.9.2
+|    \--- io.dropwizard:dropwizard-core:0.9.2 (*)
++--- com.google.inject.extensions:guice-persist:4.0
+|    \--- com.google.inject:guice:4.0 (*)
++--- com.restfb:restfb:1.16.0
++--- org.hibernate:hibernate-spatial:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    |    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    |    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
+|    |    +--- org.jboss:jandex:2.0.0.Final
+|    |    +--- dom4j:dom4j:1.6.1
+|    |    |    \--- xml-apis:xml-apis:1.0.b2 -> 1.4.01
+|    |    \--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final
+|    |         \--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- postgresql:postgresql:8.4-701.jdbc4
+|    +--- org.geolatte:geolatte-geom:1.0.1
+|    |    +--- com.vividsolutions:jts:1.13
+|    |    +--- org.slf4j:slf4j-api:1.6.1 -> 1.7.12
+|    |    \--- org.apfloat:apfloat:1.8.2
+|    \--- dom4j:dom4j:1.6.1 (*)
++--- org.hsqldb:hsqldb:2.3.1
++--- org.hibernate:hibernate-entitymanager:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    +--- dom4j:dom4j:1.6.1 (*)
+|    +--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final (*)
+|    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    \--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
++--- org.hibernate:hibernate-core:5.0.7.Final (*)
++--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
++--- org.hibernate:hibernate-envers:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- org.hibernate:hibernate-entitymanager:5.0.7.Final (*)
++--- mysql:mysql-connector-java:5.1.25
++--- org.postgresql:postgresql:9.4-1200-jdbc41
+|    \--- com.github.dblock.waffle:waffle-jna:1.7
+|         +--- net.java.dev.jna:jna:4.1.0
+|         +--- net.java.dev.jna:jna-platform:4.1.0
+|         |    \--- net.java.dev.jna:jna:4.1.0
+|         +--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|         \--- com.google.guava:guava:18.0
++--- org.hibernate:hibernate-c3p0:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- com.mchange:c3p0:0.9.2.1
+|         \--- com.mchange:mchange-commons-java:0.2.3.4
++--- org.projectlombok:lombok:1.14.8
++--- joda-time:joda-time:2.9
++--- com.github.toastshaman:dropwizard-auth-jwt:0.9.1-1
+|    \--- io.dropwizard:dropwizard-auth:0.9.0 -> 0.9.2 (*)
++--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
++--- org.codemonkey.simplejavamail:simple-java-mail:2.1
+|    +--- log4j:log4j:1.2.16
+|    \--- javax.mail:mail:1.4.1
+|         \--- javax.activation:activation:1.1
++--- javax.mail:mail:1.4 -> 1.4.1 (*)
++--- com.googlecode.jsontoken:jsontoken:1.0
+|    +--- com.google.code.gson:gson:1.4 -> 2.2.4
+|    +--- commons-codec:commons-codec:1.4 -> 1.6
+|    +--- joda-time:joda-time:1.6 -> 2.9
+|    +--- javax.servlet:servlet-api:2.5
+|    \--- org.apache.httpcomponents:httpcore:4.0.1 -> 4.4.4
++--- io.federecio:dropwizard-swagger:0.7.0
+|    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-assets:0.8.0
+|    |    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    |    \--- io.dropwizard:dropwizard-servlets:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views:0.8.0
+|    |    \--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views-freemarker:0.8.0
+|    |    +--- io.dropwizard:dropwizard-views:0.8.0 (*)
+|    |    \--- org.freemarker:freemarker:2.3.21
+|    +--- com.wordnik:swagger-jersey2-jaxrs:1.5.1-M2
+|    |    \--- com.wordnik:swagger-jaxrs:1.5.1-M2
+|    |         +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.2
+|    |         |    \--- org.codehaus.woodstox:stax2-api:3.1.4
+|    |         +--- com.wordnik:swagger-core:1.5.1-M2
+|    |         |    +--- com.wordnik:swagger-models:1.5.1-M2
+|    |         |    |    \--- com.wordnik:swagger-annotations:1.5.1-M2
+|    |         |    \--- javax.validation:validation-api:1.1.0.Final
+|    |         \--- org.reflections:reflections:0.9.9 (*)
+|    \--- xml-apis:xml-apis:1.4.01
++--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
++--- org.glassfish.jersey.media:jersey-media-multipart:2.22.1
+|    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    \--- org.jvnet.mimepull:mimepull:1.9.6
++--- com.twilio.sdk:twilio-java-sdk:3.4.5
+|    +--- org.apache.httpcomponents:httpclient:4.1.2 -> 4.3.5
+|    |    +--- org.apache.httpcomponents:httpcore:4.3.2 -> 4.4.4
+|    |    +--- commons-logging:commons-logging:1.1.3
+|    |    \--- commons-codec:commons-codec:1.6
+|    +--- commons-lang:commons-lang:2.6
+|    +--- com.googlecode.json-simple:json-simple:1.1
+|    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.3
+|         \--- org.codehaus.jackson:jackson-core-asl:1.9.3
++--- org.apache.httpcomponents:httpclient:4.3.5 (*)
++--- org.apache.httpcomponents:httpcore:4.4.4
++--- com.googlecode.libphonenumber:libphonenumber:7.0.3
++--- com.stripe:stripe-java:1.42.0
+|    \--- com.google.code.gson:gson:2.2.4
++--- com.google.code.gson:gson:2.2.4
++--- org.apache.commons:commons-lang3:3.4
+\--- org.liquibase:liquibase-core:3.0.7
+     \--- org.yaml:snakeyaml:1.13 -> 1.15
+
+runtime - Runtime classpath for source set 'main'.
++--- io.dropwizard:dropwizard-core:0.9.2
+|    +--- io.dropwizard:dropwizard-util:0.9.2
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- com.google.code.findbugs:jsr305:3.0.1
+|    |    \--- joda-time:joda-time:2.9
+|    +--- io.dropwizard:dropwizard-jackson:0.9.2
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- ch.qos.logback:logback-classic:1.1.3
+|    |         \--- ch.qos.logback:logback-core:1.1.3
+|    +--- io.dropwizard:dropwizard-validation:0.9.2
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- org.hibernate:hibernate-validator:5.2.2.Final
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    +--- org.jboss.logging:jboss-logging:3.2.1.Final -> 3.3.0.Final
+|    |    |    \--- com.fasterxml:classmate:1.1.0
+|    |    \--- org.glassfish:javax.el:3.0.0
+|    +--- io.dropwizard:dropwizard-configuration:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- org.yaml:snakeyaml:1.15
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-logging:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-logback:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- ch.qos.logback:logback-core:1.1.3
+|    |    +--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    |    +--- org.slf4j:log4j-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jcl-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    +--- io.dropwizard:dropwizard-metrics:0.9.2
+|    |    +--- io.dropwizard:dropwizard-lifecycle:0.9.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    |    +--- com.google.guava:guava:18.0
+|    |    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730
+|    |    |    |    +--- javax.servlet:javax.servlet-api:3.1.0
+|    |    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730
+|    |    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730
+|    |    |    |         \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- org.slf4j:slf4j-api:1.7.12
+|    +--- io.dropwizard:dropwizard-jersey:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    |    +--- org.glassfish.jersey.bundles.repackaged:jersey-guava:2.22.1
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31
+|    |    |    |    |    +--- javax.inject:javax.inject:1
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31
+|    |    |    |    |    |    \--- javax.inject:javax.inject:1
+|    |    |    |    |    \--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31 (*)
+|    |    |    |    |    \--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-client:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    \--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.media:jersey-media-jaxb:2.22.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    \--- javax.validation:validation-api:1.1.0.Final
+|    |    +--- org.glassfish.jersey.ext:jersey-metainf-services:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.glassfish.jersey.ext:jersey-bean-validation:2.22.1
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- io.dropwizard.metrics:metrics-jersey2:3.1.2
+|    |    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-annotation:3.1.2
+|    |    |         \--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3
+|    |    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.6.3
+|    |    |    \--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.6.3
+|    |    +--- org.glassfish.jersey.containers:jersey-container-servlet:2.22.1
+|    |    |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-webapp:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-xml:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730
+|    |    |         \--- org.eclipse.jetty:jetty-security:9.2.13.v20150730
+|    |    |              \--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-servlets:0.9.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-annotation:3.1.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    +--- io.dropwizard:dropwizard-jetty:0.9.2
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-jetty9:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlets:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    |    |    +--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730 (*)
+|    |    \--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    +--- io.dropwizard:dropwizard-lifecycle:0.9.2 (*)
+|    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-jvm:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-servlets:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-json:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-jvm:3.1.2 (*)
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- net.sourceforge.argparse4j:argparse4j:0.6.0
+|    \--- org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3
++--- com.hubspot.dropwizard:dropwizard-guice:0.8.4.0
+|    +--- com.google.code.findbugs:annotations:3.0.0
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- com.google.inject:guice:4.0
+|    |    +--- javax.inject:javax.inject:1
+|    |    +--- aopalliance:aopalliance:1.0
+|    |    \--- com.google.guava:guava:16.0.1 -> 18.0
+|    +--- com.google.inject.extensions:guice-servlet:4.0
+|    |    \--- com.google.inject:guice:4.0 (*)
+|    +--- org.glassfish.jersey.core:jersey-server:2.21 -> 2.22.1 (*)
+|    +--- com.squarespace.jersey2-guice:jersey2-guice:0.10
+|    |    +--- com.google.inject.extensions:guice-multibindings:4.0
+|    |    |    \--- com.google.inject:guice:4.0 (*)
+|    |    \--- com.google.inject.extensions:guice-servlet:4.0 (*)
+|    +--- org.reflections:reflections:0.9.9
+|    |    +--- org.javassist:javassist:3.18.2-GA
+|    |    \--- com.google.code.findbugs:annotations:2.0.1 -> 3.0.0
+|    +--- javax.servlet:javax.servlet-api:3.1.0
+|    +--- javax.inject:javax.inject:1
+|    +--- org.slf4j:slf4j-api:1.7.12
+|    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    \--- com.google.guava:guava:18.0
++--- io.dropwizard:dropwizard-auth:0.9.2
+|    \--- io.dropwizard:dropwizard-core:0.9.2 (*)
++--- com.google.inject.extensions:guice-persist:4.0
+|    \--- com.google.inject:guice:4.0 (*)
++--- com.restfb:restfb:1.16.0
++--- org.hibernate:hibernate-spatial:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    |    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    |    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
+|    |    +--- org.jboss:jandex:2.0.0.Final
+|    |    +--- dom4j:dom4j:1.6.1
+|    |    |    \--- xml-apis:xml-apis:1.0.b2 -> 1.4.01
+|    |    \--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final
+|    |         \--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- postgresql:postgresql:8.4-701.jdbc4
+|    +--- org.geolatte:geolatte-geom:1.0.1
+|    |    +--- com.vividsolutions:jts:1.13
+|    |    +--- org.slf4j:slf4j-api:1.6.1 -> 1.7.12
+|    |    \--- org.apfloat:apfloat:1.8.2
+|    \--- dom4j:dom4j:1.6.1 (*)
++--- org.hsqldb:hsqldb:2.3.1
++--- org.hibernate:hibernate-entitymanager:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    +--- dom4j:dom4j:1.6.1 (*)
+|    +--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final (*)
+|    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    \--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
++--- org.hibernate:hibernate-core:5.0.7.Final (*)
++--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
++--- org.hibernate:hibernate-envers:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- org.hibernate:hibernate-entitymanager:5.0.7.Final (*)
++--- mysql:mysql-connector-java:5.1.25
++--- org.postgresql:postgresql:9.4-1200-jdbc41
+|    \--- com.github.dblock.waffle:waffle-jna:1.7
+|         +--- net.java.dev.jna:jna:4.1.0
+|         +--- net.java.dev.jna:jna-platform:4.1.0
+|         |    \--- net.java.dev.jna:jna:4.1.0
+|         +--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|         \--- com.google.guava:guava:18.0
++--- org.hibernate:hibernate-c3p0:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- com.mchange:c3p0:0.9.2.1
+|         \--- com.mchange:mchange-commons-java:0.2.3.4
++--- org.projectlombok:lombok:1.14.8
++--- joda-time:joda-time:2.9
++--- com.github.toastshaman:dropwizard-auth-jwt:0.9.1-1
+|    \--- io.dropwizard:dropwizard-auth:0.9.0 -> 0.9.2 (*)
++--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
++--- org.codemonkey.simplejavamail:simple-java-mail:2.1
+|    +--- log4j:log4j:1.2.16
+|    \--- javax.mail:mail:1.4.1
+|         \--- javax.activation:activation:1.1
++--- javax.mail:mail:1.4 -> 1.4.1 (*)
++--- com.googlecode.jsontoken:jsontoken:1.0
+|    +--- com.google.code.gson:gson:1.4 -> 2.2.4
+|    +--- commons-codec:commons-codec:1.4 -> 1.6
+|    +--- joda-time:joda-time:1.6 -> 2.9
+|    +--- javax.servlet:servlet-api:2.5
+|    \--- org.apache.httpcomponents:httpcore:4.0.1 -> 4.4.4
++--- io.federecio:dropwizard-swagger:0.7.0
+|    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-assets:0.8.0
+|    |    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    |    \--- io.dropwizard:dropwizard-servlets:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views:0.8.0
+|    |    \--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views-freemarker:0.8.0
+|    |    +--- io.dropwizard:dropwizard-views:0.8.0 (*)
+|    |    \--- org.freemarker:freemarker:2.3.21
+|    +--- com.wordnik:swagger-jersey2-jaxrs:1.5.1-M2
+|    |    \--- com.wordnik:swagger-jaxrs:1.5.1-M2
+|    |         +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.2
+|    |         |    \--- org.codehaus.woodstox:stax2-api:3.1.4
+|    |         +--- com.wordnik:swagger-core:1.5.1-M2
+|    |         |    +--- com.wordnik:swagger-models:1.5.1-M2
+|    |         |    |    \--- com.wordnik:swagger-annotations:1.5.1-M2
+|    |         |    \--- javax.validation:validation-api:1.1.0.Final
+|    |         \--- org.reflections:reflections:0.9.9 (*)
+|    \--- xml-apis:xml-apis:1.4.01
++--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
++--- org.glassfish.jersey.media:jersey-media-multipart:2.22.1
+|    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    \--- org.jvnet.mimepull:mimepull:1.9.6
++--- com.twilio.sdk:twilio-java-sdk:3.4.5
+|    +--- org.apache.httpcomponents:httpclient:4.1.2 -> 4.3.5
+|    |    +--- org.apache.httpcomponents:httpcore:4.3.2 -> 4.4.4
+|    |    +--- commons-logging:commons-logging:1.1.3
+|    |    \--- commons-codec:commons-codec:1.6
+|    +--- commons-lang:commons-lang:2.6
+|    +--- com.googlecode.json-simple:json-simple:1.1
+|    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.3
+|         \--- org.codehaus.jackson:jackson-core-asl:1.9.3
++--- org.apache.httpcomponents:httpclient:4.3.5 (*)
++--- org.apache.httpcomponents:httpcore:4.4.4
++--- com.googlecode.libphonenumber:libphonenumber:7.0.3
++--- com.stripe:stripe-java:1.42.0
+|    \--- com.google.code.gson:gson:2.2.4
++--- com.google.code.gson:gson:2.2.4
++--- org.apache.commons:commons-lang3:3.4
+\--- org.liquibase:liquibase-core:3.0.7
+     \--- org.yaml:snakeyaml:1.13 -> 1.15
+
+testCompile - Compile classpath for source set 'test'.
++--- io.dropwizard:dropwizard-core:0.9.2
+|    +--- io.dropwizard:dropwizard-util:0.9.2
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- com.google.code.findbugs:jsr305:3.0.1
+|    |    \--- joda-time:joda-time:2.9
+|    +--- io.dropwizard:dropwizard-jackson:0.9.2
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- ch.qos.logback:logback-classic:1.1.3
+|    |         \--- ch.qos.logback:logback-core:1.1.3
+|    +--- io.dropwizard:dropwizard-validation:0.9.2
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- org.hibernate:hibernate-validator:5.2.2.Final
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    +--- org.jboss.logging:jboss-logging:3.2.1.Final -> 3.3.0.Final
+|    |    |    \--- com.fasterxml:classmate:1.1.0
+|    |    \--- org.glassfish:javax.el:3.0.0
+|    +--- io.dropwizard:dropwizard-configuration:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- org.yaml:snakeyaml:1.15
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-logging:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-logback:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- ch.qos.logback:logback-core:1.1.3
+|    |    +--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    |    +--- org.slf4j:log4j-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jcl-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    +--- io.dropwizard:dropwizard-metrics:0.9.2
+|    |    +--- io.dropwizard:dropwizard-lifecycle:0.9.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    |    +--- com.google.guava:guava:18.0
+|    |    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730
+|    |    |    |    +--- javax.servlet:javax.servlet-api:3.1.0
+|    |    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730
+|    |    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730
+|    |    |    |         \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- org.slf4j:slf4j-api:1.7.12
+|    +--- io.dropwizard:dropwizard-jersey:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    |    +--- org.glassfish.jersey.bundles.repackaged:jersey-guava:2.22.1
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31
+|    |    |    |    |    +--- javax.inject:javax.inject:1
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31
+|    |    |    |    |    |    \--- javax.inject:javax.inject:1
+|    |    |    |    |    \--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31 (*)
+|    |    |    |    |    \--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-client:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    \--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.media:jersey-media-jaxb:2.22.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    \--- javax.validation:validation-api:1.1.0.Final
+|    |    +--- org.glassfish.jersey.ext:jersey-metainf-services:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.glassfish.jersey.ext:jersey-bean-validation:2.22.1
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- io.dropwizard.metrics:metrics-jersey2:3.1.2
+|    |    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-annotation:3.1.2
+|    |    |         \--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3
+|    |    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.6.3
+|    |    |    \--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.6.3
+|    |    +--- org.glassfish.jersey.containers:jersey-container-servlet:2.22.1
+|    |    |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-webapp:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-xml:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730
+|    |    |         \--- org.eclipse.jetty:jetty-security:9.2.13.v20150730
+|    |    |              \--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-servlets:0.9.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-annotation:3.1.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    +--- io.dropwizard:dropwizard-jetty:0.9.2
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-jetty9:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlets:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    |    |    +--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730 (*)
+|    |    \--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    +--- io.dropwizard:dropwizard-lifecycle:0.9.2 (*)
+|    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-jvm:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-servlets:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-json:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-jvm:3.1.2 (*)
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- net.sourceforge.argparse4j:argparse4j:0.6.0
+|    \--- org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3
++--- com.hubspot.dropwizard:dropwizard-guice:0.8.4.0
+|    +--- com.google.code.findbugs:annotations:3.0.0
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- com.google.inject:guice:4.0
+|    |    +--- javax.inject:javax.inject:1
+|    |    +--- aopalliance:aopalliance:1.0
+|    |    \--- com.google.guava:guava:16.0.1 -> 18.0
+|    +--- com.google.inject.extensions:guice-servlet:4.0
+|    |    \--- com.google.inject:guice:4.0 (*)
+|    +--- org.glassfish.jersey.core:jersey-server:2.21 -> 2.22.1 (*)
+|    +--- com.squarespace.jersey2-guice:jersey2-guice:0.10
+|    |    +--- com.google.inject.extensions:guice-multibindings:4.0
+|    |    |    \--- com.google.inject:guice:4.0 (*)
+|    |    \--- com.google.inject.extensions:guice-servlet:4.0 (*)
+|    +--- org.reflections:reflections:0.9.9
+|    |    +--- org.javassist:javassist:3.18.2-GA
+|    |    \--- com.google.code.findbugs:annotations:2.0.1 -> 3.0.0
+|    +--- javax.servlet:javax.servlet-api:3.1.0
+|    +--- javax.inject:javax.inject:1
+|    +--- org.slf4j:slf4j-api:1.7.12
+|    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    \--- com.google.guava:guava:18.0
++--- io.dropwizard:dropwizard-auth:0.9.2
+|    \--- io.dropwizard:dropwizard-core:0.9.2 (*)
++--- com.google.inject.extensions:guice-persist:4.0
+|    \--- com.google.inject:guice:4.0 (*)
++--- com.restfb:restfb:1.16.0
++--- org.hibernate:hibernate-spatial:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    |    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    |    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
+|    |    +--- org.jboss:jandex:2.0.0.Final
+|    |    +--- dom4j:dom4j:1.6.1
+|    |    |    \--- xml-apis:xml-apis:1.0.b2 -> 1.4.01
+|    |    \--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final
+|    |         \--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- postgresql:postgresql:8.4-701.jdbc4
+|    +--- org.geolatte:geolatte-geom:1.0.1
+|    |    +--- com.vividsolutions:jts:1.13
+|    |    +--- org.slf4j:slf4j-api:1.6.1 -> 1.7.12
+|    |    \--- org.apfloat:apfloat:1.8.2
+|    \--- dom4j:dom4j:1.6.1 (*)
++--- org.hsqldb:hsqldb:2.3.1
++--- org.hibernate:hibernate-entitymanager:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    +--- dom4j:dom4j:1.6.1 (*)
+|    +--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final (*)
+|    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    \--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
++--- org.hibernate:hibernate-core:5.0.7.Final (*)
++--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
++--- org.hibernate:hibernate-envers:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- org.hibernate:hibernate-entitymanager:5.0.7.Final (*)
++--- mysql:mysql-connector-java:5.1.25
++--- org.postgresql:postgresql:9.4-1200-jdbc41
+|    \--- com.github.dblock.waffle:waffle-jna:1.7
+|         +--- net.java.dev.jna:jna:4.1.0
+|         +--- net.java.dev.jna:jna-platform:4.1.0
+|         |    \--- net.java.dev.jna:jna:4.1.0
+|         +--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|         \--- com.google.guava:guava:18.0
++--- org.hibernate:hibernate-c3p0:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- com.mchange:c3p0:0.9.2.1
+|         \--- com.mchange:mchange-commons-java:0.2.3.4
++--- org.projectlombok:lombok:1.14.8
++--- joda-time:joda-time:2.9
++--- com.github.toastshaman:dropwizard-auth-jwt:0.9.1-1
+|    \--- io.dropwizard:dropwizard-auth:0.9.0 -> 0.9.2 (*)
++--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
++--- org.codemonkey.simplejavamail:simple-java-mail:2.1
+|    +--- log4j:log4j:1.2.16
+|    \--- javax.mail:mail:1.4.1
+|         \--- javax.activation:activation:1.1
++--- javax.mail:mail:1.4 -> 1.4.1 (*)
++--- com.googlecode.jsontoken:jsontoken:1.0
+|    +--- com.google.code.gson:gson:1.4 -> 2.2.4
+|    +--- commons-codec:commons-codec:1.4 -> 1.6
+|    +--- joda-time:joda-time:1.6 -> 2.9
+|    +--- javax.servlet:servlet-api:2.5
+|    \--- org.apache.httpcomponents:httpcore:4.0.1 -> 4.4.4
++--- io.federecio:dropwizard-swagger:0.7.0
+|    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-assets:0.8.0
+|    |    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    |    \--- io.dropwizard:dropwizard-servlets:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views:0.8.0
+|    |    \--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views-freemarker:0.8.0
+|    |    +--- io.dropwizard:dropwizard-views:0.8.0 (*)
+|    |    \--- org.freemarker:freemarker:2.3.21
+|    +--- com.wordnik:swagger-jersey2-jaxrs:1.5.1-M2
+|    |    \--- com.wordnik:swagger-jaxrs:1.5.1-M2
+|    |         +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.2
+|    |         |    \--- org.codehaus.woodstox:stax2-api:3.1.4
+|    |         +--- com.wordnik:swagger-core:1.5.1-M2
+|    |         |    +--- com.wordnik:swagger-models:1.5.1-M2
+|    |         |    |    \--- com.wordnik:swagger-annotations:1.5.1-M2
+|    |         |    \--- javax.validation:validation-api:1.1.0.Final
+|    |         \--- org.reflections:reflections:0.9.9 (*)
+|    \--- xml-apis:xml-apis:1.4.01
++--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
++--- org.glassfish.jersey.media:jersey-media-multipart:2.22.1
+|    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    \--- org.jvnet.mimepull:mimepull:1.9.6
++--- com.twilio.sdk:twilio-java-sdk:3.4.5
+|    +--- org.apache.httpcomponents:httpclient:4.1.2 -> 4.3.5
+|    |    +--- org.apache.httpcomponents:httpcore:4.3.2 -> 4.4.4
+|    |    +--- commons-logging:commons-logging:1.1.3
+|    |    \--- commons-codec:commons-codec:1.6
+|    +--- commons-lang:commons-lang:2.6
+|    +--- com.googlecode.json-simple:json-simple:1.1
+|    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.3
+|         \--- org.codehaus.jackson:jackson-core-asl:1.9.3
++--- org.apache.httpcomponents:httpclient:4.3.5 (*)
++--- org.apache.httpcomponents:httpcore:4.4.4
++--- com.googlecode.libphonenumber:libphonenumber:7.0.3
++--- com.stripe:stripe-java:1.42.0
+|    \--- com.google.code.gson:gson:2.2.4
++--- com.google.code.gson:gson:2.2.4
++--- org.apache.commons:commons-lang3:3.4
++--- org.liquibase:liquibase-core:3.0.7
+|    \--- org.yaml:snakeyaml:1.13 -> 1.15
++--- io.dropwizard:dropwizard-testing:0.9.2
+|    +--- io.dropwizard:dropwizard-core:0.9.2 (*)
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.2
+|    +--- org.objenesis:objenesis:2.2
+|    +--- org.assertj:assertj-core:2.2.0
+|    \--- org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:2.22.1
+|         +--- org.glassfish.jersey.test-framework:jersey-test-framework-core:2.22.1
+|         |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|         |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1 (*)
+|         |    +--- junit:junit:4.12 (*)
+|         |    \--- org.ow2.asm:asm-debug-all:5.0.4
+|         +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|         +--- org.glassfish.jersey.core:jersey-client:2.22.1 (*)
+|         +--- junit:junit:4.12 (*)
+|         \--- org.ow2.asm:asm-debug-all:5.0.4
++--- com.jayway.restassured:rest-assured:2.3.3
+|    +--- org.codehaus.groovy:groovy:2.3.6
+|    +--- org.codehaus.groovy:groovy-xml:2.3.6
+|    |    \--- org.codehaus.groovy:groovy:2.3.6
+|    +--- org.apache.httpcomponents:httpclient:4.3.5 (*)
+|    +--- org.apache.httpcomponents:httpmime:4.3.5
+|    |    \--- org.apache.httpcomponents:httpclient:4.3.5 (*)
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.ccil.cowan.tagsoup:tagsoup:1.2.1
+|    +--- com.jayway.restassured:json-path:2.3.3
+|    |    +--- org.codehaus.groovy:groovy-json:2.3.6
+|    |    |    \--- org.codehaus.groovy:groovy:2.3.6
+|    |    +--- org.codehaus.groovy:groovy:2.3.6
+|    |    \--- com.jayway.restassured:rest-assured-common:2.3.3
+|    |         +--- org.codehaus.groovy:groovy:2.3.6
+|    |         \--- org.apache.commons:commons-lang3:3.3.2 -> 3.4
+|    \--- com.jayway.restassured:xml-path:2.3.3
+|         +--- org.codehaus.groovy:groovy-xml:2.3.6 (*)
+|         +--- org.codehaus.groovy:groovy:2.3.6
+|         +--- com.jayway.restassured:rest-assured-common:2.3.3 (*)
+|         +--- org.apache.commons:commons-lang3:3.3.2 -> 3.4
+|         \--- org.ccil.cowan.tagsoup:tagsoup:1.2.1
+\--- junit:junit:4.12 (*)
+
+testRuntime - Runtime classpath for source set 'test'.
++--- io.dropwizard:dropwizard-core:0.9.2
+|    +--- io.dropwizard:dropwizard-util:0.9.2
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- com.google.code.findbugs:jsr305:3.0.1
+|    |    \--- joda-time:joda-time:2.9
+|    +--- io.dropwizard:dropwizard-jackson:0.9.2
+|    |    +--- com.google.guava:guava:18.0
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    +--- com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.6.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- ch.qos.logback:logback-classic:1.1.3
+|    |         \--- ch.qos.logback:logback-core:1.1.3
+|    +--- io.dropwizard:dropwizard-validation:0.9.2
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- org.hibernate:hibernate-validator:5.2.2.Final
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    +--- org.jboss.logging:jboss-logging:3.2.1.Final -> 3.3.0.Final
+|    |    |    \--- com.fasterxml:classmate:1.1.0
+|    |    \--- org.glassfish:javax.el:3.0.0
+|    +--- io.dropwizard:dropwizard-configuration:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.6.3
+|    |    |    \--- org.yaml:snakeyaml:1.15
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-logging:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-logback:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- ch.qos.logback:logback-core:1.1.3
+|    |    +--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    |    +--- org.slf4j:log4j-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- org.slf4j:jcl-over-slf4j:1.7.12
+|    |    |    \--- org.slf4j:slf4j-api:1.7.12
+|    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    +--- io.dropwizard:dropwizard-metrics:0.9.2
+|    |    +--- io.dropwizard:dropwizard-lifecycle:0.9.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    |    +--- com.google.guava:guava:18.0
+|    |    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730
+|    |    |    |    +--- javax.servlet:javax.servlet-api:3.1.0
+|    |    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730
+|    |    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730
+|    |    |    |         \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- org.slf4j:slf4j-api:1.7.12
+|    +--- io.dropwizard:dropwizard-jersey:0.9.2
+|    |    +--- io.dropwizard:dropwizard-jackson:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-validation:0.9.2 (*)
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    |    +--- org.glassfish.jersey.bundles.repackaged:jersey-guava:2.22.1
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31
+|    |    |    |    |    +--- javax.inject:javax.inject:1
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31
+|    |    |    |    |    |    \--- javax.inject:javax.inject:1
+|    |    |    |    |    \--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b31
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    |    +--- org.glassfish.hk2:hk2-utils:2.4.0-b31 (*)
+|    |    |    |    |    \--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-client:2.22.1
+|    |    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    \--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.media:jersey-media-jaxb:2.22.1
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    |    \--- org.glassfish.hk2:osgi-resource-locator:1.0.1
+|    |    |    +--- javax.annotation:javax.annotation-api:1.2
+|    |    |    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.hk2:hk2-locator:2.4.0-b31 (*)
+|    |    |    \--- javax.validation:validation-api:1.1.0.Final
+|    |    +--- org.glassfish.jersey.ext:jersey-metainf-services:2.22.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.glassfish.jersey.ext:jersey-bean-validation:2.22.1
+|    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    +--- javax.validation:validation-api:1.1.0.Final
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- io.dropwizard.metrics:metrics-jersey2:3.1.2
+|    |    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-annotation:3.1.2
+|    |    |         \--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3
+|    |    |    +--- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.6.3
+|    |    |    \--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.6.3
+|    |    +--- org.glassfish.jersey.containers:jersey-container-servlet:2.22.1
+|    |    |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1
+|    |    |    |    +--- org.glassfish.hk2.external:javax.inject:2.4.0-b31
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    |    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    |    |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|    |    |    \--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-webapp:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-xml:9.2.13.v20150730
+|    |    |    |    \--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730
+|    |    |         \--- org.eclipse.jetty:jetty-security:9.2.13.v20150730
+|    |    |              \--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    \--- org.apache.commons:commons-lang3:3.4
+|    +--- io.dropwizard:dropwizard-servlets:0.9.2
+|    |    +--- org.slf4j:slf4j-api:1.7.12
+|    |    +--- io.dropwizard:dropwizard-util:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-annotation:3.1.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- ch.qos.logback:logback-classic:1.1.3 (*)
+|    +--- io.dropwizard:dropwizard-jetty:0.9.2
+|    |    +--- io.dropwizard:dropwizard-logging:0.9.2 (*)
+|    |    +--- io.dropwizard.metrics:metrics-jetty9:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- org.eclipse.jetty:jetty-server:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlet:9.2.13.v20150730 (*)
+|    |    +--- org.eclipse.jetty:jetty-servlets:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-continuation:9.2.13.v20150730
+|    |    |    +--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    |    |    +--- org.eclipse.jetty:jetty-util:9.2.13.v20150730
+|    |    |    \--- org.eclipse.jetty:jetty-io:9.2.13.v20150730 (*)
+|    |    \--- org.eclipse.jetty:jetty-http:9.2.13.v20150730 (*)
+|    +--- io.dropwizard:dropwizard-lifecycle:0.9.2 (*)
+|    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-jvm:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    +--- io.dropwizard.metrics:metrics-servlets:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    |    +--- io.dropwizard.metrics:metrics-json:3.1.2
+|    |    |    \--- io.dropwizard.metrics:metrics-core:3.1.2
+|    |    \--- io.dropwizard.metrics:metrics-jvm:3.1.2 (*)
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- net.sourceforge.argparse4j:argparse4j:0.6.0
+|    \--- org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3
++--- com.hubspot.dropwizard:dropwizard-guice:0.8.4.0
+|    +--- com.google.code.findbugs:annotations:3.0.0
+|    +--- io.dropwizard.metrics:metrics-healthchecks:3.1.2
+|    +--- com.google.inject:guice:4.0
+|    |    +--- javax.inject:javax.inject:1
+|    |    +--- aopalliance:aopalliance:1.0
+|    |    \--- com.google.guava:guava:16.0.1 -> 18.0
+|    +--- com.google.inject.extensions:guice-servlet:4.0
+|    |    \--- com.google.inject:guice:4.0 (*)
+|    +--- org.glassfish.jersey.core:jersey-server:2.21 -> 2.22.1 (*)
+|    +--- com.squarespace.jersey2-guice:jersey2-guice:0.10
+|    |    +--- com.google.inject.extensions:guice-multibindings:4.0
+|    |    |    \--- com.google.inject:guice:4.0 (*)
+|    |    \--- com.google.inject.extensions:guice-servlet:4.0 (*)
+|    +--- org.reflections:reflections:0.9.9
+|    |    +--- org.javassist:javassist:3.18.2-GA
+|    |    \--- com.google.code.findbugs:annotations:2.0.1 -> 3.0.0
+|    +--- javax.servlet:javax.servlet-api:3.1.0
+|    +--- javax.inject:javax.inject:1
+|    +--- org.slf4j:slf4j-api:1.7.12
+|    +--- org.glassfish.hk2:hk2-api:2.4.0-b31 (*)
+|    +--- javax.ws.rs:javax.ws.rs-api:2.0.1
+|    \--- com.google.guava:guava:18.0
++--- io.dropwizard:dropwizard-auth:0.9.2
+|    \--- io.dropwizard:dropwizard-core:0.9.2 (*)
++--- com.google.inject.extensions:guice-persist:4.0
+|    \--- com.google.inject:guice:4.0 (*)
++--- com.restfb:restfb:1.16.0
++--- org.hibernate:hibernate-spatial:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    |    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    |    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
+|    |    +--- org.jboss:jandex:2.0.0.Final
+|    |    +--- dom4j:dom4j:1.6.1
+|    |    |    \--- xml-apis:xml-apis:1.0.b2 -> 1.4.01
+|    |    \--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final
+|    |         \--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- postgresql:postgresql:8.4-701.jdbc4
+|    +--- org.geolatte:geolatte-geom:1.0.1
+|    |    +--- com.vividsolutions:jts:1.13
+|    |    +--- org.slf4j:slf4j-api:1.6.1 -> 1.7.12
+|    |    \--- org.apfloat:apfloat:1.8.2
+|    \--- dom4j:dom4j:1.6.1 (*)
++--- org.hsqldb:hsqldb:2.3.1
++--- org.hibernate:hibernate-entitymanager:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    +--- dom4j:dom4j:1.6.1 (*)
+|    +--- org.hibernate.common:hibernate-commons-annotations:5.0.1.Final (*)
+|    +--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
+|    +--- org.javassist:javassist:3.18.1-GA -> 3.18.2-GA
+|    \--- org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1
++--- org.hibernate:hibernate-core:5.0.7.Final (*)
++--- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final
++--- org.hibernate:hibernate-envers:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- org.hibernate:hibernate-entitymanager:5.0.7.Final (*)
++--- mysql:mysql-connector-java:5.1.25
++--- org.postgresql:postgresql:9.4-1200-jdbc41
+|    \--- com.github.dblock.waffle:waffle-jna:1.7
+|         +--- net.java.dev.jna:jna:4.1.0
+|         +--- net.java.dev.jna:jna-platform:4.1.0
+|         |    \--- net.java.dev.jna:jna:4.1.0
+|         +--- org.slf4j:slf4j-api:1.7.7 -> 1.7.12
+|         \--- com.google.guava:guava:18.0
++--- org.hibernate:hibernate-c3p0:5.0.7.Final
+|    +--- org.jboss.logging:jboss-logging:3.3.0.Final
+|    +--- org.hibernate:hibernate-core:5.0.7.Final (*)
+|    \--- com.mchange:c3p0:0.9.2.1
+|         \--- com.mchange:mchange-commons-java:0.2.3.4
++--- org.projectlombok:lombok:1.14.8
++--- joda-time:joda-time:2.9
++--- com.github.toastshaman:dropwizard-auth-jwt:0.9.1-1
+|    \--- io.dropwizard:dropwizard-auth:0.9.0 -> 0.9.2 (*)
++--- com.fasterxml.jackson.core:jackson-databind:2.6.3 (*)
++--- org.codemonkey.simplejavamail:simple-java-mail:2.1
+|    +--- log4j:log4j:1.2.16
+|    \--- javax.mail:mail:1.4.1
+|         \--- javax.activation:activation:1.1
++--- javax.mail:mail:1.4 -> 1.4.1 (*)
++--- com.googlecode.jsontoken:jsontoken:1.0
+|    +--- com.google.code.gson:gson:1.4 -> 2.2.4
+|    +--- commons-codec:commons-codec:1.4 -> 1.6
+|    +--- joda-time:joda-time:1.6 -> 2.9
+|    +--- javax.servlet:servlet-api:2.5
+|    \--- org.apache.httpcomponents:httpcore:4.0.1 -> 4.4.4
++--- io.federecio:dropwizard-swagger:0.7.0
+|    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-assets:0.8.0
+|    |    +--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    |    \--- io.dropwizard:dropwizard-servlets:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views:0.8.0
+|    |    \--- io.dropwizard:dropwizard-core:0.8.0 -> 0.9.2 (*)
+|    +--- io.dropwizard:dropwizard-views-freemarker:0.8.0
+|    |    +--- io.dropwizard:dropwizard-views:0.8.0 (*)
+|    |    \--- org.freemarker:freemarker:2.3.21
+|    +--- com.wordnik:swagger-jersey2-jaxrs:1.5.1-M2
+|    |    \--- com.wordnik:swagger-jaxrs:1.5.1-M2
+|    |         +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.2
+|    |         |    \--- org.codehaus.woodstox:stax2-api:3.1.4
+|    |         +--- com.wordnik:swagger-core:1.5.1-M2
+|    |         |    +--- com.wordnik:swagger-models:1.5.1-M2
+|    |         |    |    \--- com.wordnik:swagger-annotations:1.5.1-M2
+|    |         |    \--- javax.validation:validation-api:1.1.0.Final
+|    |         \--- org.reflections:reflections:0.9.9 (*)
+|    \--- xml-apis:xml-apis:1.4.01
++--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
++--- org.glassfish.jersey.media:jersey-media-multipart:2.22.1
+|    +--- org.glassfish.jersey.core:jersey-common:2.22.1 (*)
+|    \--- org.jvnet.mimepull:mimepull:1.9.6
++--- com.twilio.sdk:twilio-java-sdk:3.4.5
+|    +--- org.apache.httpcomponents:httpclient:4.1.2 -> 4.3.5
+|    |    +--- org.apache.httpcomponents:httpcore:4.3.2 -> 4.4.4
+|    |    +--- commons-logging:commons-logging:1.1.3
+|    |    \--- commons-codec:commons-codec:1.6
+|    +--- commons-lang:commons-lang:2.6
+|    +--- com.googlecode.json-simple:json-simple:1.1
+|    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.3
+|         \--- org.codehaus.jackson:jackson-core-asl:1.9.3
++--- org.apache.httpcomponents:httpclient:4.3.5 (*)
++--- org.apache.httpcomponents:httpcore:4.4.4
++--- com.googlecode.libphonenumber:libphonenumber:7.0.3
++--- com.stripe:stripe-java:1.42.0
+|    \--- com.google.code.gson:gson:2.2.4
++--- com.google.code.gson:gson:2.2.4
++--- org.apache.commons:commons-lang3:3.4
++--- org.liquibase:liquibase-core:3.0.7
+|    \--- org.yaml:snakeyaml:1.13 -> 1.15
++--- io.dropwizard:dropwizard-testing:0.9.2
+|    +--- io.dropwizard:dropwizard-core:0.9.2 (*)
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.2
+|    +--- org.objenesis:objenesis:2.2
+|    +--- org.assertj:assertj-core:2.2.0
+|    \--- org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:2.22.1
+|         +--- org.glassfish.jersey.test-framework:jersey-test-framework-core:2.22.1
+|         |    +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|         |    +--- org.glassfish.jersey.containers:jersey-container-servlet-core:2.22.1 (*)
+|         |    +--- junit:junit:4.12 (*)
+|         |    \--- org.ow2.asm:asm-debug-all:5.0.4
+|         +--- org.glassfish.jersey.core:jersey-server:2.22.1 (*)
+|         +--- org.glassfish.jersey.core:jersey-client:2.22.1 (*)
+|         +--- junit:junit:4.12 (*)
+|         \--- org.ow2.asm:asm-debug-all:5.0.4
++--- com.jayway.restassured:rest-assured:2.3.3
+|    +--- org.codehaus.groovy:groovy:2.3.6
+|    +--- org.codehaus.groovy:groovy-xml:2.3.6
+|    |    \--- org.codehaus.groovy:groovy:2.3.6
+|    +--- org.apache.httpcomponents:httpclient:4.3.5 (*)
+|    +--- org.apache.httpcomponents:httpmime:4.3.5
+|    |    \--- org.apache.httpcomponents:httpclient:4.3.5 (*)
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.ccil.cowan.tagsoup:tagsoup:1.2.1
+|    +--- com.jayway.restassured:json-path:2.3.3
+|    |    +--- org.codehaus.groovy:groovy-json:2.3.6
+|    |    |    \--- org.codehaus.groovy:groovy:2.3.6
+|    |    +--- org.codehaus.groovy:groovy:2.3.6
+|    |    \--- com.jayway.restassured:rest-assured-common:2.3.3
+|    |         +--- org.codehaus.groovy:groovy:2.3.6
+|    |         \--- org.apache.commons:commons-lang3:3.3.2 -> 3.4
+|    \--- com.jayway.restassured:xml-path:2.3.3
+|         +--- org.codehaus.groovy:groovy-xml:2.3.6 (*)
+|         +--- org.codehaus.groovy:groovy:2.3.6
+|         +--- com.jayway.restassured:rest-assured-common:2.3.3 (*)
+|         +--- org.apache.commons:commons-lang3:3.3.2 -> 3.4
+|         \--- org.ccil.cowan.tagsoup:tagsoup:1.2.1
+\--- junit:junit:4.12 (*)
+
+(*) - dependencies omitted (listed previously)
+
+BUILD SUCCESSFUL
+
+Total time: 3.943 secs

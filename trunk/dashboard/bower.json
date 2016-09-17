@@ -1,0 +1,23 @@
+{
+  "name": "dinenow-dashboard",
+  "version": "1.0",
+  "authors": [
+    "karan"
+  ],
+  "description": "DineNow dashboard.",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    
+  }
+}

@@ -69,54 +69,13 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
     }
   }
 
-  public List<Restaurant> findDistanceNew(SearchType type, final Point location, double distance, String cusine, String sorted) {
-    String sql = "Select c from Restaurant c where timezone=:zoneId and status=0 and cuisine LIKE :value";
+  public List<Restaurant> findDistanceNew(final Point location, double distance) {
+    String sql = "Select c from Restaurant c where within(location, :filter) = true";
     try {
-      if (type == SearchType.BOTH) {
-        sql = sql + " and accept_delivery=" + true + " and accept_takeout=" + true;
-      }
-      else if (type == SearchType.DELIVERY) {
-        sql = sql + " and accept_delivery=" + true;
-      }
-      else if (type == SearchType.PICKUP) {
-        sql = sql + " and accept_takeout=" + true;
-      }
-
-      if (cusine == null || cusine.length() == 0) {
-        cusine = "[";
-      }
-
-      if (sorted != null && sorted.equalsIgnoreCase(SortedBY.DESC.name())) {
-        sql = sql + " ORDER BY name DESC";
-      }
-      else if (sorted != null && sorted.equalsIgnoreCase(SortedBY.RAT.name())) {
-        sql = sql + " ORDER BY rating DESC";
-      }
-      else {
-        sql = sql + " ORDER BY name ASC";
-      }
-
-      System.out.println(location.getX() + "::::::::" + location.getY());
-      System.out.println(distance);
       Geometry filter = createCircle(location.getX(), location.getY(), distance);
-      List<Restaurant> l = (ArrayList<Restaurant>) getEntityManager().createQuery(sql, Restaurant.class)
-          .setParameter("filter", filter).setParameter("value", "%" + cusine + "%").getResultList();
-      System.out.println(l.size() + ">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+      List<Restaurant> l = getEntityManager().createQuery(sql, Restaurant.class)
+          .setParameter("filter", filter).getResultList();
 
-
-      if (sorted != null && sorted.equalsIgnoreCase(SortedBY.DIST.name())) {
-        Comparator<Restaurant> comparator = new Comparator<Restaurant>() {
-          public int compare(Restaurant c1, Restaurant c2) {
-            if (getDistance(location, c1) == getDistance(location, c2))
-              return 0;
-            else if (getDistance(location, c1) > getDistance(location, c2))
-              return 1;
-            else
-              return -1;  // use your logic
-          }
-        };
-        Collections.sort(l, comparator);
-      }
 
       for (Restaurant resturant : l) {
         System.out.println(":::::::::::::DISSISISI" + getDistance(location, resturant));
@@ -130,6 +89,10 @@ public class RestaurantDao extends BaseEntityDAOImpl<Restaurant, String> {
     }
   }
 
+ // private double calculateDistance(Point location, Restaurant rs) {
+    //GeodesicData g = Geodesic.WGS84.Inverse(location.getX(), location.getY(), rs.getLocation().getX(), rs.getLocation().getY());
+    //return g.s12;  // distance in metres
+  //}
 
   public static double getDistance(Point location, Restaurant rs) {
     return (location.distance(rs.getLocation()) * (Math.PI / 180) * 6378137);

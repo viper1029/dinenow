@@ -20,8 +20,11 @@ const create = (baseURL = 'http://192.168.1.180:30505/api/v1') => {
         {userName: username, password: password},
         {headers: {'Authentication': "Basic " + base64.encode(username + ":" + password)}});
 
+    const searchRestaurants = (longitude, latitude, radius) => api.get('/restaurants/searchByDistance', {distance: radius, location: longitude + ',' +latitude});
+
     return {
         signIn,
+        searchRestaurants,
     }
 };
 

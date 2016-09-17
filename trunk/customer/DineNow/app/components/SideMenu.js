@@ -6,31 +6,26 @@ import {Actions as NavActions, ActionConst} from 'react-native-router-flux'
 
 class SideMenu extends Component {
 
-    goToAbout() {
-        NavActions.about;
-        NavActions.refresh({key: 'drawer', open: value => !value })
-    }
-
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.topContainer}>
                     <Button onPress={
-                        () => {NavActions.search, NavActions.refresh({key: 'drawer', open: value => !value })}}
+                        () => {NavActions.refresh({key: 'drawer', open: false }); setTimeout(() => NavActions.search(), 50);}}
                             background={TouchableNativeFeedback.Ripple('#424242')} style={styles.button}
                             textStyle={styles.text}>
                         <Icon name="search" color={'white'} size={30}/>
                         Find Restaurants
                     </Button>
                     <Button onPress={
-                        () => {NavActions.search, NavActions.refresh({key: 'drawer', open: value => !value })}}
+                        () => {NavActions.refresh({key: 'drawer', open: false }); setTimeout(() => NavActions.account(), 50);}}
                             background={TouchableNativeFeedback.Ripple('#424242')} style={styles.button}
                             textStyle={styles.text}>
                         <Icon name="account-box" color={'white'} size={30}/>
                         Account
                     </Button>
                     <Button onPress={
-                        () => {NavActions.search, NavActions.refresh({key: 'drawer', open: value => !value })}}
+                        () => {NavActions.refresh({key: 'drawer', open: false }); setTimeout(() => NavActions.sendFeedback(), 50);}}
                             background={TouchableNativeFeedback.Ripple('#424242')} style={styles.button}
                             textStyle={styles.text}>
                         <Icon name="feedback" color={'white'} size={30}/>
@@ -38,14 +33,14 @@ class SideMenu extends Component {
                     </Button>
                 </View>
                 <View style={styles.bottomContainer}>
-                    <Button onPress={this.goToAbout.bind(this)}
+                    <Button onPress={() => {NavActions.refresh({key: 'drawer', open: false }); setTimeout(() => NavActions.about(), 50);}}
                             background={TouchableNativeFeedback.Ripple('#424242')} style={styles.button}
                             textStyle={styles.text}>
                         <Icon name="info" color={'white'} size={30}/>
                         About
                     </Button>
                     <Button onPress={
-                        () => {NavActions.intro({type: ActionConst.RESET}); NavActions.refresh({key: 'drawer', open: value => !value })}}
+                        () => {NavActions.intro({type: ActionConst.RESET})}}
                             background={TouchableNativeFeedback.Ripple('#424242')} style={styles.button}
                             textStyle={styles.text}>
                         <Icon name="power-settings-new" color={'white'} size={30}/>

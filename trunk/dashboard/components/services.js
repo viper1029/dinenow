@@ -469,7 +469,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "categories/" + params.id, params)) : $http[action](ROOT + "categories", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/categories")
+            return $http.get(ROOT + "categories/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "categories/" + params.id)
@@ -485,7 +485,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "items/" + params.id, params)) : $http[action](ROOT + "items", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/items")
+            return $http.get(ROOT + "items/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "items/" + params.id)
@@ -501,7 +501,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "menus/" + params.id, params)) : $http[action](ROOT + "menus", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/menus")
+            return $http.get(ROOT + "menus/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "menus/" + params.id)
@@ -520,7 +520,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "sizes/" + params.id, params)) : $http[action](ROOT + "sizes", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/sizes")
+            return $http.get(ROOT + "sizes/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "sizes/" + params.id)
@@ -536,7 +536,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "addons/" + params.id, params)) : $http[action](ROOT + "addons", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/addons")
+            return $http.get(ROOT + "addons/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "addons/" + params.id)
@@ -552,7 +552,7 @@ angular.module("app.owner.menu.service", []).factory("categoriesResource", ["$ht
             return params.id ? (action = "put", $http[action](ROOT + "modifiers/" + params.id, params)) : $http[action](ROOT + "modifiers", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/modifiers")
+            return $http.get(ROOT + "modifiers/restaurant/" + $rootScope.restaurantID)
         },
         getByID: function(params) {
             return $http.get(ROOT + "modifiers/" + params.id)
@@ -567,13 +567,13 @@ angular.module("app.owner.restaurant.service", []).factory("deliveryZoneResource
     return {
         addOrUpdate: function(params) {
             var action = "post";
-            return params.id ? (action = "put", $http[action](ROOT + "deliver_zones/" + params.id, params)) : $http[action](ROOT + "deliver_zones", params)
+            return params.id ? (action = "put", $http[action](ROOT + "delivery_zones/" + params.id, params)) : $http[action](ROOT + "delivery_zones", params)
         },
         get: function() {
-            return $http.get(ROOT + "restaurants/" + $rootScope.restaurantID + "/deliver_zones")
+            return $http.get(ROOT + "delivery_zones/restaurant/" + $rootScope.restaurantID)
         },
         "delete": function(params) {
-            return $http["delete"](ROOT + "deliver_zones/" + params.id)
+            return $http["delete"](ROOT + "delivery_zones/" + params.id)
         }
     }
 }).factory("infoResource", function($http, $rootScope, ROOT) {
@@ -680,7 +680,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
                 $http["post"](ROOT + "categories", params)
         },
         getAll: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/categories")
+            return $http.get(ROOT + "categories/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "categories/" + params.id)
@@ -696,7 +696,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             return params.id ? (action = "put", $http[action](ROOT + "items/" + params.id, params)) : $http[action](ROOT + "items", params)
         },
         get: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/items")
+            return $http.get(ROOT + "items/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "items/" + params.id)
@@ -713,7 +713,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
         },
         get: function(params) {
             console.log(params);
-            return $http.get(ROOT + "restaurants/" + params + "/menus")
+            return $http.get(ROOT + "menus/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "menus/" + params.id)
@@ -730,7 +730,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             return params.id ? (action = "put", $http[action](ROOT + "sizes/" + params.id, params)) : $http[action](ROOT + "sizes", params)
         },
         getAll: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/sizes")
+            return $http.get(ROOT + "sizes/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "size/" + params.id)
@@ -746,7 +746,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             return params.id ? (action = "put", $http[action](ROOT + "addons/" + params.id, params)) : $http[action](ROOT + "addons", params)
         },
         getAll: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/addons")
+            return $http.get(ROOT + "addons/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "addons/" + params.id)
@@ -762,7 +762,7 @@ angular.module("app.admin.restaurant.manage.menu.service", [])
             return params.id ? (action = "put", $http[action](ROOT + "modifiers/" + params.id, params)) : $http[action](ROOT + "modifiers", params)
         },
         get: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/modifiers")
+            return $http.get(ROOT + "modifiers/restaurant/" + params)
         },
         getByID: function(params) {
             return $http.get(ROOT + "modifiers/" + params.id)
@@ -778,13 +778,13 @@ angular.module("app.admin.restaurant.manage.restaurant.service", [])
     return {
         addOrUpdate: function(params) {
             var action = "post";
-            return params.id ? (action = "put", $http[action](ROOT + "deliver_zones/" + params.id, params)) : $http[action](ROOT + "deliver_zones", params)
+            return params.id ? (action = "put", $http[action](ROOT + "delivery_zones/" + params.id, params)) : $http[action](ROOT + "delivery_zones", params)
         },
         get: function(params) {
-            return $http.get(ROOT + "restaurants/" + params + "/deliver_zones")
+            return $http.get(ROOT + "delivery_zones/restaurant/" + params)
         },
         "delete": function(params) {
-            return $http["delete"](ROOT + "deliver_zones/" + params.id)
+            return $http["delete"](ROOT + "delivery_zones/" + params.id)
         }
     }
 }).factory("adminInfoResource", function($http, ROOT) {
@@ -810,7 +810,7 @@ angular.module("app.admin.restaurant.manage.restaurant.service", [])
             return params.id ? (action = "put", $http[action](ROOT + "taxes/" + params.id, params)) : $http[action](ROOT + "taxes", params)
         },
         get: function(params) {
-             return $http.get(ROOT + "restaurants/" + params + "/taxes")
+             return $http.get(ROOT + "taxes/restaurant/" + params)
         },
         getByID: function(params) {
            return $http.get(ROOT + "taxes/" + params.id)
