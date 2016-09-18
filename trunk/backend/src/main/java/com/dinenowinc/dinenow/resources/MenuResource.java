@@ -121,6 +121,9 @@ public class MenuResource extends AbstractResource<Menu> {
   @Override
   public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
+      if(restaurantDao.get((String) inputMap.get("restaurantId")).getMenus().size() > 1) {
+        return ResourceUtils.asFailedResponse(Status.BAD_REQUEST, new ServiceErrorMessage("Only one menu is supported at this time."));
+      }
       MenuValidator menuValidator = new MenuValidator(inputMap);
       List<ServiceErrorMessage> errorMessages = menuValidator.validateForCreation();
       if (errorMessages.size() == 0) {

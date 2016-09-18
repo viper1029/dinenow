@@ -273,22 +273,21 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
   }
 
-  @Path("getRestaurantDetails")
+  @Path("/getRestaurantDetails")
   @ApiOperation(value = "Get menu and restaurant info")
   @GET
-  public Response getRestaurantDetails(@QueryParam("status") String restaurantId) {
+  public Response getRestaurantDetails(@QueryParam("restaurantId") String restaurantId) {
     Restaurant restaurant = restaurantDao.get(restaurantId);
     if (restaurant == null) {
       return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("restaurant not found"));
     }
     else {
-      List<RestaurantUser> entities = restaurant.getMenus();
-      List<HashMap<String, Object>> dtos = new ArrayList<>();
-      for (RestaurantUser dto : entities) {
-        dtos.add(onGet(dto));
+      Set<Menu> menus = restaurant.getMenus();
+      HashMap<String, Object> dto = new HashMap<String, Object>();
+      if(menus.size() >= 1) {
+        Menu menu = menus.iterator().next();
+        dto.put("menu", menu.toDto());
       }
-      LinkedHashMap<String, Object> dto = new LinkedHashMap<>();
-      dto.put("restaurantusers", dtos);
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }
   }

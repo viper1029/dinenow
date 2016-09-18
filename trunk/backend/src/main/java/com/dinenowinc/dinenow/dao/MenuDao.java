@@ -21,7 +21,7 @@ public class MenuDao extends BaseEntityDAOImpl<Menu, String> {
   public List<Menu> getMenusByRestaurantId(String restaurantId) {
     try {
       List<Menu> menus = (ArrayList<Menu>) getEntityManager().createNativeQuery(
-          "SELECT mn.* FROM menu mn WHERE mn.id_restaurant = :value", Menu.class)
+          "SELECT t.* FROM menu t WHERE t.id_restaurant = :value", Menu.class)
           .setParameter("value", restaurantId).getResultList();
       return menus;
     }

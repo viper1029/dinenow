@@ -6,7 +6,9 @@ import {bindActionCreators} from "redux";
 import {Image, StyleSheet, View, Text, Platform, TouchableOpacity, StatusBar, ListView, TouchableHighlight} from "react-native";
 import {GooglePlacesAutocomplete} from "../components/GooglePlacesAutoComplete";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {getRestaurantDetails} from "../redux/actions/RestaurantDetailsActions";
 import Button from "../components/Button"
+import {Actions as NavActions, ActionConst} from 'react-native-router-flux'
 
 const data = [
     {
@@ -39,14 +41,28 @@ class ResultsScreen extends Component {
         };
     }
 
-    handleRestaurantSelection(restaurantId) {
-        console.log(rowData)
+    componentWillReceiveProps(nextProps) {
+        console.log("Receiving new Properties: ", nextProps.responseSuccess);
+        if (nextProps.responseSuccess) {
+            NavActions.restaurantDetails();
+            console.log('go to new screen')
+        }
+
+        //if (nextProps.signInError && this.props.signInError !== nextProps.signInError) {
+        //    console.log(nextProps.signInError);
+        //    alert(nextProps.signInError);
+        //}
+    }
+
+
+    handleRestaurantSelection(restaurant) {
+        this.props.getRestaurantDetails(restaurant.id);
     }
 
     _renderRow(rowData, sectionID, rowID, highlightRow:(sectionID:number, rowID:number) => void) {
         return (
             <View>
-                <Button style={styles.row} onPress={() => this.handleRestaurantSelection(rowData).bind(this)}>
+                <Button style={styles.row} onPress={() => this.handleRestaurantSelection(rowData)}>
                     <View style={{flex: 4}}>
                         <Image
                             style={{
@@ -72,7 +88,7 @@ class ResultsScreen extends Component {
         );
     };
 
-    _renderSeparator(sectionID:number, rowID:number, adjacentRowHighlighted:bool) {
+    _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
         return (
             <View
                 key={`${sectionID}-${rowID}`}
@@ -151,12 +167,13 @@ var styles = StyleSheet.create({
 var mapStateToProps = function (state) {
     return {
         restaurantList: state.search.restaurantList,
+        responseSuccess: state.restaurantDetails.responseSuccess,
     };
 };
 
 var mapDispatchToProps = function (dispatch) {
     return bindActionCreators({
-
+        getRestaurantDetails
     }, dispatch);
 
 };

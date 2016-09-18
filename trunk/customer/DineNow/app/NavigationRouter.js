@@ -11,6 +11,8 @@ import AboutScreen from './views/AboutScreen'
 import AccountScreen from './views/AccountScreen'
 import ResultsScreen from './views/ResultsScreen'
 import SendFeedbackScreen from './views/SendFeedbackScreen'
+import RestaurantDetails from './views/RestaurantDetails'
+import ItemScreen from './views/ItemScreen'
 import {Actions as NavActions} from 'react-native-router-flux'
 
 class NavigationRouter extends Component {
@@ -45,6 +47,19 @@ class NavigationRouter extends Component {
             }}
         />)
 
+        const BackNavBarNoShadow = (props) => (<NavBar
+            onLeftPress={NavActions.pop}
+            title={props.title}
+            leftButton={true}
+            iconStyle={{
+                fontSize: 32,
+            }}
+            navBarStyle={{shadowRadius: 0,
+                shadowOffset: {width: 0, height: 0},
+                shadowOpacity: 0,
+                elevation: 0,}}
+        />)
+
 
         return (
             <Router>
@@ -52,7 +67,7 @@ class NavigationRouter extends Component {
 
                     <Scene key="drawer" component={NavigationDrawer} open={false} type={ActionConst.RESET} direction="horizontal">
                         <Scene key="main" tabs={true}>
-                            <Scene initial key='search' component={SearchScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Search"/>)}/>
+                            <Scene  key='search' component={SearchScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Search"/>)}/>
                             <Scene key='about' component={AboutScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="About Us"/>)}/>
                             <Scene key='sendFeedback' component={SendFeedbackScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Send Feedback"/>)}/>
                             <Scene key='account' component={AccountScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Account"/>)}/>
@@ -60,6 +75,8 @@ class NavigationRouter extends Component {
 
                 </Scene>
                     <Scene key='results' component={ResultsScreen} hideNavBar={false} navBar={() => (<BackToHomeNavBar title="Restaurants"/>)} />
+                    <Scene key='restaurantDetails' component={RestaurantDetails} hideNavBar={false} navBar={() => (<BackNavBarNoShadow title="Restaurant Details"/>)} />
+                    <Scene key='item' initial component={ItemScreen} hideNavBar={false} navBar={() => (<BackNavBar title="Item"/>)} />
                 </Scene>
             </Router>
         )

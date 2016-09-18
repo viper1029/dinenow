@@ -10,7 +10,7 @@ var handleNetworkError = function(response) {
     return response;
 };
 
-const create = (baseURL = 'http://192.168.1.180:30505/api/v1') => {
+const create = (baseURL = 'http://142.58.212.100:30505/api/v1') => {
     const api = apisauce.create({
         baseURL,
         timeout: 5000
@@ -22,9 +22,12 @@ const create = (baseURL = 'http://192.168.1.180:30505/api/v1') => {
 
     const searchRestaurants = (longitude, latitude, radius) => api.get('/restaurants/searchByDistance', {distance: radius, location: longitude + ',' +latitude});
 
+    const getRestaurantDetails = (restaurantId) => api.get('/restaurants/getRestaurantDetails', {restaurantId: restaurantId});
+
     return {
         signIn,
         searchRestaurants,
+        getRestaurantDetails
     }
 };
 
