@@ -14,6 +14,7 @@ module.exports = {
     btnTextSizeLarge: this.fontSizeBase * 1.5,
 
     iconFontSize: 30,
+    rowIconFontSize: 30,
 
     toolbarHeight: (Platform.OS === 'ios' ) ? 70 : 55,
 
@@ -29,6 +30,11 @@ module.exports = {
     inverseTextColor: "#000",
     textColor: "#fff",
 
+    rowUnderLayColor: "#48BBEC",
+
+    generalRowStyle: {
+
+    },
 
     get fontSizeH1() {
         return this.fontSizeBase * 1.8;

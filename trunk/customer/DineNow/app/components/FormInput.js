@@ -15,7 +15,12 @@ export default class FormInput extends Component {
 
     render() {
         const {iconName, name, value} = this.props
-        const {valid, messages} = validate(name, value)
+        const valid = true;
+        const messages = null;
+        if(name != null || name != undefined){
+            const {valid, messages} = validate(name, value)
+        }
+
         const message = (messages && messages.length > 0 ? messages[0] : null)
         return (
             <InlineTextInput

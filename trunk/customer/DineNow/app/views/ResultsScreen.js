@@ -4,8 +4,6 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {Image, StyleSheet, View, Text, Platform, TouchableOpacity, StatusBar, ListView, TouchableHighlight} from "react-native";
-import {GooglePlacesAutocomplete} from "../components/GooglePlacesAutoComplete";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {getRestaurantDetails} from "../redux/actions/RestaurantDetailsActions";
 import Button from "../components/Button"
 import {Actions as NavActions, ActionConst} from 'react-native-router-flux'

@@ -71,11 +71,6 @@ public class OrderDetailsResource extends AbstractResource<OrderDetail>{
 	}
 
 	
-	
-	
-	//=====================================METHOD=========================================//
-	
-	
 	@GET
 	@ApiOperation("api get all OrderDetails of restaurant for ADMIN and OWNER")
 	@ApiResponses(value = {

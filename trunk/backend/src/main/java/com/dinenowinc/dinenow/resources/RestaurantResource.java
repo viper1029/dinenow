@@ -8,16 +8,21 @@ import com.dinenowinc.dinenow.dao.PaymentTypeDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
 import com.dinenowinc.dinenow.dao.RestaurantUserDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
+import com.dinenowinc.dinenow.model.CategoryItem;
 import com.dinenowinc.dinenow.model.ClosedDay;
 import com.dinenowinc.dinenow.model.Customer;
 import com.dinenowinc.dinenow.model.DeliveryZone;
 import com.dinenowinc.dinenow.model.Item;
+import com.dinenowinc.dinenow.model.ItemSize;
 import com.dinenowinc.dinenow.model.Menu;
+import com.dinenowinc.dinenow.model.Modifier;
+import com.dinenowinc.dinenow.model.ModifierAddon;
 import com.dinenowinc.dinenow.model.Order;
 import com.dinenowinc.dinenow.model.OrderDetail;
 import com.dinenowinc.dinenow.model.PaymentType;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.RestaurantUser;
+import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.helpers.BaseEntity;
 import com.dinenowinc.dinenow.model.helpers.Hour;
@@ -283,10 +288,73 @@ public class RestaurantResource extends AbstractResource<Restaurant> {
     }
     else {
       Set<Menu> menus = restaurant.getMenus();
-      HashMap<String, Object> dto = new HashMap<String, Object>();
+      HashMap<String, Object> dto = new LinkedHashMap<String, Object>();
+      dto.put("id", restaurant.getId());
+      dto.put("name", restaurant.getName());
+      dto.put("description", restaurant.getDescription());
+      dto.put("acceptDelivery", restaurant.isAcceptDelivery());
+      dto.put("acceptTakeOut", restaurant.isAcceptTakeout());
+      dto.put("location", restaurant.getLocation() != null ? new LatLng(restaurant.getLocation().getX(), restaurant.getLocation().getY()) : "");
+      dto.put("address1", restaurant.getAddress1());
+      dto.put("address2", restaurant.getAddress2());
+      dto.put("city", restaurant.getCity());
+      dto.put("province", restaurant.getProvince());
+      dto.put("postalCode", restaurant.getPostalCode());
+      dto.put("country", restaurant.getCountry());
+      dto.put("phoneNumber", restaurant.getPhoneNumber());
+      dto.put("networkStatus", restaurant.getNetworkStatus());
+      dto.put("webSite", restaurant.getWebsite());
+      dto.put("rating", restaurant.getRating());
+      dto.put("acceptDeliveryHours", restaurant.getAcceptDeliveryHours());
+      dto.put("acceptTakeOutHours", restaurant.getAcceptTakeOutHours());
+      dto.put("logo", restaurant.getLogo());
+
+
       if(menus.size() >= 1) {
+        HashMap<String, Object> categoryItemMap = new LinkedHashMap<String, Object>();
+        List<Object> categories = new LinkedList<Object>();
+        List<Object> sizes = new LinkedList<Object>();
+        List<Object> items = new LinkedList<Object>();
+        List<Object> modifiers = new LinkedList<Object>();
+        List<Object> addons = new LinkedList<Object>();
         Menu menu = menus.iterator().next();
-        dto.put("menu", menu.toDto());
+        Set<CategoryItem> categoryItemSet = menu.getCategoryItem();
+        for(CategoryItem categoryItem : categoryItemSet) {
+          HashMap<String, Object> cat = new LinkedHashMap<String, Object>();
+          cat.put("categoryName",categoryItem.getCategory().getCategoryName() );
+          for(Item item : categoryItem.getItems()) {
+            HashMap<String, Object> itemMap = new LinkedHashMap<String, Object>();
+            itemMap.put("itemName", item.getName());
+            itemMap.put("itemDescription", item.getDescription());
+            for(ItemSize itemSize : item.getItemSizes()) {
+              HashMap<String, Object> sizeMap = new LinkedHashMap<String, Object>();
+              sizeMap.put("sizeId", itemSize.getSize().getId());
+              sizeMap.put("sizeName", itemSize.getSize().getSizeName());
+              sizes.add(sizeMap);
+            }
+            for(Modifier modifier : item.getModifiers()) {
+              HashMap<String, Object> modifierMap = new LinkedHashMap<String, Object>();
+              modifierMap.put("maxSelections", modifier.getMaxSelection());
+              modifierMap.put("minSelections", modifier.getMinSelection());
+              for(ModifierAddon modifierAddon : modifier.getModifierAddons()) {
+                HashMap<String, Object> addonMap = new LinkedHashMap<String, Object>();
+                addonMap.put("addonName", modifierAddon.getAddon().getAddonName());
+                addonMap.put("addonPrice", modifierAddon.getPrice());
+                addons.add(addonMap);
+              }
+              modifierMap.put("addons", addons);
+              modifiers.add(modifierMap);
+            }
+            itemMap.put("sizes", sizes);
+            itemMap.put("addons", modifiers);
+            items.add(itemMap);
+          }
+          cat.put("items", items);
+          categories.add(cat);
+
+        }
+        categoryItemMap.put("categories", categories);
+        dto.put("menu", categoryItemMap);
       }
       return ResourceUtils.asSuccessResponse(Status.OK, dto);
     }

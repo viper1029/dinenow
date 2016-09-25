@@ -58,7 +58,8 @@ var styles = StyleSheet.create({
         backgroundColor: '#252A30'
     },
     topContainer: {
-        flex:2,
+        flex:2
+
     },
     bottomContainer: {
         flex: 1,

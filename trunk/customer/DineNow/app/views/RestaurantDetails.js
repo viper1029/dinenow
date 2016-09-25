@@ -6,6 +6,7 @@ import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab
 import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import Accordion from 'react-native-collapsible/Accordion';
 import CollapsibleList from './../components/CollapsibleList'
+import {BackNavBar} from "./../components/NavBars";
 
 const SECTIONS = [
     {
@@ -68,6 +69,10 @@ export default class RestaurantDetails extends Component {
     render() {
         return (
             <View style={{flex: 1, backgroundColor: '#384850'}}>
+                <BackNavBar title="Delivery Address" navBarStyle={{shadowRadius: 0,
+                    shadowOffset: {width: 0, height: 0},
+                    shadowOpacity: 0,
+                    elevation: 0,}}/>
                 <Image source={require('../assets/glow2.png')} style={styles.container}>
                     <TabViewAnimated
                         style={{flex:1}}

@@ -18,22 +18,26 @@ export default class NumberInput extends Component {
 
     render() {
         return (
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{flex: 0.33}}>
                 <Button style={styles.buttonStyle} onPress={() => {
                     this.setState({count: this.state.count > 1 && this.state.count - 1 || 1})
                 }}>
                     <Icon name={"remove"}/>
                 </Button>
-                <View>
+                    </View>
+                <View style={{flex: 0.33, alignItems: 'center'}}>
                     <Text color='black' style={styles.textStyle}>
                         {this.state.count}
                     </Text>
                 </View>
+                <View style={{flex: 0.33}}>
                 <Button style={styles.buttonStyle} onPress={() => {
                     this.setState({count: this.state.count + 1})
                 }}>
                     <Icon name={"add"}/>
                 </Button>
+                    </View>
             </View>
         )
     }
@@ -62,8 +66,6 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     textStyle: {
-        marginLeft: 20,
-        marginRight: 20,
-        fontSize: 20
+        fontSize: 18
     }
 });

@@ -10,7 +10,7 @@ export default class NavBar extends Component {
     }
 
     render() {
-        const {leftButton, rightButton, onLeftPress, children, title, iconStyle, navBarStyle} = this.props
+        const {leftButton, rightButton, onLeftPress, onRightPress, children, title, iconStyle, navBarStyle} = this.props
         return (
             <View style={[styles.navBar, navBarStyle]}>
                 <View style={styles.leftContainer}>
@@ -34,7 +34,14 @@ export default class NavBar extends Component {
 
                 <View style={styles.rightContainer}>
                     {rightButton &&
-                    <Text>Right</Text>
+                    <TouchableHighlight underlayColor={'grey'} onPress={onRightPress} style={styles.button}>
+                        <View>
+                            <Icon name={this.props.rightIconName != null && this.props.rightIconName || "keyboard-arrow-left"} style={[{
+                                color: 'black',
+                                fontSize: 36,
+                            }, iconStyle]}/>
+                        </View>
+                    </TouchableHighlight>
                     }
                 </View>
             </View>
@@ -87,6 +94,7 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.mainGreen,
         paddingRight: 3,
         paddingLeft: 3,
+        width: 50,
         margin: 0,
         borderRadius: 4,
         alignSelf: 'stretch',

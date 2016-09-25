@@ -13,70 +13,33 @@ import ResultsScreen from './views/ResultsScreen'
 import SendFeedbackScreen from './views/SendFeedbackScreen'
 import RestaurantDetails from './views/RestaurantDetails'
 import ItemScreen from './views/ItemScreen'
-import {Actions as NavActions} from 'react-native-router-flux'
+import DeliveryAddressScreen from './views/DeliveryAddressScreen'
+import CheckoutScreen from './views/CheckoutScreen'
+import AddDeliveryAddress from './views/AddDeliveryAddress'
+import {DrawerNavBar, BackNavBar, BackToHomeNavBar, BackNavBarNoShadow, DrawerNavBarWithAdd} from './components/NavBars';
+
 
 class NavigationRouter extends Component {
 
     render() {
-
-        const DrawerNavBar = (props) => (<NavBar
-            onLeftPress={() => {NavActions.refresh({key: 'drawer', open: value => !value })}}
-            title={props.title}
-            leftButton={true}
-            leftIconName="menu"
-            iconStyle={{
-                fontSize: 32,
-            }}
-        />)
-
-        const BackNavBar = (props) => (<NavBar
-            onLeftPress={NavActions.pop}
-            title={props.title}
-            leftButton={true}
-            iconStyle={{
-                fontSize: 32,
-            }}
-        />)
-
-        const BackToHomeNavBar = (props) => (<NavBar
-            onLeftPress={NavActions.drawer}
-            title={props.title}
-            leftButton={true}
-            iconStyle={{
-                fontSize: 32,
-            }}
-        />)
-
-        const BackNavBarNoShadow = (props) => (<NavBar
-            onLeftPress={NavActions.pop}
-            title={props.title}
-            leftButton={true}
-            iconStyle={{
-                fontSize: 32,
-            }}
-            navBarStyle={{shadowRadius: 0,
-                shadowOffset: {width: 0, height: 0},
-                shadowOpacity: 0,
-                elevation: 0,}}
-        />)
-
-
         return (
             <Router>
-                <Scene key='root'>
+                <Scene key='root' hideNavBar={true}>
 
-                    <Scene key="drawer" component={NavigationDrawer} open={false} type={ActionConst.RESET} direction="horizontal">
+                    <Scene key="drawer" component={NavigationDrawer} tabs={true} open={false} type={ActionConst.RESET} direction="horizontal">
                         <Scene key="main" tabs={true}>
-                            <Scene  key='search' component={SearchScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Search"/>)}/>
+                            <Scene key='search' component={SearchScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Search"/>)}/>
                             <Scene key='about' component={AboutScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="About Us"/>)}/>
                             <Scene key='sendFeedback' component={SendFeedbackScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Send Feedback"/>)}/>
-                            <Scene key='account' component={AccountScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Account"/>)}/>
+                            <Scene key='account' initial component={AccountScreen} hideNavBar={false} navBar={() => (<DrawerNavBar title="Account"/>)}/>
                         </Scene>
-
                 </Scene>
+                    <Scene key='address' component={DeliveryAddressScreen} hideNavBar={true}/>
+                    <Scene key='addAddress' component={AddDeliveryAddress} hideNavBar={true}/>
                     <Scene key='results' component={ResultsScreen} hideNavBar={false} navBar={() => (<BackToHomeNavBar title="Restaurants"/>)} />
-                    <Scene key='restaurantDetails' component={RestaurantDetails} hideNavBar={false} navBar={() => (<BackNavBarNoShadow title="Restaurant Details"/>)} />
-                    <Scene key='item' initial component={ItemScreen} hideNavBar={false} navBar={() => (<BackNavBar title="Item"/>)} />
+                    <Scene key='restaurantDetails' component={RestaurantDetails} />
+                    <Scene key='item' component={ItemScreen} />
+                    <Scene key='checkout' initial component={CheckoutScreen} />
                 </Scene>
             </Router>
         )

@@ -6,11 +6,11 @@ import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Addon;
 import com.dinenowinc.dinenow.model.AddonSize;
-import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
-import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.Restaurant;
 import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.User;
+import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
+import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
 import com.wordnik.swagger.annotations.Api;
@@ -49,11 +49,6 @@ public class AddonResource extends AbstractResource<Addon> {
   private RestaurantDao restaurantDao;
 
   @GET
-  @ApiOperation("get all addon of restaurant for ADMIN and OWNER")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "Access denied for user"),
-  })
   @Override
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.OWNER || access.getRole() == UserRole.ADMIN) {
@@ -63,7 +58,6 @@ public class AddonResource extends AbstractResource<Addon> {
   }
 
   @Path("/restaurant/{restaurant_id}")
-  @ApiOperation("Get All AddOns By Restaurant")
   @GET
   public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
