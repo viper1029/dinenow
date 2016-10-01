@@ -20,7 +20,7 @@ import Form from "../components/Form";
 import InlineTextInput from "../components/InlineTextInput";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Actions as NavActions, ActionConst} from 'react-native-router-flux'
-import Row from "../components/TouchableHightlightRow";
+import TouchableHightlightRow from "../components/TouchableHightlightRow";
 
 const data = [
     {
@@ -54,37 +54,44 @@ export default class DeliveryAddressScreen extends Component {
     _renderRow(rowData, sectionID, rowID, highlightRow:(sectionID:number, rowID:number) => void) {
         return (
             <View>
-                <View style={styles.listRow}>
-                    <View style={{flex: 0.8, alignSelf: 'center'}}>
-                        <Text style={styles.listText}>{rowData.address1}</Text>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={styles.listText}>{rowData.city}, </Text>
-                            <Text style={styles.listText}>{rowData.province}, </Text>
-                            <Text style={styles.listText}>{rowData.postalCode}</Text>
+                <TouchableHighlight
+                    onPress={()=> { }}
+                    onLongPress={()=>{this.setState({editMode: true})}}
+                >
+                    <View style={styles.listRow}>
+                        <View style={{flex: 0.8, alignSelf: 'center'}}>
+                            <Text style={styles.listText}>{rowData.address1}</Text>
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={styles.listText}>{rowData.city}, </Text>
+                                <Text style={styles.listText}>{rowData.province}, </Text>
+                                <Text style={styles.listText}>{rowData.postalCode}</Text>
+                            </View>
+                            <Text style={styles.listText}>{rowData.country}</Text>
                         </View>
-                        <Text style={styles.listText}>{rowData.country}</Text>
+                        <View style={{flex: 0.2, alignItems: 'flex-end', alignSelf: 'center'}}>
+                            <View>
+                                <TouchableHighlight
+                                    style={{padding: 5, borderRadius: 4}}
+                                    underlayColor="#48BBEC"
+                                    onPress={() => {
+                                        NavActions.addAddress()
+                                    }}
+                                >
+                                    <MaterialIcons name="mode-edit" size={30} style={styles.arrow}/>
+                                </TouchableHighlight>
+                                <TouchableHighlight
+                                    style={{padding: 5, borderRadius: 4}}
+                                    underlayColor="#48BBEC"
+                                    onPress={() => {
+                                        NavActions.addAddress()
+                                    }}
+                                >
+                                    <MaterialIcons name="delete" size={30} style={styles.arrow}/>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
                     </View>
-                    <View style={{flex: 0.2, alignItems: 'flex-end',  alignSelf: 'center'}}>
-                        <TouchableHighlight
-                            style={{padding: 5, borderRadius: 4}}
-                            underlayColor="#48BBEC"
-                            onPress={() => {
-                                NavActions.addAddress()
-                            }}
-                        >
-                            <MaterialIcons name="mode-edit" size={30} style={styles.arrow}/>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={{padding: 5, borderRadius: 4}}
-                            underlayColor="#48BBEC"
-                            onPress={() => {
-                                NavActions.addAddress()
-                            }}
-                        >
-                            <MaterialIcons name="delete" size={30} style={styles.arrow}/>
-                        </TouchableHighlight>
-                    </View>
-                </View>
+                </TouchableHighlight>
             </View>
         );
     };
@@ -94,8 +101,8 @@ export default class DeliveryAddressScreen extends Component {
             <View
                 key={`${sectionID}-${rowID}`}
                 style={{
-                    height: adjacentRowHighlighted ? 4 : 1,
-                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
+                    height: adjacentRowHighlighted ? 4 : 1 / PixelRatio.get(),
+                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#d6d7da',
                 }}
             />
         );
@@ -106,9 +113,20 @@ export default class DeliveryAddressScreen extends Component {
         return (
             <View style={{flex: 1, backgroundColor: '#384850'}}>
                 <View style={{flex: 1, borderWidth: 0}}>
-                    <BackNavBar title="Delivery Address"/>
+                    <BackNavBar title={this.props.navBarTitle || "Delivery Address"}/>
                     <Image source={require('../assets/glow2.png')} style={styles.container}>
-                        <Row onPress={() => { NavActions.addAddress() }} rowText="Edit Profile"/>
+                        <TouchableHighlight
+                            style={ListStyle.row}
+                            underlayColor="#48BBEC"
+                            onPress={() => {
+                                NavActions.addAddress()
+                            }}
+                        >
+                            <View style={styles.view}>
+                                <MaterialIcons name="add" size={30} style={styles.arrow}/>
+                                <Text style={styles.rowLabel}>Add Address</Text>
+                            </View>
+                        </TouchableHighlight>
                         <ListView
                             dataSource={this.state.dataSource}
                             renderRow={this._renderRow.bind(this)}

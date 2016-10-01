@@ -28,6 +28,7 @@ export default class DeliveryAddressScreen extends Component {
             <View style={{flex: 1, backgroundColor: '#384850'}}>
                 <View style={{flex: 1, borderWidth: 0}}>
                     <BackNavBar title="Add Address"
+                                leftIconName="clear"
                                 rightButton={true}
                                 rightIconName="check"
                                 onRightPress={() => {}}

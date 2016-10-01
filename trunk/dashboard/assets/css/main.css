@@ -3433,6 +3433,11 @@ button.close {
   position: relative;
   padding: 20px;
 }
+.modal-body-large {
+  position: relative;
+  padding: 20px;
+  width: 900px;
+}
 .modal-footer {
   padding: 20px;
   text-align: right;
@@ -3475,6 +3480,9 @@ button.close {
 }
 .app-modal-window .modal-dialog {
   width: 1400px;
+}
+.app-modal-window-med .modal-dialog {
+  width: 900px;
 }
 .tooltip {
   position: absolute;

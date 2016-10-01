@@ -28,46 +28,16 @@ angular.module("app.admin.restaurant.manage.menu.addon", [])
                             $scope.itemToProcess = angular.copy(itemToProcess) || {};
                             var restaurantID = $stateParams.restaurantId;
 
-                            adminSizesResource.getAll(restaurantID).then(function (payload) {
-                                $scope.listSizes = payload.data.data.sizes;
-                                loadAddonDetails();
-                            });
-
                             var loadAddonDetails = function () {
-                                $scope.itemToProcess.id ?
                                     adminAddonResource.getByID($scope.itemToProcess).success(function (payload) {
                                         $scope.itemToProcess = payload.data.addon;
-                                        $scope.itemToProcess.addonSize.push({
-                                            price: 0,
-                                            availabilityStatus: "AVAILABLE",
-                                            size: {
-                                                id: undefined
-                                            }
-                                        })
-                                    }) :
-                                    $scope.itemToProcess = {
-                                        addonSize: [{
-                                            price: 0,
-                                            availabilityStatus: "AVAILABLE",
-                                            size: {
-                                                id: undefined
-                                            }
-                                        }]
-                                    }
+                                    });
                             }
                         };
 
                         init();
                         $scope.save = function () {
-                            var splice = $scope.itemToProcess.addonSize.length > 1 &&
-                            ($scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size === undefined ||
-                            $scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size.id === null ||
-                            $scope.itemToProcess.addonSize[$scope.itemToProcess.addonSize.length - 1].size.id === undefined);
-
-                            if(splice) {
-                                $scope.itemToProcess.addonSize.splice(-1, 1);
-                            }
-                            if($scope.itemToProcess.addonSize.length > 0 && ($scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""))) {
+                            if(($scope.itemToProcess.id || ($scope.itemToProcess.restaurantId = $stateParams.restaurantId || ""))) {
                                 adminAddonResource.addOrUpdate($scope.itemToProcess).success(function () {
                                         $modalInstance.close($scope.itemToProcess)
                                     }).error(function () {
@@ -77,17 +47,6 @@ angular.module("app.admin.restaurant.manage.menu.addon", [])
                             else {
                              alertify.error("Please add size and price")
                             }
-                        };
-
-                        $scope.addAddonSize = function () {
-                            $scope.itemToProcess.addonSize.push({
-                                name: "",
-                                price: 0
-                            })
-                        };
-
-                        $scope.deleteAddonSize = function (index) {
-                            $scope.itemToProcess.addonSize.splice(index, 1)
                         };
 
                         $scope.cancel = function () {

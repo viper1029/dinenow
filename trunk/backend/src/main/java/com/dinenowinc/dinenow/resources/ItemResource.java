@@ -1,12 +1,41 @@
 package com.dinenowinc.dinenow.resources;
 
-import com.dinenowinc.dinenow.dao.AddonDao;
+import com.dinenowinc.dinenow.dao.ItemDao;
+import com.dinenowinc.dinenow.dao.ModifierDao;
+import com.dinenowinc.dinenow.dao.RestaurantDao;
+import com.dinenowinc.dinenow.dao.SizeDao;
+import com.dinenowinc.dinenow.error.ServiceErrorMessage;
+import com.dinenowinc.dinenow.model.Addon;
+import com.dinenowinc.dinenow.model.Item;
+import com.dinenowinc.dinenow.model.ItemSize;
+import com.dinenowinc.dinenow.model.Modifier;
+import com.dinenowinc.dinenow.model.ModifierAddon;
+import com.dinenowinc.dinenow.model.Restaurant;
+import com.dinenowinc.dinenow.model.Size;
+import com.dinenowinc.dinenow.model.User;
 import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.dinenowinc.dinenow.validation.ItemValidator;
+import com.google.inject.Inject;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import io.dropwizard.auth.Auth;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,37 +47,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import com.dinenowinc.dinenow.dao.CategoryDao;
-import com.dinenowinc.dinenow.dao.ItemDao;
-import com.dinenowinc.dinenow.dao.ModifierDao;
-import com.dinenowinc.dinenow.dao.RestaurantDao;
-import com.dinenowinc.dinenow.dao.SizeDao;
-import com.dinenowinc.dinenow.error.ServiceErrorMessage;
-import com.dinenowinc.dinenow.model.*;
-import com.google.inject.Inject;
 //import com.sun.jersey.core.header.FormDataContentDisposition;
 //import com.sun.jersey.multipart.FormDataParam;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
 
 @Path("/items")
 @Api("/items")
@@ -57,16 +60,10 @@ import com.wordnik.swagger.annotations.ApiResponses;
 public class ItemResource extends AbstractResource<Item> {
 
   @Inject
-  private CategoryDao categoryDao;
-
-  @Inject
   private ItemDao itemDao;
 
   @Inject
   private SizeDao sizeDao;
-
-  @Inject
-  private AddonDao addonDao;
 
   @Inject
   private ModifierDao modifierDao;
@@ -75,11 +72,7 @@ public class ItemResource extends AbstractResource<Item> {
   private RestaurantDao restaurantDao;
 
   @GET
-  @ApiOperation("api get all items of restaurant for ADMIN and OWNER")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "Access denied for user")
-  })
+  @ApiOperation("Get all items for ADMIN and OWNER")
   @Override
   public Response getAll(@ApiParam(access = "internal") @Auth User access) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -89,7 +82,7 @@ public class ItemResource extends AbstractResource<Item> {
   }
 
   @Path("/restaurant/{restaurant_id}")
-  @ApiOperation("Get All Items By Restaurant")
+  @ApiOperation("Get all items by restaurantId")
   @GET
   public Response getItemsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -109,12 +102,7 @@ public class ItemResource extends AbstractResource<Item> {
 
   @GET
   @Path("/{id}")
-  @ApiOperation("api get detail of items")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 404, message = "Cannot found entity"),
-      @ApiResponse(code = 401, message = "Access denied for user")
-  })
+  @ApiOperation("Get a specific item")
   @Override
   public Response get(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -124,12 +112,7 @@ public class ItemResource extends AbstractResource<Item> {
   }
 
   @POST
-  @ApiOperation(value = "api add new items")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "Access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
-  })
+  @ApiOperation(value = "Create an item")
   @Override
   public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -195,101 +178,14 @@ public class ItemResource extends AbstractResource<Item> {
     return itemSizeEntity;
   }
 
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected Item getEntityForUpdate(Item item, HashMap<String, Object> inputMap) {
-    item.setName(inputMap.get("name").toString());
-    item.setDescription(inputMap.get("description").toString());
-    item.setImage(inputMap.get("linkImage") == null ? "" : inputMap.get("linkImage").toString());
-    item.setNotes(inputMap.get("notes").toString());
-    //entity.setOrderType(OrderType.valueOf(dto.get("orderType").toString()));
-    if (inputMap.containsKey("sizePrices")) {
-      ArrayList<ItemSize> listsInfo = new ArrayList<>();
-      List<HashMap<String, Object>> listSizePrice = (List<HashMap<String, Object>>) inputMap.get("sizePrices");
-      for (HashMap<String, Object> hashMap : listSizePrice) {
-        Size s = sizeDao.get(hashMap.get("size").toString());
-        if (s != null) {
-          double price = Double.parseDouble(hashMap.get("price").toString());
-          ItemSize sInfo = new ItemSize();
-          sInfo.setCreatedBy("self");
-          sInfo.setCreatedDate(new Date());
-          sInfo.setSize(s);
-          sInfo.setPrice(price);
-          listsInfo.add(sInfo);
-        }
-      }
-      item.addAllItemSize(listsInfo);
-    }
-//		if (inputMap.containsKey("modifiers")) { // TODO: temp comment
-//			ArrayList<ItemModifier> listmInfo = new ArrayList<ItemModifier>();
-//			List<HashMap<String, Object>> listModifier = (List<HashMap<String, Object>>) inputMap.get("modifiers");
-//			for (HashMap<String, Object> hashMap : listModifier) {
-//				Modifier modifies = modifierDao.get(hashMap.get("modifier").toString());
-//				if (modifies != null) {
-//					ItemModifier mInfo = new ItemModifier();
-//					if (hashMap.containsKey("availabilityStatus")) {
-//						mInfo.setAvailabilityStatus(AvailabilityStatus.valueOf(hashMap.get("availabilityStatus").toString()));
-//					}else {
-//						mInfo.setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
-//					}
-//					mInfo.setModifier(modifies);
-//					mInfo.setCreatedBy("self");
-//					mInfo.setCreatedDate(new Date());
-//					listmInfo.add(mInfo);
-//				}
-//			}
-//			item.addAllModifier(listmInfo);
-//		}
-
-    return item;
-  }
-
-
-  //=============================METHOD=============================//
-
-  /*
   @PUT
-	@ApiOperation(value="api update items for restaurant OWNER", notes="<pre><code>{"
-			+ "<br/>  \"name\": \"item 2 test\","
-			+ "<br/>  \"description\": \"item test\","
-			+ "<br/>  \"availabilityStatus\": \"AVAILABLE\","
-			+ "<br/>  \"isVegeterian\": false,"
-			+ "<br/>  \"spiceLevel\": 3,"
-			+ "<br/>  \"notes\": \"notes\","
-			+ "<br/>  \"isShowSpice\": false,"
-			+ "<br/>  \"orderType\": \"ALL\","
-			+ "<br/>  \"keywords\": ["
-			+ "<br/>    \"abc\","
-			+ "<br/>    \"abc\""
-			+ "<br/>  ],"
-			+ "<br/>  \"linkImage\": \"adbc2321312.jpg\","
-			+ "<br/>  \"price\": 34,"
-			+ "<br/>  \"sizePrices\": ["
-			+ "<br/>    {"
-			+ "<br/>      \"price\": 50,"
-			+ "<br/>      \"size\": \"12180d97-c26f-434a-8960-045e9a76b161\""
-			+ "<br/>    }"
-			+ "<br/>  ],"
-			+ "<br/>  \"modifiers\": ["
-			+ "<br/>    {"
-			+ "<br/>      \"modifier\": \"a8a7c07a-0562-452b-8967-eec2777718cb\""
-			+ "<br/>    }"
-			+ "<br/>  ]"
-			+ "<br/>}</code></pre>")
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "data"),
-			@ApiResponse(code = 401, message = "Access denied for user"),
-			@ApiResponse(code = 404, message = "Item not found"),
-			@ApiResponse(code = 500, message = "Cannot update entity. Error message: ###")
-			})
 	@Path("/{id}")
 	@Override
 	public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> dto) {
 		if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
 			Item item = itemDao.get(id);
 			if (item != null) {
-				ItemValidator mItemValidator = new ItemValidator(itemDao, dto);
+				ItemValidator mItemValidator = new ItemValidator(dto);
 				List<ServiceErrorMessage> mListError = mItemValidator.validateForCreation();
 				if (mListError.size() == 0) {
 					return super.update(access, id, dto);
@@ -302,16 +198,74 @@ public class ItemResource extends AbstractResource<Item> {
 		}
 		return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user"));
 	}
-	*/
+
+  @SuppressWarnings("unchecked")
+  @Override
+  protected Item getEntityForUpdate(Item item, HashMap<String, Object> inputMap) {
+    item.setName(inputMap.get("name").toString());
+    item.setDescription(inputMap.get("description").toString());
+    item.setImage(inputMap.get("linkImage") == null ? "" : inputMap.get("linkImage").toString());
+    item.setNotes(inputMap.get("notes").toString());
+
+    if (inputMap.containsKey("itemSize")) {
+      ArrayList<ItemSize> newItemSize = new ArrayList<>();
+      ArrayList<ItemSize> keepItemSize = new ArrayList<>();
+      List<HashMap<String, Object>> itemSizeList = (List<HashMap<String, Object>>) inputMap.get("itemSize");
+      for (HashMap<String, Object> itemSize : itemSizeList) {
+        boolean foundExisting = false;
+        if (itemSize.get("id") != null) {
+          for (ItemSize existingItemSize : item.getItemSizes()) {
+            if (existingItemSize.getId().matches(itemSize.get("id").toString())) {
+              existingItemSize.setPrice(Double.parseDouble(itemSize.get("price").toString()));
+              if (!existingItemSize.getSize().getId().matches(
+                  ((HashMap<String, Object>) itemSize.get("size")).get("id").toString())) {
+                existingItemSize.setSize(sizeDao.get(((HashMap<String, Object>)itemSize.get("addon")).get("id").toString()));
+              }
+              foundExisting = true;
+              keepItemSize.add(existingItemSize);
+              break;
+            }
+          }
+        }
+        if (!foundExisting) {
+          newItemSize.add(createNewItemSize(itemSize, item));
+        }
+      }
+      item.getItemSizes().retainAll(keepItemSize);
+      item.addAllItemSize(newItemSize);
+    }
+
+		if (inputMap.containsKey("modifiers")) {
+      ArrayList<Modifier> newModifiers = new ArrayList<>();
+      ArrayList<Modifier> keepModifiers = new ArrayList<>();
+			List<HashMap<String, Object>> modifierList = (List<HashMap<String, Object>>) inputMap.get("modifiers");
+			for (HashMap<String, Object> modifier : modifierList) {
+        boolean foundExisting = false;
+			  if(modifier.get("id") != null) {
+          for (Modifier existingModifier : item.getModifiers()) {
+            if (existingModifier.getId().matches(modifier.get("id").toString())) {
+              foundExisting = true;
+              keepModifiers.add(existingModifier);
+            }
+          }
+        }
+        if(!foundExisting) {
+          Modifier existingModifier = modifierDao.get(modifier.get("id").toString());
+          if(existingModifier != null) {
+            existingModifier.setItem(item);
+            newModifiers.add(existingModifier);
+          }
+        }
+			}
+      item.getModifiers().retainAll(keepModifiers);
+      item.addAllModifier(newModifiers);
+		}
+
+    return item;
+  }
+
   @DELETE
   @ApiOperation("api delete items")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = ""),
-      @ApiResponse(code = 404, message = "Item not found"),
-      @ApiResponse(code = 401, message = "Access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot delete entity. Error message: ###"),
-      @ApiResponse(code = 404, message = "Cannot found entity")
-  })
   @Path("/{id}")
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
@@ -324,7 +278,7 @@ public class ItemResource extends AbstractResource<Item> {
         return ResourceUtils.asFailedResponse(Status.NOT_FOUND, new ServiceErrorMessage("Item not found"));
       }
     }
-    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("access denied for user"));
+    return ResourceUtils.asFailedResponse(Status.UNAUTHORIZED, new ServiceErrorMessage("Access denied for user."));
   }
 
 

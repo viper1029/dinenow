@@ -19,6 +19,7 @@ export default styles = StyleSheet.create({
         alignSelf: 'stretch',
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight: 30,
     },
     arrow: {
         justifyContent: 'flex-end',

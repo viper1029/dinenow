@@ -1,156 +1,131 @@
 <div class="modal-header">
-	<button type="button" class="close" ng-click="cancel()">×</button>
-	<h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.itemName : "Item Name" }}</h3>
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h3 class="modal-title text-center">{{ itemToProcess.name ? itemToProcess.itemName : "Item Name" }}</h3>
 </div>
 <div class="modal-body">
-	<div class="container">
-		<!-- <pre>{{ itemToProcess | json }}</pre> -->
-		<form name="form">
-			<div class="row">
-				{{apiImageUpload}}
-				<div class="col-md-4"> <!-- image upload -->
-					<div flow-init="{singleFile:true}"
-						flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
-						flow-files-submitted="$flow.upload()"
-						flow-file-success="getLinkImage($message)">
-						<div class="thumbnail item-thumbnail" ng-if="itemToProcess.linkImage == 'empty'" flow-btn>
-							<img src="assets/images/no-image.gif" />
-						</div>
-						<div class="thumbnail item-thumbnail" ng-if="itemToProcess.linkImage != 'empty'" flow-btn>
-							<img src="{{ apiImageUpload + itemToProcess.linkImage }}" />
-						</div>
-						<div class="mt10 mb10 text-center">
-							<span class="btn btn-primary" ng-if="itemToProcess.linkImage == 'empty'" flow-btn>Upload Image</span>
-							<span class="btn btn-primary" ng-if="itemToProcess.linkImage != 'empty'" flow-btn>Change Image</span>
-						</div>
-					</div>
-				</div> <!-- image upload -->
-				<div class="col-md-8">	<!-- form edit -->
-					<div class="row">
-						<div class="col-md-12">
-							<!-- <pre>{{ itemToProcess | json}}</pre> -->
-							<div class="form-horizontal">
-								<div class="form-group">
-									<label for="name" class="col-sm-3 control-label align-left">Name</label>
-									<div class="col-sm-6">
-										<input name="name" type="text" class="form-control" ng-model="itemToProcess.name" required maxlength="64">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-12">Description</label>
-									<div class="col-sm-12"><textarea name="desciption" id="description" ng-model="itemToProcess.description" cols="50" rows="2" class="form-control" required></textarea></div>
-								</div>
-								<div class="form-group">
-									<label for="notes" class="col-sm-3 control-label align-left">Notes</label>
-									<div class="col-sm-6">
-										<input name="notes" type="text" class="form-control" ng-model="itemToProcess.notes" required>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label align-left">Spice Level</label>
-									<div class="col-sm-6">
-										<div class="btn-group">
-											<button type="button" ng-repeat="level in spiceLevel" class="btn btn-default-alt" ng-class="{true: 'active'}[itemToProcess.spiceLevel==level]" ng-bind="level" ng-click="itemToProcess.spiceLevel=level"></button>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label align-left">Show spice level</label>
-									<div class="col-sm-6">
-										<div class="checkbox block"><label class="checkbox-inline"><input icheck type="checkbox" ng-model="itemToProcess.isShowSpice"></label></div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label align-left">Vegetarian</label>
-									<div class="col-sm-6">
-										<div class="btn-group">
-											<button type="button" class="btn btn-default-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==true]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=true">Yes</button>
-											<button type="button" class="btn btn-default-alt" ng-class="{true: 'active'}[itemToProcess.isVegeterian==false]" ng-model="itemToProcess.isVegeterian" ng-click="itemToProcess.isVegeterian=false">No</button>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label align-left">Order Type</label>
-									<div class="col-sm-8">
-										<div class="btn-group">
-											<button type="button" ng-repeat="type in orderType" class="btn btn-default-alt" ng-class="{true: 'active'}[itemToProcess.orderType==type]" ng-bind="type" ng-click="itemToProcess.orderType=type"></button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label class="col-sm-12 control-label align-left">Keywords</label>
-						<div class="col-sm-12 pad-bot">
-							<input ui-select2="tagOptions" ng-model="itemToProcess.keywords" style="width:100%"/>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">						
-					<label class="col-sm-12 control-label align-left">Size and Price</label>
-					<div>
-						<div class="form-group fix-inline-item" ng-if="!onShow.size && !itemToProcess.id">
-		    				<button type="button" class="btn btn-primary" ng-click="onShow.size = true"><i class="fa fa-plus"></i> Add</button>
-		    			</div>	
-						<div class="form-inline">
-							{{itemToProcess.sizePrices}}
-							<div ng-if="onShow.size || itemToProcess.id" ng-repeat="item in itemToProcess.sizePrices">
-								<div class="form-group fix-inline-item">
-					    			<select class="form-control" name="type" ng-model="item.size" ng-options="size.id as size.name for size in listSizes">              	                     
-		                        	</select>
-				    			</div>
-				    			<div class="form-group fix-inline-item">
-				    				<label class="control-label">Price: </label>
-				    				<input name="price" type="number" class="form-control" ng-model="item.price" min="0" required style="width: 80px">		    						    				    				
-				    			</div>			    			  			  			
-				    			<div class="form-group fix-inline-item">
-				    				<button type="button" class="btn btn-primary" ng-click="addSizePrice()" ng-if="$last" ng-disabled="item.size==''"><i class="fa fa-check"></i> Add</button>
-				    				<div ng-if="!$last">
-					    				<button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span class="non-text"> Pause</span></button>
-					    				<button type="button" class="btn btn-primary" ng-click="deleteSizePrice($index)"><i class="fa fa-times"></i><span class="non-text"> Remove</span></button>
-				    				</div>
-				    			</div>	
-							</div>		
-				    	</div>					
-					</div>
-					{{itemToProcess.modifiers}}
-					<div class="form-group">
-						<label class="col-sm-12 control-label align-left">Modifier</label>
-						<div class="form-inline" >
-							<div class="form-group fix-inline-item" ng-if="!onShow.modifier && itemToProcess.modifiers.length < 2">
-			    				<button type="button" class="btn btn-primary" ng-click="onShow.modifier = true"><i class="fa fa-plus"></i> Add</button>
-			    			</div>	
-							<div ng-if="onShow.modifier || itemToProcess.modifiers.length > 1" ng-repeat="item in itemToProcess.modifiers">
-								<div class="form-group fix-inline-item">
-					    			<select class="form-control" name="type" ng-model="item.modifier" ng-options="modifier.id as modifier.name for modifier in listModifier">              	                     
-		                        	</select>
-				    			</div>    						    			  			  			
-				    			<div class="form-group fix-inline-item">
-				    				<div ng-show="$last">
-					    				<button type="button" class="btn btn-primary" ng-click="createNewModifer()"><i class="fa fa-plus"></i> Create New Modifier</button>
-					    				<button type="button" class="btn btn-primary" ng-click="addModifier()" ng-disabled="item.modifier==''"><i class="fa fa-check"></i> Add</button>
-				    				</div>
-				    				<div ng-show="!$last">
-					    				<button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span class="non-text"> Pause</span></button>
-					    				<button type="button" class="btn btn-primary" ng-click="deleteModifer($index)"><i class="fa fa-times"></i><span class="non-text"> Remove</span></button>
-				    				</div>
-				    			</div>	
-							</div>		
-				    	</div>	
-					</div>
-				</div>
-			</div>	
-		</form>
-	</div>
+    <div class="container">
+        <!-- <pre>{{ itemToProcess | json }}</pre> -->
+        <form name="form">
+            <div class="row">
+                <div class="col-md-4"> <!-- image upload -->
+                    <div flow-init="{singleFile:true}"
+                         flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+                         flow-files-submitted="$flow.upload()"
+                         flow-file-success="getLinkImage($message)">
+                        <div class="thumbnail item-thumbnail"
+                             ng-if="itemToProcess.linkImage == 'empty' || itemToProcess.linkImage == ''" flow-btn>
+                            <img src="assets/images/no-image.gif"/>
+                        </div>
+                        <div class="thumbnail item-thumbnail" ng-if="itemToProcess.linkImage != 'empty'" flow-btn>
+                            <img src="{{ apiImageUpload + itemToProcess.linkImage }}"/>
+                        </div>
+                        <div class="mt10 mb10 text-center">
+                            <span class="btn btn-primary" ng-if="itemToProcess.linkImage == 'empty'" flow-btn>Upload Image</span>
+                            <span class="btn btn-primary" ng-if="itemToProcess.linkImage != 'empty'" flow-btn>Change Image</span>
+                        </div>
+                    </div>
+                </div> <!-- image upload -->
+                <div class="col-md-8">    <!-- form edit -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- <pre>{{ itemToProcess | json}}</pre> -->
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-3 control-label align-left">Name</label>
+
+                                    <div class="col-sm-6">
+                                        <input name="name" type="text" class="form-control"
+                                               ng-model="itemToProcess.name" required maxlength="64">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Description</label>
+
+                                    <div class="col-sm-12"><textarea name="desciption" id="description"
+                                                                     ng-model="itemToProcess.description" cols="50"
+                                                                     rows="2" class="form-control" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes" class="col-sm-3 control-label align-left">Notes</label>
+
+                                    <div class="col-sm-6">
+                                        <input name="notes" type="text" class="form-control"
+                                               ng-model="itemToProcess.notes" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-sm-12 control-label align-left">Size and Price</label>
+                    <div>
+                        <div class="col-sm-12">
+                            <div ng-repeat="item in itemToProcess.itemSize">
+                                <div class="col-sm-4 form-group fix-inline-item">
+                                    <select class="form-control" name="type" ng-model="item.size.id"
+                                            ng-options="size.id as size.name for size in listSizes">
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <div class="col-sm-6">Price: </div>
+                                    <input name="price" type="number" class="col-sm-6 form-control" ng-model="item.price" min="0"
+                                           required style="width: 80px">
+                                </div>
+                                <div class="col-sm-4 form-group fix-inline-item">
+                                    <button type="button" class="btn btn-primary" ng-click="addItemSize(item.size.id, item.price)"
+                                            ng-if="$last"
+                                            ng-disabled="item.size==''"><i class="fa fa-check"></i> Add
+                                    </button>
+                                    <div ng-if="!$last">
+                                        <button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span
+                                                class="non-text"> Pause</span></button>
+                                        <button type="button" class="btn btn-primary"
+                                                ng-click="deleteSizePrice($index)"><i
+                                                class="fa fa-times"></i><span class="non-text"> Remove</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label align-left">Modifier</label>
+
+                        <div class="form-inline">
+                            <div ng-repeat="item in itemToProcess.modifiers">
+                                <div class="form-group fix-inline-item">
+                                    <select class="form-control" name="type" ng-model="item.id"
+                                            ng-options="modifier.id as modifier.name for modifier in modifiers">
+                                    </select>
+                                </div>
+                                <div class="form-group fix-inline-item">
+                                    <div ng-show="$last">
+                                        <button type="button" class="btn btn-primary" ng-click="addModifier(modifier.id)"
+                                                ng-disabled="item.id==''"><i class="fa fa-check"></i> Add
+                                        </button>
+                                    </div>
+                                    <div ng-show="!$last">
+                                        <button type="button" class="btn btn-primary"><i class="fa fa-pause"></i><span
+                                                class="non-text"> Pause</span></button>
+                                        <button type="button" class="btn btn-primary" ng-click="deleteModifer($index)">
+                                            <i class="fa fa-times"></i><span class="non-text"> Remove</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-	<button class="btn btn-primary" ladda="loadingSave" ng-click="save()" ng-disabled="form.$invalid || itemToProcess.spiceLevel==0 || itemToProcess.isVegeterian===null">Save</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ladda="loadingSave" ng-click="save()"
+            ng-disabled="form.$invalid">Save
+    </button>
 </div>

@@ -2,14 +2,10 @@ package com.dinenowinc.dinenow.resources;
 
 import com.dinenowinc.dinenow.dao.AddonDao;
 import com.dinenowinc.dinenow.dao.RestaurantDao;
-import com.dinenowinc.dinenow.dao.SizeDao;
 import com.dinenowinc.dinenow.error.ServiceErrorMessage;
 import com.dinenowinc.dinenow.model.Addon;
-import com.dinenowinc.dinenow.model.AddonSize;
 import com.dinenowinc.dinenow.model.Restaurant;
-import com.dinenowinc.dinenow.model.Size;
 import com.dinenowinc.dinenow.model.User;
-import com.dinenowinc.dinenow.model.helpers.AvailabilityStatus;
 import com.dinenowinc.dinenow.model.helpers.ModelHelpers;
 import com.dinenowinc.dinenow.model.helpers.UserRole;
 import com.google.inject.Inject;
@@ -28,8 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,9 +35,6 @@ public class AddonResource extends AbstractResource<Addon> {
 
   @Inject
   private AddonDao addonDao;
-
-  @Inject
-  private SizeDao sizeDao;
 
   @Inject
   private RestaurantDao restaurantDao;
@@ -59,7 +50,8 @@ public class AddonResource extends AbstractResource<Addon> {
 
   @Path("/restaurant/{restaurant_id}")
   @GET
-  public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access, @PathParam("restaurant_id") String restaurant_id) {
+  public Response getAddOnsByRestaurantId(@ApiParam(access = "internal") @Auth User access,
+      @PathParam("restaurant_id") String restaurant_id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
       if (restaurantDao.get(restaurant_id) != null) {
         List<Addon> entities = addonDao.getAddonsByRestaurantId(restaurant_id);
@@ -92,12 +84,7 @@ public class AddonResource extends AbstractResource<Addon> {
   }
 
   @POST
-  @ApiOperation(value = "api add new add on for restaurant")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "Access denied for user"),
-      @ApiResponse(code = 500, message = "Cannot add entity. Error message: ###")
-  })
+  @ApiOperation(value = "Create addon for a restaurant")
   @Override
   public Response create(@ApiParam(access = "internal") @Auth User access, HashMap<String, Object> inputMap) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -122,39 +109,12 @@ public class AddonResource extends AbstractResource<Addon> {
     Addon entity = super.getEntityForInsertion(inputMap);
     entity.setAddonName(inputMap.get("name").toString());
     entity.setAddonDescription(inputMap.get("description").toString());
-
-    if (inputMap.containsKey("addonSize")) {
-      ArrayList<AddonSize> addonSizes = new ArrayList<>();
-      List<HashMap<String, Object>> addonSizeList = (List<HashMap<String, Object>>) inputMap.get("addonSize");
-      for (HashMap<String, Object> addonSize : addonSizeList) {
-        addonSizes.add(createNewAddonSize(addonSize, entity));
-      }
-      entity.addAllSize(addonSizes);
-    }
+    entity.setAddonPrice(Double.parseDouble(inputMap.get("price").toString()));
     return entity;
   }
 
-  private AddonSize createNewAddonSize(HashMap<String, Object> addonSize, Addon entity) {
-    Size size = sizeDao.get(((HashMap<String, Object>) addonSize.get("size")).get("id").toString());
-    double price = Double.parseDouble(addonSize.get("price").toString());
-    AddonSize addonSizeEntity = new AddonSize();
-    addonSizeEntity.setSize(size);
-    addonSizeEntity.setPrice(price);
-    addonSizeEntity.setAddon(entity);
-    addonSizeEntity.setCreatedBy("system");
-    addonSizeEntity.setCreatedDate(new Date());
-    addonSizeEntity.setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
-    return addonSizeEntity;
-  }
-
   @PUT
-  @ApiOperation(value = "update add on")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "data"),
-      @ApiResponse(code = 401, message = "Access denied for user"),
-      @ApiResponse(code = 404, message = "Add on not found"),
-      @ApiResponse(code = 500, message = "Cannot update entity. Error message: ###")
-  })
+  @ApiOperation(value = "Update an addon")
   @Path("/{id}")
   @Override
   public Response update(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id, HashMap<String, Object> inputMap) {
@@ -175,49 +135,13 @@ public class AddonResource extends AbstractResource<Addon> {
   protected Addon getEntityForUpdate(Addon entity, HashMap<String, Object> inputMap) {
     entity.setAddonName(inputMap.get("name").toString());
     entity.setAddonDescription(inputMap.get("description").toString());
-
-    if (inputMap.containsKey("addonSize")) {
-      ArrayList<AddonSize> newAddonSizes = new ArrayList<>();
-      ArrayList<AddonSize> keepExistingAddonSizes = new ArrayList<>();
-      List<HashMap<String, Object>> addonSizeList = (List<HashMap<String, Object>>) inputMap.get("addonSize");
-      for (HashMap<String, Object> addonSize : addonSizeList) {
-        boolean foundExisting = false;
-        if (addonSize.get("id") != null) {
-          for (AddonSize existingAddonSize : entity.getAddonSize()) {
-            if (existingAddonSize.getId().matches(addonSize.get("id").toString())) {
-              existingAddonSize.setPrice(Double.parseDouble(addonSize.get("price").toString()));
-              existingAddonSize.setAvailabilityStatus(AvailabilityStatus.valueOf(addonSize.get("availabilityStatus").toString()));
-              if (!existingAddonSize.getSize().getId().matches(
-                  ((HashMap<String, Object>) addonSize.get("size")).get("id").toString())) {
-                existingAddonSize.setSize(sizeDao.get(((HashMap<String, Object>) addonSize.get("size")).get("id").toString()));
-                existingAddonSize.setAddon(entity);
-              }
-              foundExisting = true;
-              keepExistingAddonSizes.add(existingAddonSize);
-              break;
-            }
-          }
-        }
-        if (!foundExisting) {
-          newAddonSizes.add(createNewAddonSize(addonSize, entity));
-        }
-      }
-      entity.getAddonSize().retainAll(keepExistingAddonSizes);
-      entity.addAllSize(newAddonSizes);
-    }
+    entity.setAddonPrice(Double.parseDouble(inputMap.get("price").toString()));
     return entity;
   }
 
   @DELETE
   @Path("/{id}")
-  @ApiOperation("delete add on by id")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = ""),
-      @ApiResponse(code = 404, message = "add on not found"),
-      @ApiResponse(code = 500, message = "Cannot delete entity. Error message: ###"),
-      @ApiResponse(code = 404, message = "Cannot found entity"),
-      @ApiResponse(code = 401, message = "Access denied for user")
-  })
+  @ApiOperation("Delete addon by id")
   @Override
   public Response delete(@ApiParam(access = "internal") @Auth User access, @PathParam("id") String id) {
     if (access.getRole() == UserRole.ADMIN || access.getRole() == UserRole.OWNER) {
@@ -232,7 +156,7 @@ public class AddonResource extends AbstractResource<Addon> {
     dto.put("id", entity.getId());
     dto.put("name", entity.getAddonName());
     dto.put("description", entity.getAddonDescription());
-    dto.put("addonSize", ModelHelpers.fromEntities(entity.getAddonSize()));
+    dto.put("price", entity.getAddonPrice());
     HashMap<String, Object> returnMap = new HashMap<>();
     returnMap.put(getClassT().getSimpleName().toLowerCase(), dto);
     return returnMap;

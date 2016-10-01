@@ -9,11 +9,15 @@ export default Row = (props) => (
         style={[ListStyle.row, props.touchableStyle]}
         underlayColor={Theme.rowUnderLayColor}
         onPress={props.onPress}
+        disabled={props.disabled}
     >
         <View style={[ListStyle.rowContent, props.rowContentStyle]}>
             <Text style={[ListStyle.rowLabel, props.rowLabelStyle]}>{props.rowText}</Text>
             <View>{props.children}</View>
+            {!props.hideArrow &&
             <MaterialIcons name="chevron-right" size={Theme.rowIconFontSize} style={ListStyle.arrow}/>
+            }
+            {props.hideArrow && <View style={{width: 15}} ></View>}
         </View>
     </TouchableHighlight>
 )

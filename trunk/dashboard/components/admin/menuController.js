@@ -28,7 +28,6 @@ angular.module("app.admin.restaurant.manage.menu.menus", [])
                     var p = document.createElement("p");
                     textNode = document.createTextNode("Drag and drop categories and item here.");
                     p.appendChild(textNode);
-                    emptyTree[0].appendChild(p);
                     emptyTree[0].className += " empty-tree"
                 }
             };

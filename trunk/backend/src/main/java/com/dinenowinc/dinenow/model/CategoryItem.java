@@ -27,7 +27,7 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CategoryItem extends BaseEntity {
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "id_item", foreignKey = @ForeignKey(name = "fk_id_item_category_item"))
   private final Set<Item> items = new HashSet<>();
 

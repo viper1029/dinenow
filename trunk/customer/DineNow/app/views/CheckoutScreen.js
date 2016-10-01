@@ -7,6 +7,7 @@ import GeneralStyles from "./../styles/GeneralStyles";
 import TouchableHightlightRow from "../components/TouchableHightlightRow";
 import TextRow from "../components/TextRow";
 var height = (Dimensions.get('window').height) - ((Platform.OS === 'ios') ? 64 : 54) - StatusBar.currentHeight;
+import {Actions as NavActions} from 'react-native-router-flux'
 
 const data = [
     {
@@ -36,8 +37,7 @@ export default class CheckoutScreen extends Component {
                 <BackNavBar title="Checkout"/>
                 <Image source={require('../assets/glow2.png')} style={GeneralStyles.backgroundImage}>
                     <ScrollView contentContainerStyle={{height: height}}>
-                        <TouchableHightlightRow onPress={() => {
-                        }} rowText="Delivery Address">
+                        <TouchableHightlightRow onPress={()=> {NavActions.address({navBarTitle: "Select Address"})}} rowText="Delivery Address">
                             <Text style={styles.textSmall}>15046 68 Avenue</Text>
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.textSmall}>Surrey, </Text>
@@ -49,8 +49,10 @@ export default class CheckoutScreen extends Component {
                         }} rowText="Payment Method">
                             <Text style={styles.textSmall}>Cash</Text>
                         </TouchableHightlightRow>
-                        <TouchableHightlightRow onPress={() => {
-                        }} rowText="Tip">
+                        <TouchableHightlightRow onPress={() => { }}
+                                                disabled={true}
+                                                hideArrow={true}
+                                                rowText="Tip">
                             <Text style={styles.textSmall}>Please tip on delivery</Text>
                         </TouchableHightlightRow>
                         <TouchableHightlightRow onPress={() => {

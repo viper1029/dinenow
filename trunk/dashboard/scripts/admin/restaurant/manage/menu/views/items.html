@@ -21,30 +21,13 @@
     <div class="col-md-12">
       <div class="fix-row"></div>
       <table ng-table="tableParams" class="table table-condensed">
-        <!-- <thead>
-          <tr>
-            <th style="width: 15%">Name</th>
-            <th style="width: 30%">Description</th>
-            <th class="text-center">Spice Level</th>
-            <th class="text-center">Vegetarian</th>
-            <th class="text-center">Order Type</th>
-            <th class="text-center">Price</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead> -->
         <tbody>
           <tr ng-repeat="item in $data | filter:itemSearch">
             <td class="text-center" ng-bind="item.name" data-title="'Name'" sortable="'itemName'">
             </td>
             <td class="text-center" ng-bind="item.description" data-title="'Description'" sortable="'itemDescription'">    
             </td>
-            <td class="text-center" ng-bind="item.spiceLevel" data-title="'Spice Level'" sortable="'spiceLevel'">
-            </td>
-            <td class="text-center" ng-bind="item.isVegeterian ? 'Yes' : 'No'" data-title="'Vegetarian'" sortable="'isVegeterian'">
-            </td>
-            <td class="text-center" ng-bind="item.order_type" data-title="'Order Type'" sortable="'categoryName'">
-            </td>
-            <td class="text-center" ng-bind="item.price | currency:'$':0" data-title="'Price'" sortable="'price'">    
+            <td class="text-center" ng-bind="item.notes" data-title="'Notes'" sortable="'notes'">
             </td>
             <td class="text-center" style="white-space: nowrap">
               <div class="buttons">

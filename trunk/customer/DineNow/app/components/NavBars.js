@@ -29,6 +29,7 @@ export const BackNavBar = (props) => (<NavBar
     onLeftPress={NavActions.pop}
     title={props.title}
     leftButton={true}
+    leftIconName={props.leftIconName}
     rightButton={props.rightButton}
     rightIconName={props.rightIconName}
     onRightPress={() => {props.onRightPress()}}

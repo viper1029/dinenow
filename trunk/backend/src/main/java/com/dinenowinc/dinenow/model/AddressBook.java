@@ -21,28 +21,28 @@ public class AddressBook extends BaseEntity {
 
   private static final long serialVersionUID = -7491749432942752355L;
 
-  @Column(name = "name", nullable = false, unique = false)
+  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "address_1", nullable = false, unique = false)
+  @Column(name = "address_1", nullable = false)
   private String address1;
 
   @Column(name = "address_2")
   private String address2;
 
-  @Column(name = "city", nullable = false, unique = false)
+  @Column(name = "city", nullable = false)
   private String city;
 
-  @Column(name = "province", nullable = false, unique = false)
+  @Column(name = "province", nullable = false)
   private String province;
 
-  @Column(name = "country", nullable = false, unique = false)
+  @Column(name = "country", nullable = false)
   private String country;
 
-  @Column(name = "postal_code", nullable = false, unique = false)
+  @Column(name = "postal_code", nullable = false)
   private String postalCode;
 
-  @Column(name = "delivery_instructions", nullable = false, unique = false)
+  @Column(name = "delivery_instructions")
   private String deliveryInstructions;
 
   public String getName() {

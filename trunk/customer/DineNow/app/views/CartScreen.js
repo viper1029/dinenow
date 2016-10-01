@@ -5,25 +5,23 @@ import {Image, View, StyleSheet, Platform, ListView, PixelRatio, TouchableHighli
 import {BackNavBar} from "./../components/NavBars";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {Actions as NavActions} from "react-native-router-flux";
-import Row from "../components/TouchableHightlightRow";
+import TextRow from "../components/TextRow";
 
 const data = [
     {
         itemId: '12345',
         quantity: "5",
-        city: 'Surrey',
-        province: 'BC',
-        postalCode: 'V3S2B7',
-        country: 'Canada',
+        itemName: 'Burger',
+        addons: ["Chicken", "Cheese"],
+        itemTotal: "$6.99"
     },
     {
-        address1: '15043 68 Ave',
-        address2: "",
-        city: 'Surrey',
-        province: 'BC',
-        postalCode: 'V3S2B7',
-        country: 'Canada',
-    }
+        itemId: '12345',
+        itemName: 'Pizza',
+        quantity: "5",
+        addons: ["Chicken", "Cheese"],
+        itemTotal: "$9.99"
+    },
 ];
 
 export default class DeliveryAddressScreen extends Component {
@@ -41,33 +39,15 @@ export default class DeliveryAddressScreen extends Component {
             <View>
                 <View style={styles.listRow}>
                     <View style={{flex: 0.8, alignSelf: 'center'}}>
-                        <Text style={styles.listText}>{rowData.address1}</Text>
+
                         <View style={{flexDirection: 'row'}}>
-                            <Text style={styles.listText}>{rowData.city}, </Text>
-                            <Text style={styles.listText}>{rowData.province}, </Text>
-                            <Text style={styles.listText}>{rowData.postalCode}</Text>
+                            <Text style={styles.listText}>{rowData.quantity} </Text>
+                            <Text style={styles.listText}>{rowData.itemName}</Text>
                         </View>
-                        <Text style={styles.listText}>{rowData.country}</Text>
+                        <Text style={styles.listText}>{rowData.addons}</Text>
                     </View>
                     <View style={{flex: 0.2, alignItems: 'flex-end', alignSelf: 'center'}}>
-                        <TouchableHighlight
-                            style={{padding: 5, borderRadius: 4}}
-                            underlayColor="#48BBEC"
-                            onPress={() => {
-                                NavActions.addAddress()
-                            }}
-                        >
-                            <MaterialIcons name="mode-edit" size={30} style={styles.arrow}/>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={{padding: 5, borderRadius: 4}}
-                            underlayColor="#48BBEC"
-                            onPress={() => {
-                                NavActions.addAddress()
-                            }}
-                        >
-                            <MaterialIcons name="delete" size={30} style={styles.arrow}/>
-                        </TouchableHighlight>
+                        <Text>{rowData.itemTotal}</Text>
                     </View>
                 </View>
             </View>
@@ -79,8 +59,8 @@ export default class DeliveryAddressScreen extends Component {
             <View
                 key={`${sectionID}-${rowID}`}
                 style={{
-                    height: adjacentRowHighlighted ? 4 : 1,
-                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
+                    height: adjacentRowHighlighted ? 4 : 1 / PixelRatio.get(),
+                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#d6d7da',
                 }}
             />
         );
@@ -91,11 +71,13 @@ export default class DeliveryAddressScreen extends Component {
         return (
             <View style={{flex: 1, backgroundColor: '#384850'}}>
                 <View style={{flex: 1, borderWidth: 0}}>
-                    <BackNavBar title="Delivery Address"/>
+                    <BackNavBar title="Cart"/>
+                    <View style={styles.row}>
+                        <View style={styles.rowContent}>
+                            <Text>Bob's Pizza</Text>
+                        </View>
+                    </View>
                     <Image source={require('../assets/glow2.png')} style={styles.container}>
-                        <Row onPress={() => {
-                            NavActions.addAddress()
-                        }} rowText="Edit Profile"/>
                         <ListView
                             dataSource={this.state.dataSource}
                             renderRow={this._renderRow.bind(this)}
@@ -161,7 +143,7 @@ var styles = StyleSheet.create({
     },
     listRow: {
         flex: 1,
-        height: 100,
+        minHeight: 75,
         flexDirection: 'row',
         justifyContent: 'center',
         padding: 20,

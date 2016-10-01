@@ -16,6 +16,7 @@ import ItemScreen from './views/ItemScreen'
 import DeliveryAddressScreen from './views/DeliveryAddressScreen'
 import CheckoutScreen from './views/CheckoutScreen'
 import AddDeliveryAddress from './views/AddDeliveryAddress'
+import CartScreen from './views/CartScreen'
 import {DrawerNavBar, BackNavBar, BackToHomeNavBar, BackNavBarNoShadow, DrawerNavBarWithAdd} from './components/NavBars';
 
 
@@ -39,7 +40,8 @@ class NavigationRouter extends Component {
                     <Scene key='results' component={ResultsScreen} hideNavBar={false} navBar={() => (<BackToHomeNavBar title="Restaurants"/>)} />
                     <Scene key='restaurantDetails' component={RestaurantDetails} />
                     <Scene key='item' component={ItemScreen} />
-                    <Scene key='checkout' initial component={CheckoutScreen} />
+                    <Scene key='checkout' component={CheckoutScreen} />
+                    <Scene key='cart' initial component={CartScreen} />
                 </Scene>
             </Router>
         )

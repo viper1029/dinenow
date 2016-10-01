@@ -26,8 +26,8 @@
 						<div class="form-group">
 							<label class="col-sm-6 control-label align-left">Customer can select multiple items</label>
 								<div class="btn-group col-sm-3">
-									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==true]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=true">Yes</button>
-									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isSelectMultiple==false]" ng-model="itemToProcess.isSelectMultiple" ng-click="itemToProcess.isSelectMultiple=false;itemToProcess.maxSelection=itemToProcess.minSelection">No</button>
+									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isMultipleSelection==true]" ng-model="itemToProcess.isMultipleSelection" ng-click="itemToProcess.isMultipleSelection=true">Yes</button>
+									<button type="button" class="btn btn-primary-alt" ng-class="{true: 'active'}[itemToProcess.isMultipleSelection==false]" ng-model="itemToProcess.isMultipleSelection" ng-click="itemToProcess.isMultipleSelection=false;itemToProcess.maxSelection=itemToProcess.minSelection">No</button>
 							</div>
 						</div>
 						<div class="form-group">
@@ -36,7 +36,7 @@
 								<input name="name" type="number" class="form-control" ng-model="itemToProcess.minSelection" min="0" required>
 							</div>
 						</div>
-						<div class="form-group" ng-if="itemToProcess.isSelectMultiple">
+						<div class="form-group" ng-if="itemToProcess.isMultipleSelection">
 							<label class="col-sm-6 control-label align-left">Max. Selections</label>
 							<div class="col-sm-2">
 								<input name="name" type="number" class="form-control" ng-model="itemToProcess.maxSelection" min="0">

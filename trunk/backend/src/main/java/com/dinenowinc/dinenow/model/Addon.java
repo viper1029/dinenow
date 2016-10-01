@@ -36,16 +36,8 @@ public class Addon extends BaseEntity {
   @Column(nullable = false)
   private String description;
 
-  @OneToMany(mappedBy = "addon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  private final Set<AddonSize> addonSizes = new HashSet<>();
-
-  public Set<AddonSize> getAddonSize() {
-    return addonSizes;
-  }
-
-  public void addAllSize(ArrayList<AddonSize> sizeList) {
-    addonSizes.addAll(sizeList);
-  }
+  @Column(nullable = false, columnDefinition = "Decimal(10,2)")
+  private double price;
 
   public String getAddonName() {
     return name;
@@ -63,12 +55,21 @@ public class Addon extends BaseEntity {
     this.description = addOnDescription;
   }
 
+  public double getAddonPrice() {
+    return price;
+  }
+
+  public void setAddonPrice(double price)  {
+    this.price = price;
+  }
+
   @Override
   public HashMap<String, Object> toDto() {
     HashMap<String, Object> dto = new LinkedHashMap<>();
     dto.put("id", this.getId());
     dto.put("name", this.getAddonName());
     dto.put("description", this.getAddonDescription());
+    dto.put("price", this.getAddonPrice());
     return dto;
   }
 }

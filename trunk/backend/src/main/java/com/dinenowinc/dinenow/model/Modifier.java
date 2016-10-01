@@ -1,6 +1,7 @@
 package com.dinenowinc.dinenow.model;
 
 import com.dinenowinc.dinenow.model.helpers.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -10,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -50,7 +52,7 @@ public class Modifier extends BaseEntity {
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "id_item", nullable = true, foreignKey = @javax.persistence.ForeignKey(name = "Fk_modifier_items"))
-  private final Item item = null;
+  private Item item = null;
 
   public Set<ModifierAddon> getModifierAddons() {
     return modifierAddons;
@@ -106,6 +108,10 @@ public class Modifier extends BaseEntity {
 
   public void setMaxSelection(int maxSelection) {
     this.maxSelection = maxSelection;
+  }
+
+  public void setItem(final Item item) {
+    this.item = item;
   }
 
   @Override
